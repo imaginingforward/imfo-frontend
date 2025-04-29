@@ -36,7 +36,7 @@ const SubmissionResult = ({ success, message, onReset }: SubmissionResultProps) 
         <Button
           variant="outline"
           onClick={() => navigate("/")}
-          className="border-white/20 hover:bg-white/10 text-white"
+          className="border-white/20 hover:bg-white/10 text-gray-800 dark:text-white"
         >
           Go Home
         </Button>
