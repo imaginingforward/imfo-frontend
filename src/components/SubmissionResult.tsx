@@ -36,13 +36,13 @@ const SubmissionResult = ({ success, message, onReset }: SubmissionResultProps) 
         <Button
           variant="outline"
           onClick={() => navigate("/")}
-          className="border-white/20 hover:bg-white/10"
+          className="border-white/20 hover:bg-white/10 text-gray-800"
         >
           Go Home
         </Button>
         
         {!success && (
-          <Button onClick={onReset} className="bg-primary hover:bg-primary/90">
+          <Button onClick={onReset} className="bg-primary hover:bg-primary/90 text-gray-800">
             Try Again
           </Button>
         )}
