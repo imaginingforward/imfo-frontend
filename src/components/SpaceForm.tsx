@@ -1,15 +1,16 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import type { FormData } from "@/types/form";
 import StartupDetailsForm from "./StartupDetailsForm";
 import ProjectDetailsForm from "./ProjectDetailsForm";
 import { Button } from "@/components/ui/button";
 
-// Baserow API endpoint for submissions (you'll need to replace this with your actual table ID)
-const BASEROW_API_URL = "https://api.baserow.io/api/database/rows/table/519889/";
-// You'll need a Baserow API token with the appropriate permissions
+// Baserow API endpoint for submissions - using public grid ID from your URL
+const BASEROW_TABLE_ID = "519889";
+const BASEROW_API_URL = `https://api.baserow.io/api/database/rows/table/${BASEROW_TABLE_ID}/`;
+// Using the API token provided earlier
 const BASEROW_API_TOKEN = "V8TT0pqPOKhwEcYzSysD0COL1oScagiG";
 
 const SpaceForm = () => {
@@ -46,8 +47,7 @@ const SpaceForm = () => {
     try {
       setIsSubmitting(true);
       
-      // Format data for Baserow
-      // Note: Field names must match exactly with your Baserow table column names
+      // Format data for Baserow - make sure field names match exactly with your Baserow columns
       const baserowData = {
         "Company Name": data.company.name,
         "Company Description": data.company.description, 
@@ -66,6 +66,9 @@ const SpaceForm = () => {
         "Interests": data.project.interests.join(", ")
       };
 
+      console.log("Sending data to Baserow:", baserowData);
+      console.log("API URL:", BASEROW_API_URL);
+
       // Send to Baserow with authentication header
       const response = await fetch(BASEROW_API_URL, {
         method: "POST",
@@ -76,26 +79,27 @@ const SpaceForm = () => {
         body: JSON.stringify(baserowData),
       });
 
+      const responseData = await response.json();
+      console.log("Baserow API response:", responseData);
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit form");
+        throw new Error(responseData.error || `API Error: ${response.status}`);
       }
 
-      console.log("Form submitted successfully:", data);
       toast({
         title: "Form Submitted Successfully",
         description: "Your data has been saved to Baserow. We'll match you with relevant RFPs soon.",
       });
       
-      // Reset form after successful submission if needed
+      // Reset form or redirect after successful submission if needed
       // reset();
       // setStep(1);
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your form. Please try again.",
+        description: `Error: ${error.message || "Failed to submit data"}`,
         variant: "destructive",
       });
     } finally {
