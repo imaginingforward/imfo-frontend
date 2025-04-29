@@ -6,6 +6,7 @@ import type { FormData } from "@/types/form";
 import StartupDetailsForm from "./StartupDetailsForm";
 import ProjectDetailsForm from "./ProjectDetailsForm";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 // Baserow API endpoint for submissions - using public grid ID from your URL
 const BASEROW_TABLE_ID = "519889";
@@ -37,6 +38,7 @@ const SpaceForm = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { handleSubmit, setValue, watch } = useForm<FormData>({
     defaultValues: {
       company: {
@@ -105,21 +107,23 @@ const SpaceForm = () => {
         throw new Error(responseData.error || `API Error: ${response.status}`);
       }
 
-      toast({
-        title: "Form Submitted Successfully",
-        description: "Your data has been saved to Baserow. We'll match you with relevant RFPs soon.",
+      // Navigate to result page with success message
+      navigate("/submission-result", {
+        state: {
+          success: true,
+          message: "Your data has been saved to Baserow. We'll match you with relevant RFPs soon."
+        }
       });
-      
-      // Reset form or redirect after successful submission if needed
-      // reset();
-      // setStep(1);
       
     } catch (error: any) {
       console.error("Error submitting form:", error);
-      toast({
-        title: "Submission Failed",
-        description: `Error: ${error.message || "Failed to submit data"}`,
-        variant: "destructive",
+      
+      // Navigate to result page with error message
+      navigate("/submission-result", {
+        state: {
+          success: false,
+          message: `Error: ${error.message || "Failed to submit data. Please try again."}`
+        }
       });
     } finally {
       setIsSubmitting(false);
