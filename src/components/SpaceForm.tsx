@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
@@ -7,9 +6,7 @@ import StartupDetailsForm from "./StartupDetailsForm";
 import ProjectDetailsForm from "./ProjectDetailsForm";
 import { Button } from "@/components/ui/button";
 
-const BASEROW_URL = "https://api.baserow.io/api/database/rows/table/294118/?user_field_names=true";
-// Adding Baserow API token
-const BASEROW_API_TOKEN = "3ZkUnJumExJ8gpryU9vDtKa88565KZnh";
+const SHEET_API_URL = "https://sheetdb.io/api/v1/5w1taeq2uy0bl";
 
 const SpaceForm = () => {
   const [step, setStep] = useState(1);
@@ -45,33 +42,32 @@ const SpaceForm = () => {
     try {
       setIsSubmitting(true);
       
-      // Format data for Baserow
-      const baserowData = {
-        "Company Name": data.company.name,
-        "Company Description": data.company.description,
-        "Tech Categories": data.company.techCategory.join(", "),
-        "Stage": data.company.stage,
-        "Team Size": data.company.teamSize,
-        "Founded Year": data.company.foundedYear,
-        "Website": data.company.website || "",
-        "Patents": data.company.patents || "",
-        "Email": data.company.email,
-        "Project Title": data.project.title,
-        "Project Description": data.project.description,
-        "Technical Specifications": data.project.techSpecs,
-        "Budget": data.project.budget,
-        "Timeline": data.project.timeline,
-        "Interests": data.project.interests.join(", "),
+      // Format data for the sheet
+      const sheetData = {
+        company_name: data.company.name,
+        company_description: data.company.description,
+        tech_categories: data.company.techCategory.join(", "),
+        stage: data.company.stage,
+        team_size: data.company.teamSize,
+        founded_year: data.company.foundedYear,
+        website: data.company.website || "",
+        patents: data.company.patents || "",
+        email: data.company.email,
+        project_title: data.project.title,
+        project_description: data.project.description,
+        technical_specs: data.project.techSpecs,
+        budget: data.project.budget,
+        timeline: data.project.timeline,
+        interests: data.project.interests.join(", "),
       };
 
-      // Send to Baserow with authentication header
-      const response = await fetch(BASEROW_URL, {
+      // Send to SheetDB - no auth needed for demo endpoint
+      const response = await fetch(SHEET_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${BASEROW_API_TOKEN}`
         },
-        body: JSON.stringify(baserowData),
+        body: JSON.stringify({ data: sheetData }),
       });
 
       if (!response.ok) {
@@ -82,7 +78,7 @@ const SpaceForm = () => {
       console.log("Form submitted successfully:", data);
       toast({
         title: "Form Submitted Successfully",
-        description: "Your data has been saved to the database. We'll match you with relevant RFPs soon.",
+        description: "Your data has been saved to our database. We'll match you with relevant RFPs soon.",
       });
       
     } catch (error) {
