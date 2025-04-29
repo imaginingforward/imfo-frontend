@@ -47,27 +47,28 @@ const SpaceForm = () => {
     try {
       setIsSubmitting(true);
       
-      // Format data for Baserow - make sure field names match exactly with your Baserow columns
+      // Format data using the actual field IDs from your Baserow table
+      // The field_XXXXXXX IDs are what Baserow uses internally
       const baserowData = {
-        "Company Name": data.company.name,
-        "Company Description": data.company.description, 
-        "Tech Categories": data.company.techCategory.join(", "),
-        "Stage": data.company.stage,
-        "Team Size": data.company.teamSize,
-        "Founded Year": data.company.foundedYear,
-        "Website": data.company.website || "",
-        "Patents": data.company.patents || "",
-        "Email": data.company.email,
-        "Project Title": data.project.title,
-        "Project Description": data.project.description,
-        "Technical Specs": data.project.techSpecs,
-        "Budget": data.project.budget,
-        "Timeline": data.project.timeline,
-        "Interests": data.project.interests.join(", ")
+        // These field IDs match the ones from your Baserow API response
+        "field_4128859": data.company.name,
+        "field_4128860": data.company.description,
+        "field_4128861": data.company.techCategory.join(", "),
+        "field_4128862": data.company.stage,
+        "field_4128863": data.company.teamSize,
+        "field_4128868": data.company.foundedYear,
+        "field_4128869": data.company.website || "",
+        "field_4128870": data.company.patents || "",
+        "field_4128871": data.company.email,
+        "field_4128872": data.project.title,
+        "field_4128873": data.project.description,
+        "field_4128874": data.project.techSpecs,
+        "field_4128875": data.project.budget,
+        "field_4128876": data.project.timeline,
+        "field_4128877": data.project.interests.join(", ")
       };
 
-      console.log("Sending data to Baserow:", baserowData);
-      console.log("API URL:", BASEROW_API_URL);
+      console.log("Sending data to Baserow with field IDs:", baserowData);
 
       // Send to Baserow with authentication header
       const response = await fetch(BASEROW_API_URL, {
