@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 // Baserow public grid URL
 const BASEROW_PUBLIC_URL = "https://baserow.io/public/grid/UmTCweArHi7GC3J5vehNJ5FFxf9g3BzX1Wst4UPPrPs";
 // Baserow API endpoint for submissions (you'll need to replace this with your actual table ID)
-const BASEROW_API_URL = "https://api.baserow.io/api/database/rows/table/YOUR_TABLE_ID/";
+const BASEROW_API_URL = "https://api.baserow.io/api/database/rows/table/5519889/";
 // You'll need a Baserow API token with the appropriate permissions
-const BASEROW_API_TOKEN = "YOUR_API_TOKEN";
+const BASEROW_API_TOKEN = "V8TT0pqPOKhwEcYzSysD0COL1oScagiG";
 
 const SpaceForm = () => {
   const [step, setStep] = useState(1);
