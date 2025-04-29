@@ -8,6 +8,8 @@ import ProjectDetailsForm from "./ProjectDetailsForm";
 import { Button } from "@/components/ui/button";
 
 const BASEROW_URL = "https://api.baserow.io/api/database/rows/table/294118/?user_field_names=true";
+// Adding Baserow API token
+const BASEROW_API_TOKEN = "3ZkUnJumExJ8gpryU9vDtKa88565KZnh";
 
 const SpaceForm = () => {
   const [step, setStep] = useState(1);
@@ -62,11 +64,12 @@ const SpaceForm = () => {
         "Interests": data.project.interests.join(", "),
       };
 
-      // Send to Baserow
+      // Send to Baserow with authentication header
       const response = await fetch(BASEROW_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Token ${BASEROW_API_TOKEN}`
         },
         body: JSON.stringify(baserowData),
       });
