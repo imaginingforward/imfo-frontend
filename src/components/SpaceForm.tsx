@@ -21,6 +21,7 @@ const SpaceForm = () => {
         foundedYear: "",
         website: "",
         patents: "",
+        email: "", // Add default value for email
       },
       project: {
         title: "",

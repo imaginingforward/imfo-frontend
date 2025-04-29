@@ -8,6 +8,7 @@ export type CompanyData = {
   stage: string;
   teamSize: string;
   foundedYear: string;
+  email: string; // Add email field
 };
 
 export type ProjectData = {
