@@ -19,7 +19,7 @@ export const useFormSubmission = () => {
       navigate("/submission-result", {
         state: {
           success: true,
-          message: "Your data has been saved to Baserow. We'll match you with relevant RFPs soon."
+          message: "We'll match you with relevant RFPs soon."
         }
       });
       
