@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "build:dev": "vite build --mode development",
     "start": "npm run build && npx serve -s dist"
   },
   "dependencies": {
