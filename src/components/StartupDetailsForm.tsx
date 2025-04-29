@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { CompanyData } from "@/types/form";
 
 // Define tech categories and stages here if needed
@@ -46,29 +47,29 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="techCategory">Technology Category *</Label>
-            {techCategories.map((category) => (
-              <div key={category} className="flex items-center space-x-2">
-                <Input
-                  type="checkbox"
-                  id={category}
-                  className="bg-white/5 border-white/20"
-                  // checked={data.techCategory.includes(category)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      onChange({ techCategory: [...data.techCategory, category] });
-                    } else {
-                      onChange({
-                        techCategory: data.techCategory.filter((item) => item !== category),
-                      });
-                    }
-                  }}
-                />
-                <Label htmlFor={category} className="text-sm font-normal">
-                  {category}
-                </Label>
-              </div>
-            ))}
+            <Label htmlFor="techCategory" className="mb-2 block">Technology Category *</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+              {techCategories.map((category) => (
+                <div key={category} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={category}
+                    checked={data.techCategory.includes(category)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        onChange({ techCategory: [...data.techCategory, category] });
+                      } else {
+                        onChange({
+                          techCategory: data.techCategory.filter((item) => item !== category),
+                        });
+                      }
+                    }}
+                  />
+                  <Label htmlFor={category} className="text-sm font-normal">
+                    {category}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div>
