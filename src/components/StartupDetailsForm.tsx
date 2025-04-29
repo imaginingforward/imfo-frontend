@@ -1,3 +1,4 @@
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,19 +29,6 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
               className="bg-white/5 border-white/20"
               value={data.name}
               onChange={(e) => onChange({ name: e.target.value })}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="companyEmail">Company Email *</Label>
-            <Input
-              id="companyEmail"
-              type="email"
-              className="bg-white/5 border-white/20"
-              value={data.email}
-              onChange={(e) => onChange({ email: e.target.value })}
-              placeholder="contact@yourcompany.com"
               required
             />
           </div>
@@ -152,6 +140,19 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
               value={data.patents || ""}
               onChange={(e) => onChange({ patents: e.target.value })}
               placeholder="List any patents"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="companyEmail">Company Email *</Label>
+            <Input
+              id="companyEmail"
+              type="email"
+              className="bg-white/5 border-white/20"
+              value={data.email}
+              onChange={(e) => onChange({ email: e.target.value })}
+              placeholder="contact@yourcompany.com"
+              required
             />
           </div>
         </div>
