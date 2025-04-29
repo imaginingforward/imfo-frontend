@@ -13,6 +13,26 @@ const BASEROW_API_URL = `https://api.baserow.io/api/database/rows/table/${BASERO
 // Using the API token provided earlier
 const BASEROW_API_TOKEN = "V8TT0pqPOKhwEcYzSysD0COL1oScagiG";
 
+// Field mapping between our form fields and Baserow field IDs
+// This makes the code more maintainable by mapping descriptive names to Baserow IDs
+const FIELD_MAPPING = {
+  companyName: "field_4128859",
+  companyDescription: "field_4128860",
+  techCategory: "field_4128861",
+  stage: "field_4128862",
+  teamSize: "field_4128863",
+  foundedYear: "field_4128868",
+  website: "field_4128869",
+  patents: "field_4128870",
+  email: "field_4128871",
+  projectTitle: "field_4128872",
+  projectDescription: "field_4128873",
+  techSpecs: "field_4128874",
+  budget: "field_4128875",
+  timeline: "field_4128876",
+  interests: "field_4128877"
+};
+
 const SpaceForm = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,25 +67,23 @@ const SpaceForm = () => {
     try {
       setIsSubmitting(true);
       
-      // Format data using the actual field IDs from your Baserow table
-      // The field_XXXXXXX IDs are what Baserow uses internally
+      // Format data using our mapping to Baserow field IDs
       const baserowData = {
-        // These field IDs match the ones from your Baserow API response
-        "field_4128859": data.company.name,
-        "field_4128860": data.company.description,
-        "field_4128861": data.company.techCategory.join(", "),
-        "field_4128862": data.company.stage,
-        "field_4128863": data.company.teamSize,
-        "field_4128868": data.company.foundedYear,
-        "field_4128869": data.company.website || "",
-        "field_4128870": data.company.patents || "",
-        "field_4128871": data.company.email,
-        "field_4128872": data.project.title,
-        "field_4128873": data.project.description,
-        "field_4128874": data.project.techSpecs,
-        "field_4128875": data.project.budget,
-        "field_4128876": data.project.timeline,
-        "field_4128877": data.project.interests.join(", ")
+        [FIELD_MAPPING.companyName]: data.company.name,
+        [FIELD_MAPPING.companyDescription]: data.company.description,
+        [FIELD_MAPPING.techCategory]: data.company.techCategory.join(", "),
+        [FIELD_MAPPING.stage]: data.company.stage,
+        [FIELD_MAPPING.teamSize]: data.company.teamSize,
+        [FIELD_MAPPING.foundedYear]: data.company.foundedYear,
+        [FIELD_MAPPING.website]: data.company.website || "",
+        [FIELD_MAPPING.patents]: data.company.patents || "",
+        [FIELD_MAPPING.email]: data.company.email,
+        [FIELD_MAPPING.projectTitle]: data.project.title,
+        [FIELD_MAPPING.projectDescription]: data.project.description,
+        [FIELD_MAPPING.techSpecs]: data.project.techSpecs,
+        [FIELD_MAPPING.budget]: data.project.budget,
+        [FIELD_MAPPING.timeline]: data.project.timeline,
+        [FIELD_MAPPING.interests]: data.project.interests.join(", ")
       };
 
       console.log("Sending data to Baserow with field IDs:", baserowData);
