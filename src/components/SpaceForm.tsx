@@ -7,8 +7,11 @@ import StartupDetailsForm from "./StartupDetailsForm";
 import ProjectDetailsForm from "./ProjectDetailsForm";
 import { Button } from "@/components/ui/button";
 
+const BASEROW_URL = "https://api.baserow.io/api/database/rows/table/294118/?user_field_names=true";
+
 const SpaceForm = () => {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { handleSubmit, setValue, watch } = useForm<FormData>({
     defaultValues: {
@@ -21,7 +24,7 @@ const SpaceForm = () => {
         foundedYear: "",
         website: "",
         patents: "",
-        email: "", // Add default value for email
+        email: "",
       },
       project: {
         title: "",
@@ -37,11 +40,58 @@ const SpaceForm = () => {
   const formData = watch();
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form submitted:", data);
-    toast({
-      title: "Form Submitted Successfully",
-      description: "We'll analyze your data and match you with relevant RFPs soon.",
-    });
+    try {
+      setIsSubmitting(true);
+      
+      // Format data for Baserow
+      const baserowData = {
+        "Company Name": data.company.name,
+        "Company Description": data.company.description,
+        "Tech Categories": data.company.techCategory.join(", "),
+        "Stage": data.company.stage,
+        "Team Size": data.company.teamSize,
+        "Founded Year": data.company.foundedYear,
+        "Website": data.company.website || "",
+        "Patents": data.company.patents || "",
+        "Email": data.company.email,
+        "Project Title": data.project.title,
+        "Project Description": data.project.description,
+        "Technical Specifications": data.project.techSpecs,
+        "Budget": data.project.budget,
+        "Timeline": data.project.timeline,
+        "Interests": data.project.interests.join(", "),
+      };
+
+      // Send to Baserow
+      const response = await fetch(BASEROW_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(baserowData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to submit form");
+      }
+
+      console.log("Form submitted successfully:", data);
+      toast({
+        title: "Form Submitted Successfully",
+        description: "Your data has been saved to the database. We'll match you with relevant RFPs soon.",
+      });
+      
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your form. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCompanyDataChange = (data: Partial<typeof formData.company>) => {
@@ -112,8 +162,9 @@ const SpaceForm = () => {
                 <Button
                   type="submit"
                   className="flex-1 bg-primary hover:bg-primary/90"
+                  disabled={isSubmitting}
                 >
-                  Submit
+                  {isSubmitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>
             </div>
