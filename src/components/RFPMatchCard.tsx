@@ -86,6 +86,19 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
           </p>
         </div>
         
+        {/* AI Recommendation */}
+        {matchDetails.aiRecommendation && (
+          <div>
+            <div className="flex items-center gap-1">
+              <InfoIcon className="h-3.5 w-3.5 text-blue-500" />
+              <h4 className="font-medium text-sm text-blue-500">AI Recommendation</h4>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 italic">
+              "{matchDetails.aiRecommendation}"
+            </p>
+          </div>
+        )}
+        
         {matchDetails.matchedKeywords && matchDetails.matchedKeywords.length > 0 && (
           <div>
             <h4 className="font-medium text-sm mb-1">Matched Keywords</h4>

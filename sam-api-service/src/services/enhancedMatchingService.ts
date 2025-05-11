@@ -503,7 +503,7 @@ const extractKeywords = (text: string): string[] => {
  * @param score Match score (0-1)
  * @returns Confidence level (high, medium, low)
  */
-const determineConfidenceLevel = (score: number): 'high' | 'medium' | 'low' => {
+export const determineConfidenceLevel = (score: number): 'high' | 'medium' | 'low' => {
   if (score >= 0.75) {
     return 'high';
   } else if (score >= 0.5) {

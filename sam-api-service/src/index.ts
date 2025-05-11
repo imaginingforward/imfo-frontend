@@ -48,9 +48,11 @@ const connectDB = async () => {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/sam-rfp-db';
     await mongoose.connect(mongoURI);
     logger.info('MongoDB connected successfully');
+    return true;
   } catch (error) {
     logger.error('MongoDB connection error:', error);
-    process.exit(1);
+    logger.warn('Continuing without MongoDB connection - some features will be disabled');
+    return false;
   }
 };
 
@@ -74,7 +76,8 @@ const scheduleJobs = () => {
 // Start server
 const startServer = async () => {
   try {
-    await connectDB();
+    // Connect to database but continue even if it fails
+    const dbConnected = await connectDB();
     
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
@@ -82,8 +85,8 @@ const startServer = async () => {
       // Schedule jobs after server starts
       scheduleJobs();
       
-      // Run initial fetch if in development mode
-      if (process.env.NODE_ENV === 'development') {
+      // Run initial fetch if in development mode and DB is connected
+      if (process.env.NODE_ENV === 'development' && dbConnected) {
         logger.info('Development mode: Running initial RFP fetch');
         fetchOpportunitiesJob().catch(err => 
           logger.error('Error in initial RFP fetch:', err)

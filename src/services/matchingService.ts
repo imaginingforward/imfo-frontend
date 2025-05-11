@@ -1,8 +1,12 @@
 import type { FormData } from "@/types/form";
 
-// API endpoint for matching
+// API endpoints for matching
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3002/api";
-const MATCHING_ENDPOINT = `${API_URL}/matching/enhanced`;
+const ENHANCED_MATCHING_ENDPOINT = `${API_URL}/matching/enhanced`;
+const AI_MATCHING_ENDPOINT = `${API_URL}/matching/ai`;
+
+// Default matching endpoint - can be switched between AI and algorithmic matching
+const MATCHING_ENDPOINT = AI_MATCHING_ENDPOINT; // Use AI matching by default
 
 // Type for match result
 export interface MatchOpportunity {
@@ -38,6 +42,7 @@ export interface MatchResult {
     budgetMatch: number;
     keywordMatch: number;
     matchedKeywords?: string[];
+    aiRecommendation?: string; // AI-generated explanation for the match
   };
 }
 
