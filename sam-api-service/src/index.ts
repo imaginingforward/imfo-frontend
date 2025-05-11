@@ -6,6 +6,7 @@ import cron from 'node-cron';
 import { opportunityRoutes } from './routes/opportunityRoutes.js';
 import { matchingRoutes } from './routes/matchingRoutes.js';
 import { enhancedMatchingRoutes } from './routes/enhancedMatchingRoutes.js';
+import { baserowRoutes } from './routes/baserowRoutes.js';
 import { fetchOpportunitiesJob } from './services/schedulerService.js';
 import { logger } from './utils/logger.js';
 
@@ -16,14 +17,25 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// Configure CORS
+const corsOptions = {
+  origin: process.env.CORS_ALLOWED_ORIGINS ? 
+    process.env.CORS_ALLOWED_ORIGINS.split(',') : 
+    ['http://localhost:5173', 'https://aero-ai-match-portal-f0c29419c37e.herokuapp.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // API Routes
 app.use('/api/opportunities', opportunityRoutes);
 app.use('/api/matching', matchingRoutes);
 app.use('/api/matching', enhancedMatchingRoutes);
+app.use('/api/baserow', baserowRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
