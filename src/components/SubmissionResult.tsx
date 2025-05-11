@@ -2,14 +2,24 @@
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import type { MatchResult } from "@/services/matchingService";
+import RFPMatchList from "./RFPMatchList";
 
 interface SubmissionResultProps {
   success: boolean;
   message: string;
   onReset: () => void;
+  matches?: MatchResult[];
+  companyName?: string;
 }
 
-const SubmissionResult = ({ success, message, onReset }: SubmissionResultProps) => {
+const SubmissionResult = ({ 
+  success, 
+  message, 
+  onReset, 
+  matches = [], 
+  companyName = ""
+}: SubmissionResultProps) => {
   const navigate = useNavigate();
   
   return (
@@ -32,7 +42,13 @@ const SubmissionResult = ({ success, message, onReset }: SubmissionResultProps) 
         {message}
       </p>
       
-      <div className="flex gap-4">
+      {success && matches && matches.length > 0 && (
+        <div className="w-full max-w-6xl mt-8">
+          <RFPMatchList matches={matches} companyName={companyName} />
+        </div>
+      )}
+      
+      <div className="flex gap-4 mt-8">
         <Button
           variant="outline"
           onClick={() => navigate("/")}

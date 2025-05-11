@@ -1,13 +1,23 @@
 
 import SubmissionResult from "@/components/SubmissionResult";
 import { useLocation, useNavigate } from "react-router-dom";
+import type { MatchResult } from "@/services/matchingService";
+
+interface SubmissionState {
+  success: boolean;
+  message: string;
+  matches?: MatchResult[];
+  companyName?: string;
+}
 
 const SubmissionResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { success, message } = location.state || { 
+  const { success, message, matches, companyName } = location.state as SubmissionState || { 
     success: false, 
-    message: "No submission details found." 
+    message: "No submission details found.",
+    matches: [],
+    companyName: "" 
   };
 
   const handleReset = () => {
@@ -30,6 +40,8 @@ const SubmissionResultPage = () => {
           success={success} 
           message={message} 
           onReset={handleReset} 
+          matches={matches}
+          companyName={companyName}
         />
       </div>
     </div>
