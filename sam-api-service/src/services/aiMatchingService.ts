@@ -86,6 +86,10 @@ export const findAIMatchingOpportunities = async (
   formData: FormData,
   limit: number = 5
 ): Promise<EnhancedMatchResult[]> => {
+  // Define variable at the very top level of the function
+  // so it's accessible throughout all blocks
+  let apiCallStartTime = 0;
+  
   try {
     logger.info(`Finding AI matching opportunities for ${formData.company.name}`);
     
@@ -111,7 +115,21 @@ export const findAIMatchingOpportunities = async (
     // Construct the prompt for the OpenAI API
     const prompt = constructMatchingPrompt(formData, opportunities);
     
+    // Log pre-API call information
+    logger.info(`Preparing to call OpenAI API with model: ${AI_MODEL}`);
+    logger.debug(`Using prompt with length: ${prompt.length} characters`);
+    
+    // Truncated prompt for logging (first 200 characters)
+    const truncatedPrompt = prompt.length > 200 
+      ? `${prompt.substring(0, 200)}... (truncated, full length: ${prompt.length})`
+      : prompt;
+    logger.debug(`Prompt preview: ${truncatedPrompt}`);
+    
+    // Set the API call start time
+    apiCallStartTime = Date.now();
+    
     // Call the OpenAI API
+    logger.info('Calling OpenAI API...');
     const response = await openai.chat.completions.create({
       model: AI_MODEL,
       messages: [
@@ -127,6 +145,14 @@ export const findAIMatchingOpportunities = async (
       response_format: { type: "json_object" }
     });
     
+    // Calculate API call duration
+    const apiCallDuration = Date.now() - apiCallStartTime;
+    logger.info(`OpenAI API call completed in ${apiCallDuration}ms`);
+    
+    // Log API response metadata
+    logger.info(`Response received. Model used: ${response.model}`);
+    logger.debug(`Tokens used: ${response.usage?.total_tokens || 'N/A'} (Prompt: ${response.usage?.prompt_tokens || 'N/A'}, Completion: ${response.usage?.completion_tokens || 'N/A'})`);
+  
     // Parse the JSON response
     const content = response.choices[0].message.content;
     if (!content) {
@@ -134,9 +160,16 @@ export const findAIMatchingOpportunities = async (
       return [];
     }
     
+    // Log a truncated version of the response
+    const truncatedContent = content.length > 500 
+      ? `${content.substring(0, 500)}... (truncated, full length: ${content.length})`
+      : content;
+    logger.debug(`AI response content preview: ${truncatedContent}`);
+    
     let matchesData: any;
     try {
       matchesData = JSON.parse(content);
+      logger.info('Successfully parsed JSON response from OpenAI API');
     } catch (error) {
       logger.error('Error parsing JSON response from OpenAI API:', error);
       logger.debug('Raw response:', content);
@@ -184,7 +217,29 @@ export const findAIMatchingOpportunities = async (
     
     return sortedMatches;
   } catch (error) {
-    logger.error('Error finding AI matching opportunities:', error);
+    // Calculate API call duration even on error
+    const apiCallDuration = Date.now() - apiCallStartTime;
+    
+    // Enhanced error logging
+    if (error instanceof Error) {
+      logger.error(`OpenAI API error after ${apiCallDuration}ms:`, {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      });
+      
+      // Additional logging for OpenAI API errors
+      if ('status' in error) {
+        logger.error(`OpenAI API HTTP status: ${(error as any).status}`);
+      }
+      
+      if ('response' in error && (error as any).response?.data) {
+        logger.error('OpenAI API error details:', (error as any).response.data);
+      }
+    } else {
+      logger.error(`Unknown error after ${apiCallDuration}ms:`, error);
+    }
+    
     throw error;
   }
 };
