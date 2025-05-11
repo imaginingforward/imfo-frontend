@@ -1,9 +1,10 @@
-
 // Baserow API service for handling submissions
 
-// Backend API endpoint for submissions (proxies to Baserow)
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3002/api";
-const BASEROW_PROXY_URL = `${API_URL}/baserow/submit`;
+// Baserow API endpoint for submissions
+const BASEROW_TABLE_ID = "519889";
+const BASEROW_API_URL = `https://api.baserow.io/api/database/rows/table/${BASEROW_TABLE_ID}/`;
+// Using the API token provided earlier
+const BASEROW_API_TOKEN = "V8TT0pqPOKhwEcYzSysD0COL1oScagiG";
 
 // Field mapping between our form fields and Baserow field IDs
 // This makes the code more maintainable by mapping descriptive names to Baserow IDs
@@ -46,16 +47,18 @@ export const formatBaserowData = (data: any) => {
   };
 };
 
-// Submit data to Baserow via backend proxy
+// Submit data to Baserow
 export const submitToBaserow = async (data: any) => {
-  console.log("Sending data to backend proxy for Baserow submission:", data);
+  const baserowData = formatBaserowData(data);
+  console.log("Sending data to Baserow with field IDs:", baserowData);
 
-  const response = await fetch(BASEROW_PROXY_URL, {
+  const response = await fetch(BASEROW_API_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": `Token ${BASEROW_API_TOKEN}`
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(baserowData),
   });
 
   const responseData = await response.json();
