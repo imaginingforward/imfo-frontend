@@ -2,7 +2,7 @@ import type { FormData } from "@/types/form";
 import { getApiBaseUrl, getAIModel } from "@/utils/envConfig";
 
 // Maximum number of opportunities to display
-const MAX_RESULTS = 5;
+const MAX_RESULTS = 3;
 
 // Base URL for API requests
 const API_BASE_URL = getApiBaseUrl();
