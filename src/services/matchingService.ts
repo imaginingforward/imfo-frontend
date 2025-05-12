@@ -7,8 +7,12 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true // Required for browser environment
 });
 
-// Default OpenAI model - can be changed as needed
-const AI_MODEL = "gpt-4.1-nano";
+// Get AI model from environment variables and format it properly
+let AI_MODEL = import.meta.env.VITE_AI_MODEL || "gpt-4.1-nano";
+// Convert "GPT-4.1 nano" format to "gpt-4.1-nano" format if needed
+if (AI_MODEL.includes(' ')) {
+  AI_MODEL = AI_MODEL.toLowerCase().replace(' ', '-');
+}
 
 // Maximum number of opportunities to display
 const MAX_RESULTS = 5;
