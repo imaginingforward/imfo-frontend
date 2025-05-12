@@ -1,13 +1,11 @@
-// Baserow API service for handling submissions
+// Baserow API service for handling submissions via the backend API
+import { getApiBaseUrl } from "@/utils/envConfig";
 
-// Baserow API endpoint for submissions
-const BASEROW_TABLE_ID = "519889";
-const BASEROW_API_URL = `https://api.baserow.io/api/database/rows/table/${BASEROW_TABLE_ID}/`;
-// Using the API token provided earlier
-const BASEROW_API_TOKEN = "V8TT0pqPOKhwEcYzSysD0COL1oScagiG";
+// Base URL for API requests
+const API_BASE_URL = getApiBaseUrl();
 
 // Field mapping between our form fields and Baserow field IDs
-// This makes the code more maintainable by mapping descriptive names to Baserow IDs
+// This is now only used for frontend field mapping and validation
 export const FIELD_MAPPING = {
   companyName: "field_4128859",
   companyDescription: "field_4128860",
@@ -26,47 +24,29 @@ export const FIELD_MAPPING = {
   interests: "field_4128877"
 };
 
-// Format the form data for Baserow submission
-export const formatBaserowData = (data: any) => {
-  return {
-    [FIELD_MAPPING.companyName]: data.company.name,
-    [FIELD_MAPPING.companyDescription]: data.company.description,
-    [FIELD_MAPPING.techCategory]: data.company.techCategory.join(", "),
-    [FIELD_MAPPING.stage]: data.company.stage,
-    [FIELD_MAPPING.teamSize]: data.company.teamSize,
-    [FIELD_MAPPING.foundedYear]: data.company.foundedYear,
-    [FIELD_MAPPING.website]: data.company.website || "",
-    [FIELD_MAPPING.patents]: data.company.patents || "",
-    [FIELD_MAPPING.email]: data.company.email,
-    [FIELD_MAPPING.projectTitle]: data.project.title,
-    [FIELD_MAPPING.projectDescription]: data.project.description,
-    [FIELD_MAPPING.techSpecs]: data.project.techSpecs,
-    [FIELD_MAPPING.budget]: data.project.budget,
-    [FIELD_MAPPING.timeline]: data.project.timeline,
-    [FIELD_MAPPING.interests]: data.project.interests.join(", ")
-  };
-};
-
-// Submit data to Baserow
+// Submit data to Baserow via the backend API
 export const submitToBaserow = async (data: any) => {
-  const baserowData = formatBaserowData(data);
-  console.log("Sending data to Baserow with field IDs:", baserowData);
+  console.log("Sending data to Baserow via backend API");
 
-  const response = await fetch(BASEROW_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Token ${BASEROW_API_TOKEN}`
-    },
-    body: JSON.stringify(baserowData),
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/baserow/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data),
+    });
 
-  const responseData = await response.json();
-  console.log("Baserow API response:", responseData);
+    const responseData = await response.json();
+    console.log("Backend API response:", responseData);
 
-  if (!response.ok) {
-    throw new Error(responseData.error || `API Error: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(responseData.error || `API Error: ${response.status}`);
+    }
+
+    return responseData;
+  } catch (error) {
+    console.error("Error submitting to Baserow via backend API:", error);
+    throw error;
   }
-
-  return responseData;
 };
