@@ -187,9 +187,6 @@ const AIMatchingPage = () => {
         
         {/* API Key Information */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-400">
-            This page uses OpenAI's API for matching. An API key must be provided in your .env file as VITE_OPENAI_API_KEY.
-          </p>
         </div>
       </div>
     </div>
