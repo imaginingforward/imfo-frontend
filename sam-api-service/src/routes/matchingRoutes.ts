@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import { findMatchingOpportunities, FormData } from '../services/matchingService.js';
+import { findAIMatchingOpportunities } from '../services/aiMatchingService.js';
 import { logger } from '../utils/logger.js';
+import { FormData } from '../services/matchingService.js';
 
 const router = express.Router();
 
@@ -64,8 +65,8 @@ router.post(
       
       logger.info(`Matching request received for ${formData.company.name}`);
       
-      // Find matching opportunities
-      const matches = await findMatchingOpportunities(formData, limit);
+      // Find matching opportunities using AI
+      const matches = await findAIMatchingOpportunities(formData, limit);
       
       // Return matches
       res.status(200).json({
@@ -127,8 +128,8 @@ router.post(
       
       logger.info(`Score request received for ${formData.company.name} against opportunity ${opportunityId}`);
       
-      // Find matching opportunities (limit to 1)
-      const matches = await findMatchingOpportunities(formData, 1);
+      // Find matching opportunities using AI (limit to 1)
+      const matches = await findAIMatchingOpportunities(formData, 1);
       
       // Filter for the requested opportunity
       const match = matches.find(m => {

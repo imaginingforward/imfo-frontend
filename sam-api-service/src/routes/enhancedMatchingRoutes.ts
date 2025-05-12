@@ -1,13 +1,5 @@
 import express from 'express';
-import { 
-  findEnhancedMatchingOpportunities, 
-  TECH_FOCUS_WEIGHT,
-  STAGE_WEIGHT,
-  TIMELINE_WEIGHT,
-  BUDGET_WEIGHT,
-  KEYWORD_WEIGHT,
-  getWeightsConfig
-} from '../services/enhancedMatchingService.js';
+import { determineConfidenceLevel } from '../services/enhancedMatchingService.js';
 import { findAIMatchingOpportunities } from '../services/aiMatchingService.js';
 import { logger } from '../utils/logger.js';
 
@@ -15,7 +7,7 @@ const router = express.Router();
 
 /**
  * @route POST /api/match/enhanced
- * @desc Find matching opportunities for a company profile using enhanced algorithm
+ * @desc Find matching opportunities for a company profile using AI (formerly enhanced algorithm)
  * @access Public
  */
 router.post('/enhanced', async (req, res) => {
@@ -33,8 +25,9 @@ router.post('/enhanced', async (req, res) => {
     // Get optional limit parameter
     const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 5;
     
-    // Find matching opportunities
-    const matches = await findEnhancedMatchingOpportunities(formData, limit);
+    // Find matching opportunities using AI instead of enhanced algorithm
+    logger.info(`Enhanced matching route now using AI matching for ${formData.company.name}`);
+    const matches = await findAIMatchingOpportunities(formData, limit);
     
     // Return matched opportunities with scores
     return res.status(200).json({
@@ -95,11 +88,12 @@ router.post('/ai', async (req, res) => {
  * @access Public
  */
 router.get('/enhanced/stats', (req, res) => {
-  // Return the current algorithm configuration
+  // Return AI-based algorithm configuration
   return res.status(200).json({
     success: true,
-    algorithmVersion: '1.0.0',
-    weights: getWeightsConfig(),
+    algorithmVersion: '2.0.0',
+    matchingType: 'AI-based (OpenAI)',
+    model: process.env.AI_MODEL || 'gpt-4.1-nano',
     confidenceLevels: {
       high: '≥ 0.75',
       medium: '0.5 - 0.75',

@@ -33,9 +33,12 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/opportunities', opportunityRoutes);
-app.use('/api/matching', matchingRoutes);
-app.use('/api/matching', enhancedMatchingRoutes);
+app.use('/api/matching', matchingRoutes);     // /api/matching/ (basic routes, now using AI matching)
+app.use('/api/matching', enhancedMatchingRoutes); // /api/matching/enhanced and /api/matching/ai (both using AI matching)
 app.use('/api/baserow', baserowRoutes);
+
+// Log that we're using AI-based matching for all endpoints
+logger.info('Server configured to use AI-based matching for all matching endpoints');
 
 // Health check endpoint
 app.get('/health', (req, res) => {

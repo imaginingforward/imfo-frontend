@@ -8,7 +8,7 @@ The matching system consists of several components:
 
 1. **Mock Data Generation** - Creates realistic space technology RFPs
 2. **Data Storage** - Stores opportunities in MongoDB and/or Baserow
-3. **Matching Algorithm** - Evaluates and ranks opportunities based on company fit
+3. **AI-based Matching** - Uses OpenAI to intelligently match opportunities to companies
 4. **API Interface** - Provides endpoints for searching and matching
 
 ## Data Structure
@@ -75,31 +75,31 @@ interface IOpportunity {
 }
 ```
 
-## Matching Algorithm
+## Matching System
 
-### Standard Matching
+### AI-based Matching
 
-The standard matching algorithm evaluates three factors:
+All matching endpoints now use OpenAI's API for intelligent opportunity matching. This approach offers several advantages:
 
-- **Tech Focus Match (60%)** - How well the company's technology categories align with the opportunity
-- **Stage Match (30%)** - Whether the company's stage is eligible for the opportunity
-- **Timeline Match (10%)** - How well the project and opportunity timelines align
+- **Comprehensive Analysis** - The AI evaluates all aspects of the company and opportunities including:
+  - **Tech Focus Match** - How well the company's technology aligns with the opportunity
+  - **Stage Match** - Whether the company's stage is appropriate for the opportunity
+  - **Timeline Match** - Compatibility between project and opportunity timelines
+  - **Budget Match** - Alignment between project budget and opportunity award amount
+  - **Keyword Match** - Semantic matching of keywords and concepts
 
-### Enhanced Matching
+- **Advanced Features**
+  - **Confidence Scoring** - High, medium, or low confidence designation for matches
+  - **Intelligent Recommendations** - AI-generated explanations of why each opportunity matches
+  - **Matched Keywords** - Relevant keywords found in both company profile and opportunity
 
-The enhanced matching algorithm adds two additional factors and uses slightly different weights:
+### Legacy Support
 
-- **Tech Focus Match (35%)** - Jaccard similarity between company tech and opportunity tech focus
-- **Stage Match (25%)** - Direct match or related stages comparison
-- **Timeline Match (15%)** - Temporal overlap analysis
-- **Budget Match (15%)** - Comparison between project budget and award amount
-- **Keyword Match (10%)** - Semantic matching between project and opportunity descriptions
+While all endpoints now use AI-based matching, we maintain backward compatibility for the following API routes:
 
-The enhanced algorithm also includes:
-
-- **Confidence Scoring** - High, medium, or low confidence designation
-- **Diversity Mechanism** - Ensures results aren't dominated by one factor or agency
-- **Matched Keywords** - Shows which keywords matched between project and opportunity
+1. `/api/matching` - Standard endpoint (uses AI matching)
+2. `/api/matching/enhanced` - Enhanced endpoint (uses AI matching)
+3. `/api/matching/ai` - Explicit AI endpoint (directly uses AI matching)
 
 ## How to Use
 
@@ -129,7 +129,9 @@ npm run dev
 
 ### 4. Use the API
 
-#### Standard Matching
+All endpoints use the same AI-based matching but provide different interfaces for backward compatibility:
+
+#### Standard API Endpoint
 
 ```
 POST /api/matching
@@ -142,12 +144,23 @@ x-api-key: YOUR_API_KEY
 }
 ```
 
-#### Enhanced Matching
+#### Enhanced API Endpoint (uses same AI matching)
 
 ```
 POST /api/matching/enhanced
 Content-Type: application/json
-x-api-key: YOUR_API_KEY
+
+{
+  "company": { ... company data ... },
+  "project": { ... project data ... }
+}
+```
+
+#### Explicit AI Endpoint
+
+```
+POST /api/matching/ai
+Content-Type: application/json
 
 {
   "company": { ... company data ... },
@@ -159,7 +172,6 @@ x-api-key: YOUR_API_KEY
 
 ```
 GET /api/matching/enhanced/stats
-x-api-key: YOUR_API_KEY
 ```
 
 ### 5. Test with Example Client
@@ -172,14 +184,15 @@ ts-node examples/enhanced-matching-client.ts
 
 ## Configuration
 
-The matching algorithm weights can be configured through environment variables:
+The AI-based matching system can be configured through environment variables:
 
 ```
-TECH_FOCUS_WEIGHT=0.35
-STAGE_WEIGHT=0.25
-TIMELINE_WEIGHT=0.15
-BUDGET_WEIGHT=0.15
-KEYWORD_WEIGHT=0.10
+# OpenAI Configuration
+OPENAI_API_KEY=your_api_key_here
+AI_MODEL=gpt-4.1-nano
+
+# Data Processing Limits
+MAX_OPPORTUNITIES_TO_PROCESS=20
 ```
 
 ## Example Response
