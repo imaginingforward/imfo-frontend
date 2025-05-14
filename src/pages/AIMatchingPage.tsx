@@ -187,8 +187,6 @@ const AIMatchingPage = () => {
         
         {/* Backend API Information */}
         <div className="mt-8 text-center text-sm text-gray-400">
-          <p>Running with backend API at {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3002'}</p>
-          <p>Using AI model: {import.meta.env.VITE_AI_MODEL || 'gpt-4.1-nano'} (display only)</p>
         </div>
       </div>
     </div>
