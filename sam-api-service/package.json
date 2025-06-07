@@ -8,7 +8,9 @@
     "start": "node dist/index.js",
     "dev": "nodemon --watch src -e ts,json --exec \"npm run build && node dist/index.js\"",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "test-sam-api": "node test-sam-api.js",
+    "fetch-opportunities": "node fetch-opportunities.js"
   },
   "dependencies": {
     "axios": "^1.9.0",

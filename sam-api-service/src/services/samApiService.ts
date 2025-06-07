@@ -48,6 +48,12 @@ export const fetchSamOpportunities = async (limit: number = 100): Promise<any[]>
   try {
     logger.info(`Fetching opportunities from SAM.gov API (limit: ${limit})`);
     
+    // Validate API key is configured
+    if (!SAM_API_KEY || SAM_API_KEY === 'your_api_key_here') {
+      logger.error('SAM.gov API key is not configured. Please set SAM_API_KEY in your .env file');
+      throw new Error('SAM_API_KEY not configured');
+    }
+    
     // Create a keyword query string for space-related terms
     const keywordQuery = SPACE_KEYWORDS.map(keyword => `"${keyword}"`).join(' OR ');
     
@@ -63,14 +69,22 @@ export const fetchSamOpportunities = async (limit: number = 100): Promise<any[]>
       keyword: keywordQuery,
     };
 
+    logger.info('Making request to SAM.gov API...');
+    
     // Make the API request with a timeout
     const response = await axios.get(`${SAM_API_BASE_URL}/search`, {
       params,
       timeout: 30000 // 30 second timeout
     });
     
-    if (!response.data || !response.data.opportunitiesData) {
+    if (!response.data) {
       logger.warn('No data returned from SAM.gov API');
+      return [];
+    }
+    
+    if (!response.data.opportunitiesData || !Array.isArray(response.data.opportunitiesData)) {
+      logger.warn('Invalid data structure returned from SAM.gov API');
+      logger.debug('API response:', response.data);
       return [];
     }
     
@@ -85,6 +99,14 @@ export const fetchSamOpportunities = async (limit: number = 100): Promise<any[]>
         logger.error('SAM.gov API request timed out');
       } else {
         logger.error(`SAM.gov API error (${error.response?.status || 'Unknown'}): ${error.message}`);
+        
+        // Log detailed error information
+        if (error.response) {
+          logger.debug(`SAM.gov API response data:`, error.response.data);
+          logger.debug(`SAM.gov API response status: ${error.response.status}`);
+        } else if (error.request) {
+          logger.debug(`SAM.gov API no response received:`, error.request);
+        }
       }
     } else {
       logger.error('Error fetching opportunities from SAM.gov API:', error);

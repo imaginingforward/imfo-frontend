@@ -273,6 +273,119 @@ function extractTimeline(description = '') {
   return null;
 }
 
+// Function to generate sample opportunities
+function generateSampleOpportunities(count = 10) {
+  log(`Generating ${count} sample opportunities`);
+  
+  // Define sample data
+  const agencies = [
+    'NASA', 'Space Force', 'DARPA', 'Air Force Research Laboratory', 
+    'Department of Defense', 'Department of Energy', 'NOAA', 'AFWERX',
+    'Naval Research Laboratory', 'Missile Defense Agency'
+  ];
+  
+  const titles = [
+    'Advanced Satellite Communication Systems',
+    'Space Debris Monitoring and Mitigation',
+    'Autonomous Drone Swarm Technology',
+    'Next-Generation Space Propulsion',
+    'Secure Space-to-Ground Communications',
+    'Space-Based Sensor Networks',
+    'Hypersonic Vehicle Materials Research',
+    'Satellite Cybersecurity Solutions',
+    'Lunar Surface Exploration Robotics',
+    'Small Satellite Launch Technologies'
+  ];
+  
+  const descriptions = [
+    'Research and development of advanced technologies for next-generation satellite communication systems with improved bandwidth, security, and resilience.',
+    'Development of technologies for tracking, monitoring, and mitigating space debris to protect critical space assets.',
+    'Creation of AI-driven drone swarm capabilities for reconnaissance and surveillance in contested environments.',
+    'Research into novel propulsion technologies for more efficient and powerful space propulsion systems.',
+    'Development of secure, high-bandwidth communication systems between space assets and ground stations.',
+    'Creation of interconnected sensor networks for space domain awareness and threat detection.',
+    'Research into advanced materials capable of withstanding extreme conditions of hypersonic flight.',
+    'Development of cybersecurity solutions specifically designed for satellite systems and space infrastructure.',
+    'Creation of robotic systems capable of operating on the lunar surface for exploration and resource utilization.',
+    'Development of cost-effective launch technologies for small satellite deployment.'
+  ];
+  
+  const techFocusOptions = [
+    ['Satellites', 'Signals', 'Software'],
+    ['Satellites', 'Software', 'AI/ML'],
+    ['Drones', 'AI/ML', 'Software', 'Robotics'],
+    ['Propulsion', 'Materials', 'Components'],
+    ['Signals', 'Cybersecurity', 'Software'],
+    ['Satellites', 'Sensors', 'Software', 'AI/ML'],
+    ['Materials', 'Components'],
+    ['Cybersecurity', 'Software', 'Satellites'],
+    ['Robotics', 'AI/ML', 'Materials'],
+    ['Propulsion', 'Components', 'Materials']
+  ];
+  
+  const eligibleStagesOptions = [
+    ['Seed', 'Series A', 'Series B+'],
+    ['Seed', 'Series A', 'Series B+', 'Growth'],
+    ['Pre-seed', 'Seed', 'Series A'],
+    ['Series A', 'Series B+', 'Growth'],
+    ['Pre-seed', 'Seed', 'Series A']
+  ];
+  
+  const timelineOptions = [
+    '12-24 months',
+    '24-48 months',
+    '18-36 months',
+    '36-60 months',
+    '12-24 months'
+  ];
+  
+  const budgetOptions = [
+    500000,
+    2000000,
+    5000000,
+    10000000,
+    20000000
+  ];
+  
+  // Generate sample opportunities
+  const sampleOpportunities = [];
+  
+  for (let i = 0; i < count; i++) {
+    const index = i % titles.length;
+    const agencyIndex = i % agencies.length;
+    const techIndex = i % techFocusOptions.length;
+    const stageIndex = i % eligibleStagesOptions.length;
+    const timelineIndex = i % timelineOptions.length;
+    const budgetIndex = i % budgetOptions.length;
+    
+    // Generate dates
+    const postedDate = new Date();
+    postedDate.setMonth(postedDate.getMonth() - Math.floor(Math.random() * 3)); // 0-3 months ago
+    
+    const responseDeadline = new Date();
+    responseDeadline.setMonth(responseDeadline.getMonth() + 3 + Math.floor(Math.random() * 9)); // 3-12 months from now
+    
+    // Create opportunity
+    sampleOpportunities.push({
+      noticeId: `SAMPLE-${new Date().getFullYear()}-${i + 1}`,
+      title: titles[index],
+      agency: agencies[agencyIndex],
+      description: descriptions[index],
+      postedDate,
+      responseDeadline,
+      awardAmount: budgetOptions[budgetIndex],
+      naicsCode: '336414', // Guided Missile and Space Vehicle Manufacturing
+      techFocus: techFocusOptions[techIndex],
+      eligibleStages: eligibleStagesOptions[stageIndex],
+      timeline: timelineOptions[timelineIndex],
+      url: `https://sam.gov/sample/${i + 1}`,
+      source: 'Sample Data'
+    });
+  }
+  
+  return sampleOpportunities;
+}
+
 // Main function
 async function main() {
   try {
@@ -284,135 +397,82 @@ async function main() {
       process.exit(1);
     }
     
-    // Fetch opportunities from SAM.gov API
-    log('Fetching opportunities from SAM.gov API...');
-    let samOpportunities = [];
-    
-    try {
-      samOpportunities = await fetchSamOpportunities(10);
-    } catch (error) {
-      log(`Error fetching from SAM.gov API: ${error.message}`);
-      log('Falling back to generated sample data');
+    // Check if SAM API key is configured
+    if (!process.env.SAM_API_KEY || process.env.SAM_API_KEY === 'your_api_key_here') {
+      log('WARNING: SAM.gov API key is not configured or is set to default value');
+      
+      // If USE_SAMPLE_DATA is not explicitly 'true', warn and exit
+      if (process.env.USE_SAMPLE_DATA !== 'true') {
+        log('ERROR: SAM_API_KEY not configured and USE_SAMPLE_DATA is not enabled. Please set SAM_API_KEY in your .env file or set USE_SAMPLE_DATA=true');
+        process.exit(1);
+      }
     }
     
-    // If no opportunities from API, generate sample data
-    if (!samOpportunities || samOpportunities.length === 0) {
-      log('No opportunities fetched from SAM.gov API, generating sample data');
+    // Determine data source
+    const useSampleData = process.env.USE_SAMPLE_DATA === 'true';
+    let samOpportunities = [];
+    
+    if (useSampleData) {
+      log('Using sample data instead of SAM.gov API as specified in environment variables');
+      samOpportunities = generateSampleOpportunities(10);
+    } else {
+      // Fetch opportunities from SAM.gov API
+      log('Fetching opportunities from SAM.gov API...');
       
-      // Generate sample opportunities
-      const sampleOpportunities = [];
+      // Get limit from environment variable or default to 10
+      const fetchLimit = parseInt(process.env.SAM_API_FETCH_LIMIT || '10');
       
-      // Define sample data
-      const agencies = [
-        'NASA', 'Space Force', 'DARPA', 'Air Force Research Laboratory', 
-        'Department of Defense', 'Department of Energy', 'NOAA', 'AFWERX',
-        'Naval Research Laboratory', 'Missile Defense Agency'
-      ];
-      
-      const titles = [
-        'Advanced Satellite Communication Systems',
-        'Space Debris Monitoring and Mitigation',
-        'Autonomous Drone Swarm Technology',
-        'Next-Generation Space Propulsion',
-        'Secure Space-to-Ground Communications',
-        'Space-Based Sensor Networks',
-        'Hypersonic Vehicle Materials Research',
-        'Satellite Cybersecurity Solutions',
-        'Lunar Surface Exploration Robotics',
-        'Small Satellite Launch Technologies'
-      ];
-      
-      const descriptions = [
-        'Research and development of advanced technologies for next-generation satellite communication systems with improved bandwidth, security, and resilience.',
-        'Development of technologies for tracking, monitoring, and mitigating space debris to protect critical space assets.',
-        'Creation of AI-driven drone swarm capabilities for reconnaissance and surveillance in contested environments.',
-        'Research into novel propulsion technologies for more efficient and powerful space propulsion systems.',
-        'Development of secure, high-bandwidth communication systems between space assets and ground stations.',
-        'Creation of interconnected sensor networks for space domain awareness and threat detection.',
-        'Research into advanced materials capable of withstanding extreme conditions of hypersonic flight.',
-        'Development of cybersecurity solutions specifically designed for satellite systems and space infrastructure.',
-        'Creation of robotic systems capable of operating on the lunar surface for exploration and resource utilization.',
-        'Development of cost-effective launch technologies for small satellite deployment.'
-      ];
-      
-      const techFocusOptions = [
-        ['Satellites', 'Signals', 'Software'],
-        ['Satellites', 'Software', 'AI/ML'],
-        ['Drones', 'AI/ML', 'Software', 'Robotics'],
-        ['Propulsion', 'Materials', 'Components'],
-        ['Signals', 'Cybersecurity', 'Software'],
-        ['Satellites', 'Sensors', 'Software', 'AI/ML'],
-        ['Materials', 'Components'],
-        ['Cybersecurity', 'Software', 'Satellites'],
-        ['Robotics', 'AI/ML', 'Materials'],
-        ['Propulsion', 'Components', 'Materials']
-      ];
-      
-      const eligibleStagesOptions = [
-        ['Seed', 'Series A', 'Series B+'],
-        ['Seed', 'Series A', 'Series B+', 'Growth'],
-        ['Pre-seed', 'Seed', 'Series A'],
-        ['Series A', 'Series B+', 'Growth'],
-        ['Pre-seed', 'Seed', 'Series A']
-      ];
-      
-      const timelineOptions = [
-        '12-24 months',
-        '24-48 months',
-        '18-36 months',
-        '36-60 months',
-        '12-24 months'
-      ];
-      
-      const budgetOptions = [
-        500000,
-        2000000,
-        5000000,
-        10000000,
-        20000000
-      ];
-      
-      // Generate 10 sample opportunities
-      for (let i = 0; i < 10; i++) {
-        const index = i % titles.length;
-        const agencyIndex = i % agencies.length;
-        const techIndex = i % techFocusOptions.length;
-        const stageIndex = i % eligibleStagesOptions.length;
-        const timelineIndex = i % timelineOptions.length;
-        const budgetIndex = i % budgetOptions.length;
+      try {
+        log(`Attempting to fetch up to ${fetchLimit} opportunities from SAM.gov API`);
+        samOpportunities = await fetchSamOpportunities(fetchLimit);
         
-        // Generate dates
-        const postedDate = new Date();
-        postedDate.setMonth(postedDate.getMonth() - Math.floor(Math.random() * 3)); // 0-3 months ago
+        if (!samOpportunities || samOpportunities.length === 0) {
+          log('No opportunities fetched from SAM.gov API');
+          
+          // Check if we should fallback to sample data
+          if (process.env.FALLBACK_TO_SAMPLE_DATA === 'true') {
+            log('Falling back to generated sample data as specified in environment variables');
+            samOpportunities = generateSampleOpportunities(10);
+          } else {
+            log('No opportunities found and FALLBACK_TO_SAMPLE_DATA is not enabled. Exiting.');
+            process.exit(0);
+          }
+        } else {
+          log(`Successfully fetched ${samOpportunities.length} opportunities from SAM.gov API`);
+        }
+      } catch (error) {
+        log(`Error fetching from SAM.gov API: ${error.message}`);
         
-        const responseDeadline = new Date();
-        responseDeadline.setMonth(responseDeadline.getMonth() + 3 + Math.floor(Math.random() * 9)); // 3-12 months from now
-        
-        // Create opportunity
-        sampleOpportunities.push({
-          noticeId: `SAMPLE-${new Date().getFullYear()}-${i + 1}`,
-          title: titles[index],
-          agency: agencies[agencyIndex],
-          description: descriptions[index],
-          postedDate,
-          responseDeadline,
-          awardAmount: budgetOptions[budgetIndex],
-          naicsCode: '336414', // Guided Missile and Space Vehicle Manufacturing
-          techFocus: techFocusOptions[techIndex],
-          eligibleStages: eligibleStagesOptions[stageIndex],
-          timeline: timelineOptions[timelineIndex],
-          url: `https://sam.gov/sample/${i + 1}`
-        });
+        // Check if we should fallback to sample data
+        if (process.env.FALLBACK_TO_SAMPLE_DATA === 'true') {
+          log('Falling back to generated sample data as specified in environment variables');
+          samOpportunities = generateSampleOpportunities(10);
+        } else {
+          log('Error fetching opportunities and FALLBACK_TO_SAMPLE_DATA is not enabled. Exiting.');
+          process.exit(1);
+        }
       }
-      
-      samOpportunities = sampleOpportunities;
+    }
+    
+    if (!samOpportunities || samOpportunities.length === 0) {
+      log('No opportunities to process. Exiting.');
+      process.exit(0);
     }
     
     // Transform opportunities to our format
     log(`Transforming ${samOpportunities.length} opportunities`);
-    const transformedOpportunities = transformSamOpportunities ? 
-      transformSamOpportunities(samOpportunities) : 
-      samOpportunities;
+    const transformedOpportunities = samOpportunities.map(opp => {
+      const transformed = transformSamOpportunities ? 
+        transformSamOpportunities([opp])[0] : 
+        opp;
+      
+      // Add source field if not present
+      if (!transformed.source) {
+        transformed.source = useSampleData ? 'Sample Data' : 'SAM.gov API';
+      }
+      
+      return transformed;
+    });
     
     // Store opportunities in Baserow
     log(`Storing ${transformedOpportunities.length} opportunities in Baserow`);

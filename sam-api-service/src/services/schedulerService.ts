@@ -9,13 +9,51 @@ export const fetchOpportunitiesJob = async (): Promise<void> => {
   try {
     logger.info('Starting scheduled job to fetch opportunities from SAM.gov API');
     
+    // Check if USE_SAMPLE_DATA environment variable is set
+    const useSampleData = process.env.USE_SAMPLE_DATA === 'true';
+    
+    if (useSampleData) {
+      logger.info('USE_SAMPLE_DATA is set to true. Generating sample data instead of calling SAM.gov API.');
+      await generateSampleOpportunities(10);
+      logger.info('Sample data generation completed');
+      return;
+    }
+    
+    // Determine how many opportunities to fetch
+    const fetchLimit = parseInt(process.env.SAM_API_FETCH_LIMIT || '100');
+    
     // Fetch opportunities from SAM.gov API
-    const samOpportunities = await fetchSamOpportunities(100);
+    let samOpportunities: any[] = [];
+    try {
+      logger.info(`Attempting to fetch up to ${fetchLimit} opportunities from SAM.gov API`);
+      samOpportunities = await fetchSamOpportunities(fetchLimit);
+    } catch (error) {
+      logger.error('Error fetching from SAM.gov API:', error);
+      
+      // Check if FALLBACK_TO_SAMPLE_DATA is enabled
+      if (process.env.FALLBACK_TO_SAMPLE_DATA === 'true') {
+        logger.warn('Falling back to generating sample data due to API error');
+        await generateSampleOpportunities(10);
+        return;
+      } else {
+        // Re-throw the error if we don't want to fallback
+        throw error;
+      }
+    }
     
     if (!samOpportunities || samOpportunities.length === 0) {
       logger.warn('No opportunities fetched from SAM.gov API');
+      
+      // Check if we should fallback to sample data
+      if (process.env.FALLBACK_TO_SAMPLE_DATA === 'true') {
+        logger.info('Falling back to generating sample data');
+        await generateSampleOpportunities(10);
+      }
+      
       return;
     }
+    
+    logger.info(`Successfully fetched ${samOpportunities.length} opportunities from SAM.gov API`);
     
     // Transform opportunities to our format
     const transformedOpportunities = transformSamOpportunities(samOpportunities);
@@ -25,31 +63,41 @@ export const fetchOpportunitiesJob = async (): Promise<void> => {
     // Store opportunities in the database
     let newCount = 0;
     let updatedCount = 0;
+    let errorCount = 0;
     
     for (const opp of transformedOpportunities) {
-      // Check if opportunity already exists
-      const existingOpp = await Opportunity.findOne({ noticeId: opp.noticeId });
-      
-      if (existingOpp) {
-        // Update existing opportunity
-        await Opportunity.updateOne(
-          { noticeId: opp.noticeId },
-          { 
-            $set: { 
-              ...opp,
-              lastUpdated: new Date()
-            } 
-          }
-        );
-        updatedCount++;
-      } else {
-        // Create new opportunity
-        await Opportunity.create(opp);
-        newCount++;
+      try {
+        // Check if opportunity already exists
+        const existingOpp = await Opportunity.findOne({ noticeId: opp.noticeId });
+        
+        if (existingOpp) {
+          // Update existing opportunity
+          await Opportunity.updateOne(
+            { noticeId: opp.noticeId },
+            { 
+              $set: { 
+                ...opp,
+                lastUpdated: new Date(),
+                source: 'SAM.gov API'
+              } 
+            }
+          );
+          updatedCount++;
+        } else {
+          // Create new opportunity
+          await Opportunity.create({
+            ...opp,
+            source: 'SAM.gov API'
+          });
+          newCount++;
+        }
+      } catch (err) {
+        errorCount++;
+        logger.error(`Error processing opportunity ${opp.noticeId}:`, err);
       }
     }
     
-    logger.info(`Job completed: ${newCount} new opportunities created, ${updatedCount} opportunities updated`);
+    logger.info(`Job completed: ${newCount} new opportunities created, ${updatedCount} opportunities updated, ${errorCount} errors`);
   } catch (error) {
     logger.error('Error in fetchOpportunitiesJob:', error);
     throw error;
