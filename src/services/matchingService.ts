@@ -181,7 +181,7 @@ export const getMatchingOpportunities = async (formData: FormData): Promise<Matc
     }
     
     // Call the backend API to get matching opportunities
-    const response = await fetch(`https://aero-ai-backend-b4a2e5c4d981.herokuapp.com`, {
+    const response = await fetch(`https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
