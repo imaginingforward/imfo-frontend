@@ -36,7 +36,7 @@ Frontend environment variables are now managed through Vite's built-in environme
 
 ```
 # Example frontend variables (.env.development.local)
-VITE_API_BASE_URL=http://localhost:3002
+VITE_API_BASE_URL=https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/
 VITE_AI_MODEL=gpt-4.1-nano
 ```
 

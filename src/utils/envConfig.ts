@@ -13,9 +13,6 @@ export function getApiBaseUrl(): string {
     // @ts-ignore
     return import.meta.env.VITE_API_BASE_URL;
   }
-  
-  // Default to local development server
-  return 'http://localhost:3002';
 }
 
 /**
