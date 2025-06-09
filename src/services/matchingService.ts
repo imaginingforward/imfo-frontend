@@ -189,12 +189,27 @@ export const getMatchingOpportunities = async (formData: FormData): Promise<Matc
       body: JSON.stringify(formData),
     });
     
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `API Error: ${response.status}`);
+    // Get the response text first to check if it's JSON or HTML
+    const responseText = await response.text();
+    
+    // Check if the response is HTML (which would indicate an error)
+    if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
+      console.error("Received HTML response instead of JSON:", responseText.substring(0, 200) + "...");
+      throw new Error(`Server returned HTML instead of JSON. Check API URL and server status.`);
     }
     
-    const data = await response.json();
+    // Parse the response as JSON if it's not HTML
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("Failed to parse response as JSON:", responseText.substring(0, 200) + "...");
+      throw new Error(`Invalid JSON response from server: ${parseError.message}`);
+    }
+    
+    if (!response.ok) {
+      throw new Error(data.message || `API Error: ${response.status}`);
+    }
     
     // Transform the backend response to match our frontend format
     const matches = data.data.map((match: any) => ({

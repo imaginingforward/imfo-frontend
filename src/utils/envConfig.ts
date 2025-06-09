@@ -13,6 +13,10 @@ export function getApiBaseUrl(): string {
     // @ts-ignore
     return import.meta.env.VITE_API_BASE_URL;
   }
+  
+  // For development without env var, rely on the backend service running
+  // on the default port when doing local development
+  return '';
 }
 
 /**
