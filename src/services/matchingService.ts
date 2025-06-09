@@ -181,13 +181,12 @@ export const getMatchingOpportunities = async (formData: FormData): Promise<Matc
     }
     
     // Call the backend API to get matching opportunities
-    const API_KEY = process.env.AERO_AI_BACKEND_API_KEY; // The same value you set in Heroku
 
     const response = await fetch(`https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY, // Include the API key in the headers
+        'x-api-key': import.meta.env.VITE_AERO_AI_BACKEND_API_KEY, // Include the API key in the headers
       },
       body: JSON.stringify(formData),
     });
