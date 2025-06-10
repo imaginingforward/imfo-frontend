@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test</title>
+  <style>
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    pre { 
+      background: #f5f5f5; 
+      padding: 10px; 
+      border-radius: 5px; 
+      overflow-x: auto;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input {
+      padding: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .output {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Space Tech RFP Matchmaker API Test</h1>
+  
+  <div>
+    <label for="apiKey">API Key:</label>
+    <input type="text" id="apiKey" placeholder="Enter API Key">
+  </div>
+  
+  <button id="testBtn">Test API Connection</button>
+  
+  <div class="output">
+    <h3>Request Payload:</h3>
+    <pre id="requestPayload"></pre>
+    
+    <h3>Response:</h3>
+    <pre id="responseOutput">Results will appear here...</pre>
+  </div>
+  
+  <script>
+    document.getElementById('testBtn').addEventListener('click', testApiCall);
+    
+    async function testApiCall() {
+      try {
+        const responseOutput = document.getElementById('responseOutput');
+        responseOutput.textContent = "Making API request...";
+        
+        // Get API key from input field
+        const apiKey = document.getElementById('apiKey').value;
+        
+        // Minimal valid data that meets all requirements
+        const minimalData = {
+          company: {
+            name: "Test Company",
+            description: "A test company description",
+            techCategory: ["Satellite", "Propulsion"],
+            stage: "Early Stage",
+            teamSize: "1-10",
+            foundedYear: "2020",
+            email: "test@example.com"
+          },
+          project: {
+            title: "Test Project",
+            description: "A test project description",
+            techSpecs: "Simple specs",
+            budget: "$10,000",
+            timeline: "3 months",
+            interests: ["Space"]
+          }
+        };
+        
+        // Display request payload
+        document.getElementById('requestPayload').textContent = JSON.stringify(minimalData, null, 2);
+        
+        // Use CORS proxy to avoid CORS issues
+        const corsProxy = "https://corsproxy.io/?";
+        const apiUrl = `${corsProxy}https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`;
+        
+        // Make the API call
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey
+          },
+          body: JSON.stringify(minimalData)
+        });
+        
+        // Get response as text
+        const responseText = await response.text();
+        
+        // Build response output
+        let output = `Status: ${response.status} ${response.statusText}\n\n`;
+        output += `Headers:\n`;
+        response.headers.forEach((value, key) => {
+          output += `${key}: ${value}\n`;
+        });
+        output += `\nResponse Body:\n${responseText}`;
+        
+        // Display response
+        responseOutput.textContent = output;
+        
+        // Try to parse as JSON for better formatting
+        try {
+          const data = JSON.parse(responseText);
+          responseOutput.textContent = `Status: ${response.status} ${response.statusText}\n\nResponse Body:\n${JSON.stringify(data, null, 2)}`;
+        } catch (e) {
+          // Keep as text if not valid JSON
+        }
+        
+      } catch (error) {
+        document.getElementById('responseOutput').textContent = `Error: ${error.message}`;
+        console.error("Error making API test call:", error);
+      }
+    }
+  </script>
+</body>
+</html>

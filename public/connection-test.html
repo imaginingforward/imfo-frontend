@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Connection Diagnostics</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1 {
+      color: #2563eb;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+    }
+    .card {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    pre {
+      background: #1f2937;
+      color: #e5e7eb;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #1d4ed8;
+    }
+    button:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
+    }
+    input, select {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .status-ok {
+      color: #16a34a;
+      font-weight: bold;
+    }
+    .status-error {
+      color: #dc2626;
+      font-weight: bold;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,.3);
+      border-radius: 50%;
+      border-top-color: #2563eb;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <h1>API Connection Diagnostics</h1>
+  
+  <div class="card">
+    <h2>Configuration</h2>
+    <div>
+      <label for="apiUrl">API Base URL:</label>
+      <input type="text" id="apiUrl" value="https://aero-ai-backend-b4a2e5c4d981.herokuapp.com" />
+      
+      <label for="apiKey">API Key:</label>
+      <input type="text" id="apiKey" placeholder="Enter your API key" />
+    </div>
+    <button id="testConnection">Test Connection</button>
+    <span id="loadingIndicator" class="loading" style="display: none;"></span>
+  </div>
+  
+  <div class="card">
+    <h2>Test Results</h2>
+    <div id="statusSummary">No tests run yet.</div>
+    <h3>Root Endpoint</h3>
+    <div id="rootEndpointStatus"></div>
+    <h3>Matching Endpoint</h3>
+    <div id="matchingEndpointStatus"></div>
+    <h3>Detailed Response</h3>
+    <pre id="responseDetails">Run a test to see results...</pre>
+  </div>
+
+  <div class="card">
+    <h2>Request Payload</h2>
+    <pre id="requestPayload">No request payload yet.</pre>
+  </div>
+
+  <div class="card">
+    <h2>Troubleshooting Tips</h2>
+    <ul>
+      <li>Ensure the API server is running and accessible</li>
+      <li>Check that the API key is correct and has not expired</li>
+      <li>Verify that CORS is properly configured on the server</li>
+      <li>Check the request payload structure against API documentation</li>
+      <li>Ensure all required fields are present in the request</li>
+      <li>Try using a smaller, simplified request payload</li>
+      <li>Check the browser console for additional error details</li>
+    </ul>
+  </div>
+
+  <script type="module">
+    // API Connection Checker function
+    async function checkApiConnection(apiUrl = null, apiKey = null) {
+      try {
+        // Use provided values or defaults
+        // Use CORS proxy
+        const corsProxy = 'https://corsproxy.io/?';
+        const url = corsProxy + (apiUrl || "https://aero-ai-backend-b4a2e5c4d981.herokuapp.com");
+        const key = apiKey || "";
+        
+        console.log(`Checking API connection to: ${url}`);
+        console.log(`API key provided: ${key ? 'Yes' : 'No'}`);
+        
+        // First, try a simple GET request to the root endpoint
+        const rootResponse = await fetch(url, {
+          method: "GET",
+          headers: key ? { "x-api-key": key } : {}
+        });
+        
+        console.log(`Root endpoint status: ${rootResponse.status}`);
+        
+        const rootText = await rootResponse.text();
+        let rootData = null;
+        
+        try {
+          rootData = JSON.parse(rootText);
+          console.log("Root endpoint response:", rootData);
+        } catch (e) {
+          console.log("Root endpoint returned non-JSON response");
+        }
+        
+        // Now try the actual matching endpoint with a simple request
+        // For matching endpoint, use cors proxy if not already included
+        const matchingUrl = url.includes('corsproxy.io') 
+          ? `${url}/api/matching`
+          : `https://corsproxy.io/?${url}/api/matching`;
+        console.log(`Checking matching endpoint: ${matchingUrl}`);
+        
+        const testPayload = {
+          company: {
+            name: "API Check Company",
+            description: "A test company for API checking",
+            techCategory: ["Test"],
+            stage: "Early Stage",
+            teamSize: "1-10",
+            foundedYear: "2023",
+            email: "test@example.com"
+          },
+          project: {
+            title: "API Check Project",
+            description: "A test project for API checking",
+            techSpecs: "Test specs",
+            budget: "$1",
+            timeline: "1 day",
+            interests: ["Test"]
+          }
+        };
+        
+        document.getElementById('requestPayload').textContent = JSON.stringify(testPayload, null, 2);
+        
+        const matchingResponse = await fetch(matchingUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(key ? { "x-api-key": key } : {})
+          },
+          body: JSON.stringify(testPayload)
+        });
+        
+        console.log(`Matching endpoint status: ${matchingResponse.status}`);
+        
+        const matchingText = await matchingResponse.text();
+        let matchingData = null;
+        
+        try {
+          matchingData = JSON.parse(matchingText);
+          console.log("Matching endpoint response:", matchingData);
+        } catch (e) {
+          console.log("Matching endpoint returned non-JSON response:", matchingText.substring(0, 200));
+        }
+        
+        // Compile the results
+        return {
+          success: 
+            rootResponse.ok && 
+            matchingResponse.status !== 400 && 
+            matchingResponse.status !== 404,
+          rootEndpoint: {
+            status: rootResponse.status,
+            isJson: rootData !== null,
+            data: rootData,
+            text: rootText
+          },
+          matchingEndpoint: {
+            status: matchingResponse.status,
+            isJson: matchingData !== null,
+            data: matchingData,
+            text: matchingText
+          },
+          errorDetails: matchingResponse.status >= 400 ? matchingText : null
+        };
+        
+      } catch (error) {
+        console.error("API connection check failed:", error);
+        return {
+          success: false,
+          error: error.message,
+          details: error.toString()
+        };
+      }
+    }
+
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+      const testBtn = document.getElementById('testConnection');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      
+      testBtn.addEventListener('click', async () => {
+        // Update UI for loading state
+        testBtn.disabled = true;
+        loadingIndicator.style.display = 'inline-block';
+        document.getElementById('statusSummary').textContent = 'Running tests...';
+        document.getElementById('rootEndpointStatus').textContent = 'Checking...';
+        document.getElementById('matchingEndpointStatus').textContent = 'Checking...';
+        document.getElementById('responseDetails').textContent = 'Running tests...';
+        
+        try {
+          // Get values from inputs
+          const apiUrl = document.getElementById('apiUrl').value;
+          const apiKey = document.getElementById('apiKey').value;
+          
+          // Run the check
+          const result = await checkApiConnection(apiUrl, apiKey);
+          console.log('API check result:', result);
+          
+          // Update UI with results
+          if (result.success) {
+            document.getElementById('statusSummary').innerHTML = 
+              '<span class="status-ok">✓ API connection successful!</span>';
+          } else {
+            document.getElementById('statusSummary').innerHTML = 
+              '<span class="status-error">✗ API connection failed.</span>';
+          }
+          
+          // Root endpoint status
+          const rootStatus = result.rootEndpoint?.status || (result.error ? 'Error' : 'Unknown');
+          document.getElementById('rootEndpointStatus').innerHTML = 
+            `Status: ${rootStatus} ${rootStatus >= 200 && rootStatus < 300 ? '✓' : '✗'}<br>` +
+            `Format: ${result.rootEndpoint?.isJson ? 'JSON ✓' : 'Not JSON ✗'}<br>`;
+          
+          // Matching endpoint status
+          const matchingStatus = result.matchingEndpoint?.status || (result.error ? 'Error' : 'Unknown');
+          document.getElementById('matchingEndpointStatus').innerHTML = 
+            `Status: ${matchingStatus} ${matchingStatus >= 200 && matchingStatus < 300 ? '✓' : '✗'}<br>` +
+            `Format: ${result.matchingEndpoint?.isJson ? 'JSON ✓' : 'Not JSON ✗'}<br>`;
+          
+          // Detailed output
+          document.getElementById('responseDetails').textContent = 
+            JSON.stringify({
+              rootEndpoint: {
+                status: result.rootEndpoint?.status,
+                response: result.rootEndpoint?.isJson 
+                  ? result.rootEndpoint?.data 
+                  : (result.rootEndpoint?.text || '').substring(0, 500)
+              },
+              matchingEndpoint: {
+                status: result.matchingEndpoint?.status,
+                response: result.matchingEndpoint?.isJson 
+                  ? result.matchingEndpoint?.data 
+                  : (result.matchingEndpoint?.text || '').substring(0, 500)
+              },
+              error: result.error
+            }, null, 2);
+          
+        } catch (error) {
+          console.error('Test execution error:', error);
+          document.getElementById('statusSummary').innerHTML = 
+            `<span class="status-error">✗ Test failed: ${error.message}</span>`;
+          document.getElementById('responseDetails').textContent = 
+            `Error: ${error.message}\n\nStack: ${error.stack || 'No stack trace available'}`;
+        } finally {
+          // Reset UI
+          testBtn.disabled = false;
+          loadingIndicator.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

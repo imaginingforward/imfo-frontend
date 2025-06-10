@@ -167,83 +167,6 @@ function determineConfidenceLevel(score: number): 'high' | 'medium' | 'low' {
 }
 
 /**
- * Get matching opportunities by calling the backend API
- * @param formData Form data with company and project information
- * @returns Promise with match results
- */
-export const getMatchingOpportunities = async (formData: FormData): Promise<MatchResponse> => {
-  try {
-    console.log("Starting AI matching process with:", formData);
-    
-    // In a development environment, use the demo data
-    if (process.env.NODE_ENV === 'development' && !process.env.USE_REAL_API) {
-      return getDemoMatchingOpportunities(formData);
-    }
-    
-    // Call the backend API to get matching opportunities
-
-    const response = await fetch(`https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': import.meta.env.VITE_AERO_AI_BACKEND_API_KEY, // Include the API key in the headers
-      },
-      body: JSON.stringify(formData),
-    });
-    
-    // Get the response text first to check if it's JSON or HTML
-    const responseText = await response.text();
-    
-    // Check if the response is HTML (which would indicate an error)
-    if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
-      console.error("Received HTML response instead of JSON:", responseText.substring(0, 200) + "...");
-      throw new Error(`Server returned HTML instead of JSON. Check API URL and server status.`);
-    }
-    
-    // Parse the response as JSON if it's not HTML
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error("Failed to parse response as JSON:", responseText.substring(0, 200) + "...");
-      throw new Error(`Invalid JSON response from server: ${parseError.message}`);
-    }
-    
-    if (!response.ok) {
-      throw new Error(data.message || `API Error: ${response.status}`);
-    }
-    
-    // Transform the backend response to match our frontend format
-    const matches = data.data.map((match: any) => ({
-      opportunity: match.opportunity,
-      score: match.score,
-      confidenceLevel: determineConfidenceLevel(match.score),
-      matchDetails: {
-        techFocusMatch: match.matchDetails?.techFocusMatch || 0,
-        stageMatch: match.matchDetails?.stageMatch || 0,
-        timelineMatch: match.matchDetails?.timelineMatch || 0,
-        budgetMatch: match.matchDetails?.budgetMatch || 0,
-        keywordMatch: match.matchDetails?.keywordMatch || 0,
-        matchedKeywords: match.matchDetails?.matchedKeywords || [],
-        aiRecommendation: match.explanation || match.matchDetails?.aiRecommendation
-      }
-    }));
-    
-    // Return in expected format
-    return {
-      success: true,
-      matchCount: matches.length,
-      matches: matches.slice(0, MAX_RESULTS) // Limit to max results
-    };
-  } catch (error) {
-    console.error("Error in AI matching:", error);
-    // If API call fails, fall back to demo data
-    console.log("Falling back to demo data due to API error");
-    return getDemoMatchingOpportunities(formData);
-  }
-};
-
-/**
  * Get demo matching opportunities for development and fallback
  * @param formData Form data with company and project information
  * @returns Promise with match results
@@ -315,6 +238,206 @@ const getDemoMatchingOpportunities = async (formData: FormData): Promise<MatchRe
     matchCount: sortedMatches.length,
     matches: sortedMatches
   };
+};
+
+/**
+ * Get matching opportunities by calling the backend API
+ * @param formData Form data with company and project information
+ * @returns Promise with match results
+ */
+export const getMatchingOpportunities = async (formData: FormData): Promise<MatchResponse> => {
+  try {
+    console.log("Starting AI matching process with:", formData);
+    
+    // In a development environment, use the demo data
+    /*if (process.env.NODE_ENV === 'development' && !process.env.USE_REAL_API) {
+      return getDemoMatchingOpportunities(formData);
+    }*/
+    
+    // Debug API request details
+    console.log("API URL:", `https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`);
+    console.log("API Key present:", import.meta.env.VITE_AERO_AI_BACKEND_API_KEY ? "Yes" : "No");
+    
+    // Prepare the data format - ensure all required fields are present
+    const requestData = {
+      ...formData,
+      // Ensure required arrays are arrays even if empty
+      company: {
+        ...formData.company,
+        techCategory: Array.isArray(formData.company.techCategory) ? formData.company.techCategory : [],
+      },
+      project: {
+        ...formData.project,
+        interests: Array.isArray(formData.project.interests) ? formData.project.interests : [],
+      }
+    };
+    
+    console.log("Formatted request payload:", JSON.stringify(requestData, null, 2));
+    
+    // Check if we're in development mode and should use fallback data
+    /*if (import.meta.env.MODE === 'development' && !import.meta.env.VITE_USE_REAL_API) {
+      console.log("Development mode and VITE_USE_REAL_API not set, using demo data");
+      return getDemoMatchingOpportunities(formData);
+    }*/
+    
+    // Fall back to demo data if API key is missing
+    const apiKey = import.meta.env.VITE_AERO_AI_BACKEND_API_KEY;
+    /*if (!apiKey) {
+      console.warn("API key missing, falling back to demo data");
+      return getDemoMatchingOpportunities(formData);
+    }*/
+    
+    // Call the backend API to get matching opportunities using a CORS proxy
+    const corsProxy = 'https://corsproxy.io/?';
+    const apiUrl = `${corsProxy}https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`;
+    console.log(`Making API request to ${apiUrl}`);
+    
+    // First try with our standard structure
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey
+      },
+      body: JSON.stringify(requestData)
+    });
+  
+    // Log response status
+    console.log(`API response status: ${response.status}`);
+    
+    // Get the response text first to check if it's JSON or HTML
+    const responseText = await response.text();
+    console.log("Response preview:", responseText.substring(0, 200) + (responseText.length > 200 ? "..." : ""));
+  
+    // Check if the response is HTML (which would indicate an error)
+    if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
+      console.error("Received HTML response instead of JSON:", responseText.substring(0, 200) + "...");
+      throw new Error(`Server returned HTML instead of JSON. Check API URL and server status.`);
+    }
+    
+    // Parse the response as JSON if it's not HTML
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log("Parsed response data:", data);
+    } catch (parseError) {
+      console.error("Failed to parse response as JSON:", responseText);
+      throw new Error(`Invalid JSON response from server: ${parseError.message}`);
+    }
+    
+    if (!response.ok) {
+      throw new Error(data.message || `API Error: ${response.status}`);
+    }
+    
+    // Transform the backend response to match our frontend format
+    const matches = data.data.map((match: any) => ({
+      opportunity: match.opportunity,
+      score: match.score,
+      confidenceLevel: determineConfidenceLevel(match.score),
+      matchDetails: {
+        techFocusMatch: match.matchDetails?.techFocusMatch || 0,
+        stageMatch: match.matchDetails?.stageMatch || 0,
+        timelineMatch: match.matchDetails?.timelineMatch || 0,
+        budgetMatch: match.matchDetails?.budgetMatch || 0,
+        keywordMatch: match.matchDetails?.keywordMatch || 0,
+        matchedKeywords: match.matchDetails?.matchedKeywords || [],
+        aiRecommendation: match.explanation || match.matchDetails?.aiRecommendation
+      }
+    }));
+    
+    // Return in expected format
+    return {
+      success: true,
+      matchCount: matches.length,
+      matches: matches.slice(0, MAX_RESULTS) // Limit to max results
+    };
+  } catch (error: any) {
+    console.error("Error in AI matching:", error);
+    
+    // Extract more details from the error if available
+    if (error.response) {
+      console.error("Response status:", error.response.status);
+      console.error("Response headers:", error.response.headers);
+      console.error("Response data:", error.response.data);
+    }
+    
+    // If it's a 400 Bad Request, log more specific information
+    if (error.message && error.message.includes('400')) {
+      console.error("400 Bad Request detected. This typically means the request format is incorrect.");
+      console.error("Check that all required fields are present and properly formatted.");
+    }
+    
+    // If API call fails, try again with a simpler payload format
+    console.log("First API attempt failed, trying alternate payload format");
+    
+    // Create a simplified payload with only the required fields
+    const simplifiedPayload = {
+      company: {
+        name: formData.company.name || "Test Company",
+        description: formData.company.description || "A company description",
+        techCategory: Array.isArray(formData.company.techCategory) ? 
+          formData.company.techCategory : ["Space Technology"],
+        stage: formData.company.stage || "Early Stage",
+        email: formData.company.email || "test@example.com"
+      },
+      project: {
+        title: formData.project.title || "Test Project",
+        description: formData.project.description || "A project description",
+        interests: Array.isArray(formData.project.interests) ? 
+          formData.project.interests : ["Space"]
+      }
+    };
+    
+    console.log("Trying with simplified payload:", simplifiedPayload);
+    
+    try {
+      // Use CORS proxy for second attempt as well
+      const corsProxy = 'https://corsproxy.io/?';
+      const apiUrl = `${corsProxy}https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching`;
+      const simpleResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': import.meta.env.VITE_AERO_AI_BACKEND_API_KEY || ''
+        },
+        body: JSON.stringify(simplifiedPayload)
+      });
+      
+      console.log(`Simplified API response status: ${simpleResponse.status}`);
+      
+      if (simpleResponse.ok) {
+        const data = await simpleResponse.json();
+        
+        // Transform the backend response to match our frontend format
+        const matches = data.data.map((match: any) => ({
+          opportunity: match.opportunity,
+          score: match.score,
+          confidenceLevel: determineConfidenceLevel(match.score),
+          matchDetails: {
+            techFocusMatch: match.matchDetails?.techFocusMatch || 0,
+            stageMatch: match.matchDetails?.stageMatch || 0,
+            timelineMatch: match.matchDetails?.timelineMatch || 0,
+            budgetMatch: match.matchDetails?.budgetMatch || 0,
+            keywordMatch: match.matchDetails?.keywordMatch || 0,
+            matchedKeywords: match.matchDetails?.matchedKeywords || [],
+            aiRecommendation: match.explanation || match.matchDetails?.aiRecommendation
+          }
+        }));
+        
+        return {
+          success: true,
+          matchCount: matches.length,
+          matches: matches.slice(0, MAX_RESULTS)
+        };
+      }
+    } catch (fallbackError) {
+      console.error("Simplified payload attempt also failed:", fallbackError);
+    }
+    
+    // If all API calls fail, throw the error - no more fallback to demo data
+    console.error("All API attempts failed");
+    throw error;
+  }
 };
 
 /**

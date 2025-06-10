@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import debugEnvironmentVariables from "@/debug-env";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import type { FormData } from "@/types/form";
@@ -45,12 +46,22 @@ const AIMatchingPage = () => {
 
   const formData = watch();
 
+  useEffect(() => {
+    // Check environment variables on component load
+    debugEnvironmentVariables();
+  }, []);
+
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     setMatchingError(null);
     
     try {
-      // Call OpenAI directly through our service
+      // Debug environment variables before making the API call
+      console.log("Environment check before API call:");
+      debugEnvironmentVariables();
+      console.log("Form data being submitted:", data);
+      
+      // Call matching service
       const result = await getMatchingOpportunities(data);
       setMatches(result.matches);
       setShowResults(true);
@@ -61,11 +72,19 @@ const AIMatchingPage = () => {
       });
     } catch (error: any) {
       console.error("Error in AI matching:", error);
-      setMatchingError(error.message || "An error occurred during matching.");
+      
+      // More detailed error logging
+      const errorDetail = error.response ? 
+        `Status: ${error.response.status} - ${JSON.stringify(error.response.data)}` : 
+        error.message || "Unknown error";
+      
+      console.error("Error details:", errorDetail);
+      
+      setMatchingError(`${error.message || "An error occurred during matching."}\n\nPlease check the console for more details.`);
       
       toast({
         title: "Matching Failed",
-        description: "There was an error performing the AI match.",
+        description: "There was an error performing the AI match. Check console for details.",
         variant: "destructive",
       });
     } finally {
@@ -173,7 +192,17 @@ const AIMatchingPage = () => {
               {matchingError ? (
                 <div className="p-4 bg-red-500/20 rounded-lg text-center">
                   <h3 className="text-xl font-bold mb-2">Error</h3>
-                  <p>{matchingError}</p>
+                  <p style={{ whiteSpace: 'pre-line' }}>{matchingError}</p>
+                  <div className="mt-4">
+                    <details>
+                      <summary className="cursor-pointer text-sm">Debug Information</summary>
+                      <div className="text-left mt-2 p-2 bg-black/20 text-xs rounded">
+                        <p>API URL: https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching</p>
+                        <p>Environment: {import.meta.env.MODE || 'unknown'}</p>
+                        <p>API Key Set: {import.meta.env.VITE_AERO_AI_BACKEND_API_KEY ? 'Yes' : 'No'}</p>
+                      </div>
+                    </details>
+                  </div>
                 </div>
               ) : (
                 <RFPMatchList 
