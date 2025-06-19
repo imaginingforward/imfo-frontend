@@ -8,9 +8,8 @@ import type { CompanyData } from "@/types/form";
 
 // Define options aligned with government categories and funding types
 const techCategories = [
-  "Agriculture", "Cybersecurity", "Disaster Prevention and Relief",
-  "Science and Technology", "Transportation", "Propulsion Systems", 
-  "Satellite Technology", "Aerospace Engineering"
+  "Propulsion", "Satellites", "Robotics", "AI/ML", "Earth Observation", 
+  "Communications", "Manufacturing", "Materials Science", "Other"
 ];
 
 // Agency codes

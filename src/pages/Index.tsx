@@ -27,26 +27,14 @@ const Index = () => {
               </div>
               <h2 className="text-2xl font-bold mb-3">Standard Submission</h2>
               <p className="text-gray-300 mb-6">
-                Submit your company and project details through our traditional form. Your information will be stored in our database for ongoing matching.
+                Submit your company and project details through our traditional form.
               </p>
               <ul className="space-y-2 mb-8">
                 <li className="flex items-center">
                   <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
                     <span className="text-green-500 text-sm">✓</span>
                   </div>
-                  <span>Save your data for future reference</span>
-                </li>
-                <li className="flex items-center">
-                  <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
-                    <span className="text-green-500 text-sm">✓</span>
-                  </div>
-                  <span>Receive ongoing match notifications</span>
-                </li>
-                <li className="flex items-center">
-                  <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
-                    <span className="text-green-500 text-sm">✓</span>
-                  </div>
-                  <span>Access to all platform features</span>
+                  <span>Receive matches you can store in PDF/CSV</span>
                 </li>
               </ul>
             </div>
@@ -73,7 +61,7 @@ const Index = () => {
               </div>
               <h2 className="text-2xl font-bold mb-3">Direct AI Matching</h2>
               <p className="text-gray-300 mb-6">
-                Use our new AI-powered direct matching system. Get immediate results without storing your data in our database.
+                Use our new AI-powered direct matching system.
               </p>
               <ul className="space-y-2 mb-8">
                 <li className="flex items-center">
@@ -81,12 +69,6 @@ const Index = () => {
                     <span className="text-green-500 text-sm">✓</span>
                   </div>
                   <span>Instant AI-powered matching</span>
-                </li>
-                <li className="flex items-center">
-                  <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
-                    <span className="text-green-500 text-sm">✓</span>
-                  </div>
-                  <span>No data stored on our servers</span>
                 </li>
                 <li className="flex items-center">
                   <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
