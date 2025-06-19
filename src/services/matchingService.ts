@@ -1,5 +1,8 @@
 import type { FormData } from "@/types/form";
 
+// API URL for the matching API endpoint
+const API_URL = "https://aero-matching-backend-a8e57a2ef366.herokuapp.com/api/matching";
+
 // Maximum number of opportunities to display
 const MAX_RESULTS = 5; // Updated to show top 5 matches
 
@@ -85,5 +88,93 @@ export const getConfidenceLevelColor = (level: string): string => {
       return "text-red-500";
     default:
       return "text-gray-500";
+  }
+};
+
+/**
+ * Send company and project data to the matching API to get matching opportunities
+ * @param formData The form data containing company and project information
+ * @param limit Optional limit for the number of results to return
+ * @returns Promise with matching results
+ */
+export const getMatchingOpportunities = async (formData: FormData, limit: number = MAX_RESULTS): Promise<MatchResponse> => {
+  try {
+    console.log('Submitting to matching API:', API_URL);
+    console.log('Form data being sent to matching API:', formData);
+    
+    // Prepare normalized form data for API
+    const normalizedFormData = {
+      ...formData,
+      company: {
+        ...formData.company,
+        techCategory: Array.isArray(formData.company.techCategory) ? formData.company.techCategory : [],
+        fundingInstrumentTypes: Array.isArray(formData.company.fundingInstrumentTypes) ? formData.company.fundingInstrumentTypes : [],
+        eligibleAgencyCodes: Array.isArray(formData.company.eligibleAgencyCodes) ? formData.company.eligibleAgencyCodes : [],
+      },
+      project: {
+        ...formData.project,
+        categoryOfFundingActivity: Array.isArray(formData.project.categoryOfFundingActivity) ? 
+          formData.project.categoryOfFundingActivity : [],
+        // For backward compatibility with the backend which might expect 'interests' field
+        interests: Array.isArray(formData.project.categoryOfFundingActivity) ? 
+          formData.project.categoryOfFundingActivity : [],
+      }
+    };
+    
+    // Get optional API key from environment variable
+    const apiKey = import.meta.env.VITE_AERO_AI_BACKEND_API_KEY || "";
+    
+    // Make the request to the API
+    const response = await fetch(`${API_URL}?limit=${limit}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+      },
+      body: JSON.stringify(normalizedFormData)
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("API error:", response.status, errorText);
+      throw new Error(`API match error: ${response.status} - ${errorText}`);
+    }
+    
+    // Parse the response
+    const data = await response.json();
+    
+    // Check if we have valid data
+    if (!data.success || !data.data || !Array.isArray(data.data)) {
+      console.warn("Invalid or empty response from match API");
+      throw new Error('Invalid response from match API');
+    }
+    
+    // Transform the API response to match our expected format
+    const matches: MatchResult[] = data.data.map((match: any) => ({
+      opportunity: match.opportunity,
+      score: match.score || 0,
+      matchPercentage: Math.round((match.score || 0) * 100),
+      confidenceLevel: match.confidenceLevel || 'medium',
+      matchDetails: match.matchDetails || {
+        techFocusMatch: 0,
+        stageMatch: 0,
+        timelineMatch: 0,
+        budgetMatch: 0,
+        keywordMatch: 0,
+      }
+    }));
+    
+    console.log(`Received ${matches.length} matches from API`);
+    
+    // Return the match response
+    return {
+      success: true,
+      matchCount: matches.length,
+      matches: matches
+    };
+    
+  } catch (error: any) {
+    console.error("Error in matching API:", error);
+    throw error;
   }
 };
