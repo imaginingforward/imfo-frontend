@@ -8,12 +8,7 @@ import type { ProjectData } from "@/types/form";
 
 // Categories of funding activity aligned with common Baserow values
 const categoriesOfFundingActivity = [
-  "Economic Development", "Education", "Employment and Training", 
-  "Environment", "Health", "Housing", "Humanities", 
-  "Income Security and Social Services", "Information and Statistics", 
-  "Law, Justice and Legal Services", "Natural Resources", 
-  "Regional Development", "Science and Technology and other Research and Development", 
-  "Transportation"
+  "Space Technology", "Research and Development", "Engineering"
 ];
 
 // Timeline duration options

@@ -8,16 +8,14 @@ import type { CompanyData } from "@/types/form";
 
 // Define options aligned with government categories and funding types
 const techCategories = [
-  "Agriculture", "Arts", "Business and Commerce", "Community Development", 
-  "Consumer Protection", "Cybersecurity", "Disaster Prevention and Relief",
-  "Education", "Employment", "Energy", "Environment", "Food and Nutrition",
-  "Health", "Housing", "Humanities", "Information and Statistics", 
-  "Natural Resources", "Science and Technology", "Transportation"
+  "Agriculture", "Cybersecurity", "Disaster Prevention and Relief",
+  "Science and Technology", "Transportation", "Propulsion Systems", 
+  "Satellite Technology", "Aerospace Engineering"
 ];
 
 // Agency codes
 const agencyCodes = [
-  "DOD", "NASA", "DOE", "DOT", "NSF", "DHS", "USDA", "HHS", 
+  "DARPA", "DOD", "NASA", "DOE", "DOT", "NSF", "DHS", "USDA", "HHS", 
   "EPA", "DOC", "DOI", "DOJ", "DOS", "ED", "HUD", "DOL", "VA"
 ];
 
