@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { TagInput } from "@/components/ui/tag-input";
 import type { ProjectData } from "@/types/form";
 
 // Timeline duration options
@@ -60,19 +61,11 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
 
           <div>
             <Label htmlFor="keywords">Keywords</Label>
-            <Textarea
-              id="keywords"
-              className="bg-white/5 border-white/20"
-              value={data.keywords?.join(", ") || ""}
-              onChange={(e) => {
-                // Split by commas and trim whitespace
-                const keywordsArray = e.target.value
-                  .split(',')
-                  .map(keyword => keyword.trim())
-                  .filter(keyword => keyword !== "");
-                onChange({ keywords: keywordsArray });
-              }}
-              placeholder="Enter keywords separated by commas..."
+            <TagInput
+              value={data.keywords || []}
+              onChange={(tags) => onChange({ keywords: tags })}
+              placeholder="Type keyword and press Enter or comma..."
+              className="mt-1"
             />
           </div>
 

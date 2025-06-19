@@ -131,10 +131,10 @@ const AIMatchingPage = () => {
             <img src="/logo.jpg" alt="IMFO Logo" className="h-16 w-auto" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            AI Space Tech RFP Matchmaker
+            Aerospace Opportunity Intelligence Platform
           </h1>
           <p className="text-lg text-gray-300 mb-8">
-            Find the perfect government contract opportunities for your space tech company using AI
+            Discover optimal government contract opportunities for your space technology enterprise
           </p>
         </div>
         

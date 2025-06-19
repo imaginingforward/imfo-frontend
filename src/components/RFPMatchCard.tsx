@@ -62,7 +62,12 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
             <CalendarIcon className="h-4 w-4 text-black" />
-            <span className="text-sm">Response Deadline/Archive Date {formatDate(opportunity.responseDeadline || opportunity.archiveDate)}</span>
+            <span className="text-sm">
+              {opportunity.responseDeadline 
+                ? `Response Deadline ${formatDate(opportunity.responseDeadline)}` 
+                : `Archive Date ${formatDate(opportunity.archiveDate)}`
+              }
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <DollarSignIcon className="h-4 w-4 text-black" />
