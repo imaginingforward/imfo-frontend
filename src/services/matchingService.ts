@@ -16,6 +16,7 @@ export interface MatchOpportunity {
   description: string;
   postedDate: string;
   responseDeadline: string;
+  archiveDate: string;
   awardAmount?: number;
   naicsCode?: string;
   setAside?: string;

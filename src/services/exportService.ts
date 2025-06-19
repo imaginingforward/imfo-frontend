@@ -50,7 +50,7 @@ export const exportMatchesToPdf = (matches: MatchResult[], companyName: string):
       y += 6;
     }
     
-    doc.text(`Deadline: ${formatDate(opportunity.responseDeadline)}`, 20, y);
+    doc.text(`Deadline: ${opportunity.responseDeadline ? formatDate(opportunity.responseDeadline) : formatDate(opportunity.archiveDate)}`, 20, y);
     y += 6;
     
     doc.text(`Match Score: ${(match.score * 100).toFixed(1)}% (${match.confidenceLevel} confidence)`, 20, y);
@@ -124,7 +124,7 @@ export const exportMatchesToCsv = (matches: MatchResult[], companyName: string):
     csvContent += `"${opportunity.agency}",`;
     csvContent += `"${description}",`;
     csvContent += `"${formatDate(opportunity.postedDate)}",`;
-    csvContent += `"${formatDate(opportunity.responseDeadline)}",`;
+    csvContent += `"${opportunity.responseDeadline ? formatDate(opportunity.responseDeadline) : formatDate(opportunity.archiveDate)}",`;
     csvContent += `"${opportunity.awardAmount ? formatCurrency(opportunity.awardAmount) : 'Not specified'}",`;
     csvContent += `"${techFocus}",`;
     csvContent += `"${(match.score * 100).toFixed(1)}%",`;

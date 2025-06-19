@@ -61,11 +61,11 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="h-4 w-4 text-gray-500" />
-            <span className="text-sm">Response Deadline {formatDate(opportunity.responseDeadline)}</span>
+            <CalendarIcon className="h-4 w-4 text-black" />
+            <span className="text-sm">Response Deadline/Archive Date {formatDate(opportunity.responseDeadline || opportunity.archiveDate)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <DollarSignIcon className="h-4 w-4 text-gray-500" />
+            <DollarSignIcon className="h-4 w-4 text-black" />
             <span className="text-sm">{formatCurrency(opportunity.awardAmount)}</span>
           </div>
         </div>
@@ -74,13 +74,13 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
         <div className="grid grid-cols-2 gap-4">
           {opportunity.type && (
             <div className="flex items-center gap-2">
-              <TagIcon className="h-4 w-4 text-gray-500" />
+              <TagIcon className="h-4 w-4 text-black" />
               <span className="text-sm">{opportunity.type}</span>
             </div>
           )}
           {opportunity.state && (
             <div className="flex items-center gap-2">
-              <MapPinIcon className="h-4 w-4 text-gray-500" />
+              <MapPinIcon className="h-4 w-4 text-black" />
               <span className="text-sm">{opportunity.state}</span>
             </div>
           )}
@@ -103,19 +103,6 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
             {opportunity.description}
           </p>
         </div>
-        
-        {/* AI Recommendation */}
-        {matchDetails.aiRecommendation && (
-          <div>
-            <div className="flex items-center gap-1">
-              <InfoIcon className="h-3.5 w-3.5 text-blue-500" />
-              <h4 className="font-medium text-sm text-blue-500">AI Recommendation</h4>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 italic">
-              "{matchDetails.aiRecommendation}"
-            </p>
-          </div>
-        )}
         
         {matchDetails.matchedKeywords && matchDetails.matchedKeywords.length > 0 && (
           <div>

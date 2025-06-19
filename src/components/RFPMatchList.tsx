@@ -115,20 +115,20 @@ const RFPMatchList: React.FC<RFPMatchListProps> = ({ matches, companyName }) => 
         <h2 className="text-2xl font-bold">Your Top Matches</h2>
         
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleExportPDF} className="flex items-center gap-1">
-            <FileTextIcon className="h-4 w-4" />
+          <Button variant="outline" onClick={handleExportPDF} className="flex items-center gap-1 text-black">
+            <FileTextIcon className="h-4 w-4 text-black" />
             <span>PDF</span>
           </Button>
           
-          <Button variant="outline" onClick={handleExportCSV} className="flex items-center gap-1">
-            <FileSpreadsheetIcon className="h-4 w-4" />
+          <Button variant="outline" onClick={handleExportCSV} className="flex items-center gap-1 text-black">
+            <FileSpreadsheetIcon className="h-4 w-4 text-black" />
             <span>CSV</span>
           </Button>
           
           <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-1">
-                <MailIcon className="h-4 w-4" />
+              <Button variant="outline" className="flex items-center gap-1 text-black">
+                <MailIcon className="h-4 w-4 text-black" />
                 <span>Email</span>
               </Button>
             </DialogTrigger>
@@ -155,6 +155,7 @@ const RFPMatchList: React.FC<RFPMatchListProps> = ({ matches, companyName }) => 
                 <Button 
                   variant="outline" 
                   onClick={() => setEmailDialogOpen(false)}
+                  className="text-black"
                 >
                   Cancel
                 </Button>

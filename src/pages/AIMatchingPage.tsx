@@ -127,6 +127,9 @@ const AIMatchingPage = () => {
     <div className="min-h-screen bg-primary-dark text-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="text-center">
+          <div className="flex justify-center mb-6">
+            <img src="/logo.jpg" alt="IMFO Logo" className="h-16 w-auto" />
+          </div>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
             AI Space Tech RFP Matchmaker
           </h1>
@@ -171,7 +174,7 @@ const AIMatchingPage = () => {
                       type="button"
                       onClick={() => setStep(1)}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 text-black"
                     >
                       Back
                     </Button>
@@ -182,7 +185,7 @@ const AIMatchingPage = () => {
                     >
                       {isLoading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin text-black" />
                           Finding Matches...
                         </>
                       ) : (
@@ -198,7 +201,7 @@ const AIMatchingPage = () => {
           <div className="animate-fadeIn">
             <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg p-6 mb-6">
               <div className="mb-6">
-                <Button onClick={handleReset} variant="outline">
+                <Button onClick={handleReset} variant="outline" className="text-black">
                   ← Start New Match
                 </Button>
               </div>
