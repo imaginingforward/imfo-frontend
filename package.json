@@ -15,8 +15,7 @@
     "npm": "8.x"
   },
   "overrides": {
-    "rollup": "~3.18.0",
-    "esbuild": "0.25.0"
+    "rollup": "~3.18.0"
   },
   "dependencies": {
     "@types/whatwg-url": "8.2.2",
@@ -98,7 +97,6 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
-    "esbuild": "0.25.0",
     "lovable-tagger": "^1.1.7",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
