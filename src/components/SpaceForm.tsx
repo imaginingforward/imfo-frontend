@@ -19,6 +19,8 @@ const SpaceForm = () => {
         name: "",
         description: "",
         techCategory: [],
+        fundingInstrumentTypes: [],
+        eligibleAgencyCodes: [],
         stage: "",
         teamSize: "",
         foundedYear: "",
@@ -30,9 +32,16 @@ const SpaceForm = () => {
         title: "",
         description: "",
         techSpecs: "",
-        budget: "",
-        timeline: "",
-        interests: [],
+        budget: {
+          min: 0,
+          max: 0,
+          currency: "USD"
+        },
+        timeline: {
+          duration: "",
+          startDate: ""
+        },
+        categoryOfFundingActivity: [],
       },
     },
   });

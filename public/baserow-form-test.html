@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baserow Matching System Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2, h3 {
+      color: #333;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .form-section {
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0052a3;
+    }
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+    }
+    .checkbox-item input {
+      margin-right: 5px;
+    }
+    #results {
+      background-color: #eef8ff;
+      padding: 20px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      display: none;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Baserow Matching System Test</h1>
+  
+  <div class="container">
+    <h2>Company Information</h2>
+    <div class="form-section">
+      <div class="form-group">
+        <label for="companyName">Company Name</label>
+        <input type="text" id="companyName" value="Aero Tech Solutions">
+      </div>
+      
+      <div class="form-group">
+        <label for="companyDescription">Company Description</label>
+        <textarea id="companyDescription" rows="3">We develop advanced propulsion systems for small satellites and CubeSats with a focus on green propellant alternatives and efficient miniaturized solutions.</textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Technology Categories</label>
+        <div class="checkbox-group" id="techCategories">
+          <!-- Will be populated with JS -->
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Funding Instrument Types</label>
+        <div class="checkbox-group" id="fundingTypes">
+          <!-- Will be populated with JS -->
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Eligible Agency Codes</label>
+        <div class="checkbox-group" id="agencyCodes">
+          <!-- Will be populated with JS -->
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="stage">Company Stage</label>
+        <select id="stage">
+          <option value="Pre-seed">Pre-seed</option>
+          <option value="Seed">Seed</option>
+          <option value="Series A" selected>Series A</option>
+          <option value="Series B">Series B</option>
+          <option value="Series C+">Series C+</option>
+          <option value="Public">Public</option>
+          <option value="Small Business">Small Business</option>
+          <option value="Disadvantaged Business">Disadvantaged Business</option>
+          <option value="Women-Owned Business">Women-Owned Business</option>
+          <option value="Veteran-Owned Business">Veteran-Owned Business</option>
+          <option value="HUBZone">HUBZone</option>
+        </select>
+      </div>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="teamSize">Team Size</label>
+          <select id="teamSize">
+            <option value="1-5" selected>1-5</option>
+            <option value="6-15">6-15</option>
+            <option value="16-30">16-30</option>
+            <option value="31-50">31-50</option>
+            <option value="51-100">51-100</option>
+            <option value="101+">101+</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="foundedYear">Founded Year</label>
+          <input type="number" id="foundedYear" value="2020">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <h2>Project Information</h2>
+    <div class="form-section">
+      <div class="form-group">
+        <label for="projectTitle">Project Title</label>
+        <input type="text" id="projectTitle" value="Eco-friendly Microthrusters for CubeSats">
+      </div>
+      
+      <div class="form-group">
+        <label for="projectDescription">Project Description</label>
+        <textarea id="projectDescription" rows="3">Development of efficient, eco-friendly microthrusters that use non-toxic propellants for small satellites and CubeSats. Our innovative design minimizes weight while maximizing delta-v capabilities.</textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="techSpecs">Technical Specifications</label>
+        <textarea id="techSpecs" rows="3">- Thrust: 1-5 mN
+- Specific Impulse: 250s
+- Total Impulse: 50-500 Ns
+- Mass: < 200g
+- Power Consumption: < 10W peak, 2W average
+- Compatible with CubeSat form factors</textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Categories of Funding Activity</label>
+        <div class="checkbox-group" id="fundingActivities">
+          <!-- Will be populated with JS -->
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Budget Range</label>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="budgetMin">Minimum ($)</label>
+            <input type="number" id="budgetMin" value="250000">
+          </div>
+          <div class="form-group">
+            <label for="budgetMax">Maximum ($)</label>
+            <input type="number" id="budgetMax" value="750000">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Project Timeline</label>
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="timelineDuration">Duration</label>
+            <select id="timelineDuration">
+              <option value="0-6 months">0-6 months</option>
+              <option value="6-12 months" selected>6-12 months</option>
+              <option value="12-18 months">12-18 months</option>
+              <option value="18-24 months">18-24 months</option>
+              <option value="24-36 months">24-36 months</option>
+              <option value="36+ months">36+ months</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="timelineStart">Preferred Start Date</label>
+            <input type="date" id="timelineStart" value="2025-08-01">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="controls">
+      <button id="testBtn">Test Form Data</button>
+      <button id="fetchBtn">Fetch Baserow Opportunities</button>
+      <button id="matchBtn">Run Matching Algorithm</button>
+    </div>
+  </div>
+  
+  <div id="results" class="container"></div>
+  
+  <script>
+    // Define form options
+    const techCategoriesOptions = [
+      "Agriculture", "Arts", "Business and Commerce", "Community Development", 
+      "Consumer Protection", "Cybersecurity", "Disaster Prevention and Relief",
+      "Education", "Employment", "Energy", "Environment", "Food and Nutrition",
+      "Health", "Housing", "Humanities", "Information and Statistics", 
+      "Natural Resources", "Science and Technology", "Transportation"
+    ];
+    
+    const fundingTypesOptions = [
+      "Grant", "Cooperative Agreement", "Procurement Contract",
+      "Other Financial Assistance", "SBIR", "STTR"
+    ];
+    
+    const agencyCodesOptions = [
+      "DOD", "NASA", "DOE", "DOT", "NSF", "DHS", "USDA", "HHS", 
+      "EPA", "DOC", "DOI", "DOJ", "DOS", "ED", "HUD", "DOL", "VA"
+    ];
+    
+    const fundingActivitiesOptions = [
+      "Economic Development", "Education", "Employment and Training", 
+      "Environment", "Health", "Housing", "Humanities", 
+      "Income Security and Social Services", "Information and Statistics", 
+      "Law, Justice and Legal Services", "Natural Resources", 
+      "Regional Development", "Science and Technology and other Research and Development", 
+      "Transportation"
+    ];
+    
+    // Populate checkbox groups
+    function populateCheckboxes(containerId, options, defaultCheckedIndexes = []) {
+      const container = document.getElementById(containerId);
+      options.forEach((option, index) => {
+        const item = document.createElement('div');
+        item.className = 'checkbox-item';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `${containerId}-${index}`;
+        checkbox.value = option;
+        checkbox.checked = defaultCheckedIndexes.includes(index);
+        
+        const label = document.createElement('label');
+        label.htmlFor = `${containerId}-${index}`;
+        label.textContent = option;
+        
+        item.appendChild(checkbox);
+        item.appendChild(label);
+        container.appendChild(item);
+      });
+    }
+    
+    // Get checked values from a checkbox group
+    function getCheckedValues(containerId) {
+      const container = document.getElementById(containerId);
+      const checked = [];
+      container.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        checked.push(checkbox.value);
+      });
+      return checked;
+    }
+    
+    // Initialize the form
+    function initForm() {
+      populateCheckboxes('techCategories', techCategoriesOptions, [17, 18]); // Science and Technology, Transportation
+      populateCheckboxes('fundingTypes', fundingTypesOptions, [4, 5]); // SBIR, STTR
+      populateCheckboxes('agencyCodes', agencyCodesOptions, [1, 2]); // NASA, DOE
+      populateCheckboxes('fundingActivities', fundingActivitiesOptions, [12]); // Science and Technology
+    }
+    
+    // Get form data
+    function getFormData() {
+      return {
+        company: {
+          name: document.getElementById('companyName').value,
+          description: document.getElementById('companyDescription').value,
+          techCategory: getCheckedValues('techCategories'),
+          fundingInstrumentTypes: getCheckedValues('fundingTypes'),
+          eligibleAgencyCodes: getCheckedValues('agencyCodes'),
+          stage: document.getElementById('stage').value,
+          teamSize: document.getElementById('teamSize').value,
+          foundedYear: document.getElementById('foundedYear').value,
+          email: "test@example.com" // Not in the form but required
+        },
+        project: {
+          title: document.getElementById('projectTitle').value,
+          description: document.getElementById('projectDescription').value,
+          techSpecs: document.getElementById('techSpecs').value,
+          budget: {
+            min: parseInt(document.getElementById('budgetMin').value),
+            max: parseInt(document.getElementById('budgetMax').value),
+            currency: "USD"
+          },
+          timeline: {
+            duration: document.getElementById('timelineDuration').value,
+            startDate: document.getElementById('timelineStart').value
+          },
+          categoryOfFundingActivity: getCheckedValues('fundingActivities')
+        }
+      };
+    }
+    
+    // Event listeners
+    document.getElementById('testBtn').addEventListener('click', function() {
+      const formData = getFormData();
+      const results = document.getElementById('results');
+      results.textContent = JSON.stringify(formData, null, 2);
+      results.style.display = 'block';
+    });
+    
+    document.getElementById('fetchBtn').addEventListener('click', async function() {
+      const results = document.getElementById('results');
+      results.textContent = "Fetching Baserow opportunities...";
+      results.style.display = 'block';
+      
+      try {
+        // Get environment variables
+        const apiUrl = "https://api.baserow.io";
+        const apiKey = "V8TT0pqPOKhwEcYzSysD0COL1oScagiG";
+        const tableId = "576422";
+        
+        const url = `${apiUrl}/api/database/rows/table/${tableId}/?user_field_names=true`;
+        
+        // Make request to Baserow API
+        const response = await fetch(url, {
+          headers: {
+            "Authorization": `Token ${apiKey}`,
+            "Content-Type": "application/json"
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Show number of records
+        results.textContent = `Found ${data.results.length} opportunities in Baserow\n\n`;
+        results.textContent += JSON.stringify(data.results[0], null, 2);
+      } catch (error) {
+        results.textContent = `Error: ${error.message}`;
+      }
+    });
+    
+    document.getElementById('matchBtn').addEventListener('click', function() {
+      const formData = getFormData();
+      const results = document.getElementById('results');
+      results.textContent = "Running mock matching algorithm...\n\n";
+      
+      // Mock matching algorithm results
+      const mockResults = {
+        success: true,
+        matchCount: 3,
+        matches: [
+          {
+            opportunity: {
+              noticeId: "DEMO-001",
+              title: "Advanced Satellite Communication Systems",
+              agency: "NASA",
+              description: "Development of advanced satellite communication systems for deep space missions.",
+              techFocus: ["Science and Technology", "Transportation"],
+              timeline: "6-12 months"
+            },
+            score: 0.92,
+            confidenceLevel: "high",
+            matchDetails: {
+              techFocusMatch: 0.9,
+              stageMatch: 0.8,
+              timelineMatch: 1.0,
+              budgetMatch: 0.95,
+              keywordMatch: 0.9
+            }
+          },
+          {
+            opportunity: {
+              noticeId: "DEMO-002",
+              title: "Next-Generation Propulsion Technology",
+              agency: "DARPA",
+              description: "Research and development of efficient propulsion systems for small satellites and CubeSats.",
+              techFocus: ["Science and Technology"],
+              timeline: "12-18 months"
+            },
+            score: 0.87,
+            confidenceLevel: "high",
+            matchDetails: {
+              techFocusMatch: 0.95,
+              stageMatch: 0.7,
+              timelineMatch: 0.8,
+              budgetMatch: 0.9,
+              keywordMatch: 0.95
+            }
+          },
+          {
+            opportunity: {
+              noticeId: "DEMO-003",
+              title: "Small Satellite Constellation Management",
+              agency: "Space Force",
+              description: "Software solutions for managing small satellite constellations.",
+              techFocus: ["Science and Technology", "Information and Statistics"],
+              timeline: "6-12 months"
+            },
+            score: 0.78,
+            confidenceLevel: "medium",
+            matchDetails: {
+              techFocusMatch: 0.8,
+              stageMatch: 0.7,
+              timelineMatch: 0.9,
+              budgetMatch: 0.7,
+              keywordMatch: 0.75
+            }
+          }
+        ]
+      };
+      
+      results.textContent += JSON.stringify(mockResults, null, 2);
+      results.style.display = 'block';
+    });
+    
+    // Initialize the form on load
+    initForm();
+  </script>
+</body>
+</html>

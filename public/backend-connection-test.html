@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend API Connection Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2563eb;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #374151;
+            margin-top: 30px;
+        }
+        .card {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        #results {
+            white-space: pre-wrap;
+            overflow-x: auto;
+            background-color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error {
+            color: #dc2626;
+            background-color: #fee2e2;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #fca5a5;
+            margin: 10px 0;
+        }
+        .success {
+            color: #059669;
+            background-color: #d1fae5;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #a7f3d0;
+            margin: 10px 0;
+        }
+        .test-container {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aero Matching Backend - Connection Test</h1>
+    <p>This page tests the connection to the Aero Matching Backend API hosted on Heroku.</p>
+    
+    <div class="test-container">
+        <h2>1. Test GET /api/opportunities Endpoint</h2>
+        <p>This test fetches opportunities from the backend API.</p>
+        <button id="test-get-opportunities">Test GET Opportunities</button>
+        <div id="get-opportunities-result" class="card">
+            <p>Results will appear here...</p>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>2. Test POST /api/match Endpoint</h2>
+        <p>This test sends a sample company and project data for matching.</p>
+        <button id="test-post-match">Test POST Match</button>
+        <div id="post-match-result" class="card">
+            <p>Results will appear here...</p>
+        </div>
+    </div>
+    
+    <h2>Raw Response Data</h2>
+    <div id="results">No data yet.</div>
+    
+    <script>
+        // Get the API base URL from environment variables or use the Heroku URL
+        const API_BASE_URL = "https://aero-matching-backend-a8e57a2ef366.herokuapp.com";
+        
+        // Helper function to format JSON with indentation
+        function formatJSON(obj) {
+            return JSON.stringify(obj, null, 2);
+        }
+        
+        // Helper function to update results
+        function updateResults(data) {
+            const resultsElement = document.getElementById('results');
+            resultsElement.textContent = formatJSON(data);
+        }
+        
+        // Helper to show success
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="success">${message}</div>`;
+        }
+        
+        // Helper to show error
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="error">Error: ${message}</div>`;
+        }
+        
+        // Test GET /api/opportunities endpoint
+        document.getElementById('test-get-opportunities').addEventListener('click', async function() {
+            const resultElement = document.getElementById('get-opportunities-result');
+            resultElement.innerHTML = '<p>Testing connection...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/opportunities?page=1&fetchAll=false`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                updateResults(data);
+                
+                if (data.success && data.opportunities && data.opportunities.length > 0) {
+                    showSuccess('get-opportunities-result', `
+                        Success! Received ${data.opportunities.length} opportunities.
+                        <ul>
+                            <li><strong>Total:</strong> ${data.total}</li>
+                            <li><strong>First opportunity:</strong> ${data.opportunities[0].title}</li>
+                        </ul>
+                    `);
+                } else {
+                    showError('get-opportunities-result', 'API returned success but with no opportunities');
+                }
+                
+            } catch (error) {
+                console.error('Error testing GET /api/opportunities:', error);
+                showError('get-opportunities-result', error.message);
+                updateResults({error: error.message});
+            }
+        });
+        
+        // Test POST /api/match endpoint
+        document.getElementById('test-post-match').addEventListener('click', async function() {
+            const resultElement = document.getElementById('post-match-result');
+            resultElement.innerHTML = '<p>Testing match API...</p>';
+            
+            // Sample form data for testing
+            const testData = {
+                company: {
+                    name: "Test Space Company",
+                    description: "We develop advanced propulsion systems and satellite components.",
+                    techCategory: ["Propulsion", "Satellites", "Communications"],
+                    fundingInstrumentTypes: ["SBIR", "Grant"],
+                    eligibleAgencyCodes: ["DOD", "NASA"],
+                    stage: "Early Stage",
+                    teamSize: "6-15",
+                    foundedYear: "2022"
+                },
+                project: {
+                    title: "Next-Gen Propulsion System",
+                    description: "Development of efficient propulsion systems for small satellites and CubeSats.",
+                    techSpecs: "Green propellant, miniaturized design, high efficiency.",
+                    budget: {
+                      min: 250000,
+                      max: 750000,
+                      currency: "USD"
+                    },
+                    timeline: {
+                      duration: "12-18 months",
+                      startDate: "2025-09-01"
+                    },
+                    categoryOfFundingActivity: ["Space Technology", "Propulsion"]
+                }
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/match`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                updateResults(data);
+                
+                if (data.success && data.matches && data.matches.length > 0) {
+                    showSuccess('post-match-result', `
+                        Success! Received ${data.matches.length} matches.
+                        <ul>
+                            <li><strong>First match:</strong> ${data.matches[0].opportunity.title}</li>
+                            <li><strong>Match score:</strong> ${(data.matches[0].score * 100).toFixed(1)}%</li>
+                            <li><strong>Confidence level:</strong> ${data.matches[0].confidenceLevel}</li>
+                        </ul>
+                    `);
+                } else {
+                    showError('post-match-result', 'API returned success but with no matches');
+                }
+                
+            } catch (error) {
+                console.error('Error testing POST /api/match:', error);
+                showError('post-match-result', error.message);
+                updateResults({error: error.message});
+            }
+        });
+    </script>
+</body>
+</html>

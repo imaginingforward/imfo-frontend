@@ -6,9 +6,33 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { CompanyData } from "@/types/form";
 
-// Define tech categories and stages here if needed
-const techCategories = ["Propulsion", "Satellites", "Robotics", "AI/ML", "Earth Observation", "Communications", "Manufacturing", "Materials Science", "Other"];
-const stages = ["Pre-seed", "Seed", "Series A", "Series B", "Series C+", "Public"];
+// Define options aligned with government categories and funding types
+const techCategories = [
+  "Agriculture", "Arts", "Business and Commerce", "Community Development", 
+  "Consumer Protection", "Cybersecurity", "Disaster Prevention and Relief",
+  "Education", "Employment", "Energy", "Environment", "Food and Nutrition",
+  "Health", "Housing", "Humanities", "Information and Statistics", 
+  "Natural Resources", "Science and Technology", "Transportation"
+];
+
+// Agency codes
+const agencyCodes = [
+  "DOD", "NASA", "DOE", "DOT", "NSF", "DHS", "USDA", "HHS", 
+  "EPA", "DOC", "DOI", "DOJ", "DOS", "ED", "HUD", "DOL", "VA"
+];
+
+// Funding instrument types from grants.gov
+const fundingInstrumentTypes = [
+  "Grant", "Cooperative Agreement", "Procurement Contract",
+  "Other Financial Assistance", "SBIR", "STTR"
+];
+
+const stages = [
+  "Pre-seed", "Seed", "Series A", "Series B", "Series C+", 
+  "Public", "Small Business", "Disadvantaged Business", 
+  "Women-Owned Business", "Veteran-Owned Business", "HUBZone"
+];
+
 const teamSizes = ["1-5", "6-15", "16-30", "31-50", "51-100", "101+"];
 
 interface StartupDetailsFormProps {
@@ -53,19 +77,79 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
                 <div key={category} className="flex items-center space-x-2">
                   <Checkbox
                     id={category}
-                    checked={data.techCategory.includes(category)}
+                    checked={data.techCategory?.includes(category)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        onChange({ techCategory: [...data.techCategory, category] });
+                        onChange({ techCategory: [...(data.techCategory || []), category] });
                       } else {
                         onChange({
-                          techCategory: data.techCategory.filter((item) => item !== category),
+                          techCategory: (data.techCategory || []).filter((item) => item !== category),
                         });
                       }
                     }}
                   />
                   <Label htmlFor={category} className="text-sm font-normal">
                     {category}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="fundingInstrumentTypes" className="mb-2 block">Funding Instrument Types *</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {fundingInstrumentTypes.map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={type}
+                    checked={data.fundingInstrumentTypes?.includes(type)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        onChange({ 
+                          fundingInstrumentTypes: [...(data.fundingInstrumentTypes || []), type] 
+                        });
+                      } else {
+                        onChange({
+                          fundingInstrumentTypes: (data.fundingInstrumentTypes || []).filter(
+                            (item) => item !== type
+                          ),
+                        });
+                      }
+                    }}
+                  />
+                  <Label htmlFor={type} className="text-sm font-normal">
+                    {type}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="eligibleAgencyCodes" className="mb-2 block">Eligible Agency Codes</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+              {agencyCodes.map((code) => (
+                <div key={code} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={code}
+                    checked={data.eligibleAgencyCodes?.includes(code)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        onChange({ 
+                          eligibleAgencyCodes: [...(data.eligibleAgencyCodes || []), code] 
+                        });
+                      } else {
+                        onChange({
+                          eligibleAgencyCodes: (data.eligibleAgencyCodes || []).filter(
+                            (item) => item !== code
+                          ),
+                        });
+                      }
+                    }}
+                  />
+                  <Label htmlFor={code} className="text-sm font-normal">
+                    {code}
                   </Label>
                 </div>
               ))}

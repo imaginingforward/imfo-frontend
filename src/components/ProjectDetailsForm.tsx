@@ -6,14 +6,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import type { ProjectData } from "@/types/form";
 
-const interests = [
-  "AFWERX",
-  "DARPA",
-  "DOD",
-  "DOE",
-  "Maritime",
-  "Space Force",
-  "Other"
+// Categories of funding activity aligned with common Baserow values
+const categoriesOfFundingActivity = [
+  "Economic Development", "Education", "Employment and Training", 
+  "Environment", "Health", "Housing", "Humanities", 
+  "Income Security and Social Services", "Information and Statistics", 
+  "Law, Justice and Legal Services", "Natural Resources", 
+  "Regional Development", "Science and Technology and other Research and Development", 
+  "Transportation"
+];
+
+// Timeline duration options
+const durationOptions = [
+  "0-6 months", "6-12 months", "12-18 months", 
+  "18-24 months", "24-36 months", "36+ months"
 ];
 
 interface ProjectDetailsFormProps {
@@ -64,22 +70,22 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
           </div>
 
           <div>
-            <Label>Agency Interests *</Label>
-            <div className="grid grid-cols-2 gap-4 mt-2">
-              {interests.map((interest) => (
-                <div key={interest} className="flex items-center space-x-2">
+            <Label>Categories of Funding Activity *</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+              {categoriesOfFundingActivity.map((category) => (
+                <div key={category} className="flex items-center space-x-2">
                   <Checkbox
-                    id={interest}
-                    checked={data.interests?.includes(interest)}
+                    id={category}
+                    checked={data.categoryOfFundingActivity?.includes(category)}
                     onCheckedChange={(checked) => {
-                      const newInterests = checked
-                        ? [...(data.interests || []), interest]
-                        : (data.interests || []).filter((i) => i !== interest);
-                      onChange({ interests: newInterests });
+                      const newCategories = checked
+                        ? [...(data.categoryOfFundingActivity || []), category]
+                        : (data.categoryOfFundingActivity || []).filter((i) => i !== category);
+                      onChange({ categoryOfFundingActivity: newCategories });
                     }}
                   />
-                  <Label htmlFor={interest} className="text-sm font-normal">
-                    {interest}
+                  <Label htmlFor={category} className="text-sm font-normal">
+                    {category}
                   </Label>
                 </div>
               ))}
@@ -88,26 +94,79 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
 
           <div>
             <Label htmlFor="budget">Estimated Budget Range *</Label>
-            <Input
-              id="budget"
-              className="bg-white/5 border-white/20"
-              value={data.budget}
-              onChange={(e) => onChange({ budget: e.target.value })}
-              placeholder="e.g., $100K - $500K"
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="budgetMin" className="text-sm">Minimum ($)</Label>
+                <Input
+                  id="budgetMin"
+                  type="number"
+                  className="bg-white/5 border-white/20"
+                  value={data.budget?.min || ""}
+                  onChange={(e) => onChange({ 
+                    budget: { 
+                      ...(data.budget || {max: 0}), 
+                      min: Number(e.target.value),
+                      currency: "USD"
+                    } 
+                  })}
+                  placeholder="e.g., 100000"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="budgetMax" className="text-sm">Maximum ($)</Label>
+                <Input
+                  id="budgetMax"
+                  type="number"
+                  className="bg-white/5 border-white/20"
+                  value={data.budget?.max || ""}
+                  onChange={(e) => onChange({ 
+                    budget: { 
+                      ...(data.budget || {min: 0}), 
+                      max: Number(e.target.value),
+                      currency: "USD"
+                    } 
+                  })}
+                  placeholder="e.g., 500000"
+                  required
+                />
+              </div>
+            </div>
           </div>
 
           <div>
             <Label htmlFor="timeline">Project Timeline *</Label>
-            <Input
-              id="timeline"
-              className="bg-white/5 border-white/20"
-              value={data.timeline}
-              onChange={(e) => onChange({ timeline: e.target.value })}
-              placeholder="e.g., 12 months"
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="timelineDuration" className="text-sm">Duration</Label>
+                <select
+                  id="timelineDuration"
+                  className="w-full bg-white/5 border-white/20 text-white rounded-md py-2 px-3"
+                  value={data.timeline?.duration || ""}
+                  onChange={(e) => onChange({ 
+                    timeline: { ...(data.timeline || {startDate: ""}), duration: e.target.value } 
+                  })}
+                  required
+                >
+                  <option value="">Select Duration</option>
+                  {durationOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="timelineStart" className="text-sm">Preferred Start</Label>
+                <Input
+                  id="timelineStart"
+                  type="date"
+                  className="bg-white/5 border-white/20"
+                  value={data.timeline?.startDate || ""}
+                  onChange={(e) => onChange({ 
+                    timeline: { ...(data.timeline || {duration: ""}), startDate: e.target.value } 
+                  })}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
