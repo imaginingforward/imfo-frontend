@@ -131,7 +131,7 @@ const AIMatchingPage = () => {
             <img src="/logo.jpg" alt="IMFO Logo" className="h-16 w-auto" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            Aerospace Opportunity Intelligence Platform
+            AeroAlign
           </h1>
           <p className="text-lg text-gray-300 mb-8">
             Discover optimal government contract opportunities for your space technology enterprise
