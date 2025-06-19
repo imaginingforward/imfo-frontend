@@ -10,6 +10,7 @@ import FormProgressIndicator from "@/components/FormProgressIndicator";
 import { Button } from "@/components/ui/button";
 import RFPMatchList from "@/components/RFPMatchList";
 import { getMatchingOpportunities, MatchResult } from "@/services/matchingService";
+import { getBackendApiKey } from "@/utils/envConfig";
 import { Loader2 } from "lucide-react";
 
 const AIMatchingPage = () => {
@@ -26,6 +27,8 @@ const AIMatchingPage = () => {
         name: "",
         description: "",
         techCategory: [],
+        fundingInstrumentTypes: [], // Added for backend compatibility
+        eligibleAgencyCodes: [],     // Added for backend compatibility
         stage: "",
         teamSize: "",
         foundedYear: "",
@@ -37,9 +40,16 @@ const AIMatchingPage = () => {
         title: "",
         description: "",
         techSpecs: "",
-        budget: "",
-        timeline: "",
-        interests: [],
+        budget: {
+          min: 0,
+          max: 0,
+          currency: "USD"
+        },
+        timeline: {
+          startDate: "",
+          duration: ""
+        },
+        categoryOfFundingActivity: [], // Changed from interests to match backend
       },
     },
   });
@@ -94,13 +104,13 @@ const AIMatchingPage = () => {
 
   const handleCompanyDataChange = (data: Partial<typeof formData.company>) => {
     Object.entries(data).forEach(([key, value]) => {
-      setValue(`company.${key as keyof typeof formData.company}`, value);
+      setValue(`company.${String(key as keyof typeof formData.company)}`, value);
     });
   };
 
   const handleProjectDataChange = (data: Partial<typeof formData.project>) => {
     Object.entries(data).forEach(([key, value]) => {
-      setValue(`project.${key as keyof typeof formData.project}`, value);
+      setValue(`project.${String(key as keyof typeof formData.project)}`, value);
     });
   };
   
@@ -197,9 +207,9 @@ const AIMatchingPage = () => {
                     <details>
                       <summary className="cursor-pointer text-sm">Debug Information</summary>
                       <div className="text-left mt-2 p-2 bg-black/20 text-xs rounded">
-                        <p>API URL: https://aero-ai-backend-b4a2e5c4d981.herokuapp.com/api/matching</p>
-                        <p>Environment: {import.meta.env.MODE || 'unknown'}</p>
-                        <p>API Key Set: {import.meta.env.VITE_AERO_AI_BACKEND_API_KEY ? 'Yes' : 'No'}</p>
+                        <p>API URL: https://aero-matching-backend-a8e57a2ef366.herokuapp.com/api/matching</p>
+                        <p>Environment: {'production'}</p>
+                        <p>API Key Set: {getBackendApiKey() ? 'Yes' : 'No'}</p>
                       </div>
                     </details>
                   </div>

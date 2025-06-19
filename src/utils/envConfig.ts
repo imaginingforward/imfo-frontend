@@ -104,3 +104,15 @@ export function getMongoDBDataSource(): string {
   }
   return 'Cluster0';
 }
+
+/**
+ * Get the backend API key for authentication
+ */
+export function getBackendApiKey(): string {
+  // @ts-ignore - import.meta.env is a Vite feature
+  if (import.meta.env && import.meta.env.VITE_AERO_AI_BACKEND_API_KEY) {
+    // @ts-ignore
+    return import.meta.env.VITE_AERO_AI_BACKEND_API_KEY;
+  }
+  return '';
+}

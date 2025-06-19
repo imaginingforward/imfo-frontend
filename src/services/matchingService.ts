@@ -1,7 +1,8 @@
 import type { FormData } from "@/types/form";
+import { getBackendApiKey } from "@/utils/envConfig";
 
 // API URL for the matching API endpoint
-const API_URL = "https://aero-matching-backend-a8e57a2ef366.herokuapp.com/api/matching";
+const API_URL = "https://aero-matching-backend-a8e57a2ef366.herokuapp.com/api/match";
 
 // Maximum number of opportunities to display
 const MAX_RESULTS = 5; // Updated to show top 5 matches
@@ -102,36 +103,49 @@ export const getMatchingOpportunities = async (formData: FormData, limit: number
     console.log('Submitting to matching API:', API_URL);
     console.log('Form data being sent to matching API:', formData);
     
-    // Prepare normalized form data for API
-    const normalizedFormData = {
-      ...formData,
+    // Transform form data to match the API's expected format
+    const transformedData = {
       company: {
-        ...formData.company,
-        techCategory: Array.isArray(formData.company.techCategory) ? formData.company.techCategory : [],
-        fundingInstrumentTypes: Array.isArray(formData.company.fundingInstrumentTypes) ? formData.company.fundingInstrumentTypes : [],
-        eligibleAgencyCodes: Array.isArray(formData.company.eligibleAgencyCodes) ? formData.company.eligibleAgencyCodes : [],
+        name: formData.company.name,
+        description: formData.company.description,
+        // Convert single stage to array of stages
+        stages: [formData.company.stage],
+        // Use tech category as focus
+        focus: Array.isArray(formData.company.techCategory) ? formData.company.techCategory : [],
+        // Include budget from the project
+        budget: formData.project.budget?.max || 0,
+        // Add other data the API might use
+        email: formData.company.email,
+        foundedYear: formData.company.foundedYear,
+        teamSize: formData.company.teamSize
       },
       project: {
-        ...formData.project,
-        categoryOfFundingActivity: Array.isArray(formData.project.categoryOfFundingActivity) ? 
-          formData.project.categoryOfFundingActivity : [],
-        // For backward compatibility with the backend which might expect 'interests' field
-        interests: Array.isArray(formData.project.categoryOfFundingActivity) ? 
-          formData.project.categoryOfFundingActivity : [],
+        description: formData.project.description,
+        // Convert timeline object to string
+        timeline: formData.project.timeline?.duration || '',
+        // Add title and tech specs
+        title: formData.project.title,
+        techSpecs: formData.project.techSpecs
       }
     };
     
-    // Get optional API key from environment variable
-    const apiKey = import.meta.env.VITE_AERO_AI_BACKEND_API_KEY || "";
+    console.log('Transformed data for API:', transformedData);
     
-    // Make the request to the API
+    // Get API key from environment variable
+    const apiKey = getBackendApiKey();
+    
+    // Make the request to the API with authentication
     const response = await fetch(`${API_URL}?limit=${limit}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
+        'Accept': 'application/json',
+        'Origin': window.location.origin,
+        'x-api-key': apiKey, // Include API key for authentication
       },
-      body: JSON.stringify(normalizedFormData)
+      mode: 'cors',
+      credentials: 'omit',
+      body: JSON.stringify(transformedData)
     });
     
     if (!response.ok) {
@@ -144,13 +158,13 @@ export const getMatchingOpportunities = async (formData: FormData, limit: number
     const data = await response.json();
     
     // Check if we have valid data
-    if (!data.success || !data.data || !Array.isArray(data.data)) {
+    if (!data.success || !data.matches || !Array.isArray(data.matches)) {
       console.warn("Invalid or empty response from match API");
       throw new Error('Invalid response from match API');
     }
     
     // Transform the API response to match our expected format
-    const matches: MatchResult[] = data.data.map((match: any) => ({
+    const matches: MatchResult[] = data.matches.map((match: any) => ({
       opportunity: match.opportunity,
       score: match.score || 0,
       matchPercentage: Math.round((match.score || 0) * 100),
