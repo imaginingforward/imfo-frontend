@@ -19,10 +19,11 @@ fi
 
 echo "📝 Using Heroku app: $APP_NAME"
 
-# Clear and set up buildpacks - using only Node.js buildpack with direct npm start
-echo "🔧 Setting up Node.js buildpack..."
+# Clear and set up buildpacks - using static buildpack for SPA
+echo "🔧 Setting up Static buildpack..."
 heroku buildpacks:clear --app $APP_NAME
 heroku buildpacks:set heroku/nodejs --app $APP_NAME
+heroku buildpacks:add heroku/static --app $APP_NAME
 
 # Configure environment variables for Heroku
 echo "📝 Setting NODE_ENV=production for production build..."

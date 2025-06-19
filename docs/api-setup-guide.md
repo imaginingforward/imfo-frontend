@@ -6,7 +6,7 @@ This guide explains how to connect the Aero AI Match Portal frontend to the back
 
 The frontend application connects to a backend API service running at:
 ```
-https://aero-matching-backend-a8e57a2ef366.herokuapp.com
+https://aero-matching-backend-5d1bd860f515.herokuapp.com
 ```
 
 This API provides:

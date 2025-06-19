@@ -17,7 +17,7 @@ We've made the following changes to fix Heroku deployment issues:
    - Added security headers and caching rules
 
 3. **Connected to the Heroku-hosted Baserow Backend**:
-   - Updated services to use `https://aero-matching-backend-a8e57a2ef366.herokuapp.com/`
+   - Updated services to use `https://aero-matching-backend-5d1bd860f515.herokuapp.com/`
    - Created a unified API service for communication with the backend
 
 4. **Created Deployment Scripts**:

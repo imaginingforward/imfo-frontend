@@ -84,7 +84,7 @@ The static buildpack was deprecated and is no longer maintained. Additionally, i
 For proper operation, make sure these environment variables are set in your Heroku app:
 
 ```
-heroku config:set VITE_API_BASE_URL=https://aero-matching-backend-a8e57a2ef366.herokuapp.com/ --app your-app-name
+heroku config:set VITE_API_BASE_URL=https://aero-matching-backend-5d1bd860f515.herokuapp.com/ --app your-app-name
 ```
 
 ## Troubleshooting

@@ -32,7 +32,7 @@ function debugEnvironmentVariables() {
   
   // Display API connection information
   console.log("\n📡 API Connection Information:");
-  console.log("API Endpoint: https://aero-matching-backend-a8e57a2ef366.herokuapp.com/api/match");
+  console.log("API Endpoint: https://aero-matching-backend-5d1bd860f515.herokuapp.com/api/match");
   console.log("Current Origin:", window.location.origin);
   
   // Check for potential CORS issues
@@ -49,7 +49,7 @@ function debugEnvironmentVariables() {
   // Perform a simple health check if possible
   console.log("\n🩺 Attempting API Health Check...");
   
-  fetch('https://aero-matching-backend-a8e57a2ef366.herokuapp.com/health')
+  fetch('https://aero-matching-backend-5d1bd860f515.herokuapp.com/health')
     .then(response => {
       if (response.ok) {
         console.log("✓ API Health Check: Success");
@@ -90,7 +90,7 @@ export default debugEnvironmentVariables;
  *    import('/src/debug-env.js').then(module => module.default());
  * 
  * 3. To test API connection manually:
- *    fetch('https://aero-matching-backend-a8e57a2ef366.herokuapp.com/health', {
+ *    fetch('https://aero-matching-backend-5d1bd860f515.herokuapp.com/health', {
  *      headers: { 'x-api-key': 'your-api-key-here' }
  *    }).then(r => r.json()).then(console.log).catch(console.error)
  */

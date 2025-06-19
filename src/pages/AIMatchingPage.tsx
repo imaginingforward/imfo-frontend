@@ -207,7 +207,7 @@ const AIMatchingPage = () => {
                     <details>
                       <summary className="cursor-pointer text-sm">Debug Information</summary>
                       <div className="text-left mt-2 p-2 bg-black/20 text-xs rounded">
-                        <p>API URL: https://aero-matching-backend-a8e57a2ef366.herokuapp.com/api/matching</p>
+                        <p>API URL: https://aero-matching-backend-5d1bd860f515.herokuapp.com/api/matching</p>
                         <p>Environment: {'production'}</p>
                         <p>API Key Set: {getBackendApiKey() ? 'Yes' : 'No'}</p>
                       </div>
