@@ -57,7 +57,7 @@ If you encounter connection issues:
 
 1. Check that your API key is correctly set in the `.env` file
 2. Verify the backend service is running by visiting: 
-   `https://aero-matching-backend-a8e57a2ef366.herokuapp.com/health`
+   `https://aero-matching-backend-5d1bd860f515.herokuapp.com/health`
 3. Check the browser console for API errors
 4. Ensure CORS is properly configured on both client and server
 
