@@ -19,6 +19,16 @@ const agencyCodes = [
   "EPA", "DOC", "DOI", "DOJ", "DOS", "ED", "HUD", "DOL", "VA"
 ];
 
+// US States for dropdown
+const usStates = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
+  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+  "DC", "PR", "VI", "AS", "GU", "MP"
+];
+
 // Funding instrument types from grants.gov
 const fundingInstrumentTypes = [
   "Grant", "Cooperative Agreement", "Procurement Contract",
@@ -201,6 +211,35 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
               placeholder="e.g., 2018"
               required
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="city">City</Label>
+              <Input
+                id="city"
+                className="bg-white/5 border-white/20"
+                value={data.city || ""}
+                onChange={(e) => onChange({ city: e.target.value })}
+                placeholder="e.g., Austin"
+              />
+            </div>
+            <div>
+              <Label htmlFor="state">State</Label>
+              <select
+                id="state"
+                className="w-full bg-white/5 border-white/20 text-white rounded-md py-2 px-3"
+                value={data.state || ""}
+                onChange={(e) => onChange({ state: e.target.value })}
+              >
+                <option value="">Select State</option>
+                {usStates.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>

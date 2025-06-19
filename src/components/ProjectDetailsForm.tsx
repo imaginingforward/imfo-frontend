@@ -2,14 +2,8 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import type { ProjectData } from "@/types/form";
-
-// Categories of funding activity aligned with common Baserow values
-const categoriesOfFundingActivity = [
-  "Space Technology", "Research and Development", "Engineering"
-];
 
 // Timeline duration options
 const durationOptions = [
@@ -65,26 +59,21 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
           </div>
 
           <div>
-            <Label>Categories of Funding Activity *</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-              {categoriesOfFundingActivity.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={category}
-                    checked={data.categoryOfFundingActivity?.includes(category)}
-                    onCheckedChange={(checked) => {
-                      const newCategories = checked
-                        ? [...(data.categoryOfFundingActivity || []), category]
-                        : (data.categoryOfFundingActivity || []).filter((i) => i !== category);
-                      onChange({ categoryOfFundingActivity: newCategories });
-                    }}
-                  />
-                  <Label htmlFor={category} className="text-sm font-normal">
-                    {category}
-                  </Label>
-                </div>
-              ))}
-            </div>
+            <Label htmlFor="keywords">Keywords</Label>
+            <Textarea
+              id="keywords"
+              className="bg-white/5 border-white/20"
+              value={data.keywords?.join(", ") || ""}
+              onChange={(e) => {
+                // Split by commas and trim whitespace
+                const keywordsArray = e.target.value
+                  .split(',')
+                  .map(keyword => keyword.trim())
+                  .filter(keyword => keyword !== "");
+                onChange({ keywords: keywordsArray });
+              }}
+              placeholder="Enter keywords separated by commas..."
+            />
           </div>
 
           <div>
@@ -150,14 +139,14 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
                 </select>
               </div>
               <div>
-                <Label htmlFor="timelineStart" className="text-sm">Preferred Start</Label>
+                <Label htmlFor="timelineDeadline" className="text-sm">Preferred Deadline</Label>
                 <Input
-                  id="timelineStart"
+                  id="timelineDeadline"
                   type="date"
                   className="bg-white/5 border-white/20"
-                  value={data.timeline?.startDate || ""}
+                  value={data.timeline?.deadline || ""}
                   onChange={(e) => onChange({ 
-                    timeline: { ...(data.timeline || {duration: ""}), startDate: e.target.value } 
+                    timeline: { ...(data.timeline || {duration: ""}), deadline: e.target.value } 
                   })}
                 />
               </div>

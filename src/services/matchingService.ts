@@ -126,7 +126,14 @@ export const getMatchingOpportunities = async (formData: FormData, limit: number
         timeline: formData.project.timeline?.duration || '',
         // Add title and tech specs
         title: formData.project.title,
-        techSpecs: formData.project.techSpecs
+        techSpecs: formData.project.techSpecs,
+        // Add location data
+        location: {
+          city: formData.company.city || '',
+          state: formData.company.state || ''
+        },
+        // Add keywords
+        keywords: formData.project.keywords || []
       }
     };
     

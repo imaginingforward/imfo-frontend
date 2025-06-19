@@ -29,6 +29,8 @@ const AIMatchingPage = () => {
         techCategory: [],
         fundingInstrumentTypes: [], // Added for backend compatibility
         eligibleAgencyCodes: [],     // Added for backend compatibility
+        city: "",                   // New field for location
+        state: "",                  // New field for location
         stage: "",
         teamSize: "",
         foundedYear: "",
@@ -40,16 +42,16 @@ const AIMatchingPage = () => {
         title: "",
         description: "",
         techSpecs: "",
+        keywords: [],                 // New field for keywords
         budget: {
           min: 0,
           max: 0,
           currency: "USD"
         },
         timeline: {
-          startDate: "",
+          deadline: "",               // Changed from startDate to deadline
           duration: ""
         },
-        categoryOfFundingActivity: [], // Changed from interests to match backend
       },
     },
   });
@@ -104,13 +106,15 @@ const AIMatchingPage = () => {
 
   const handleCompanyDataChange = (data: Partial<typeof formData.company>) => {
     Object.entries(data).forEach(([key, value]) => {
-      setValue(`company.${String(key as keyof typeof formData.company)}`, value);
+      // Use type assertion to fix TypeScript error
+      setValue(`company.${key}` as any, value);
     });
   };
 
   const handleProjectDataChange = (data: Partial<typeof formData.project>) => {
     Object.entries(data).forEach(([key, value]) => {
-      setValue(`project.${String(key as keyof typeof formData.project)}`, value);
+      // Use type assertion to fix TypeScript error
+      setValue(`project.${key}` as any, value);
     });
   };
   

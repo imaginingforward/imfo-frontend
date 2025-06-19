@@ -62,7 +62,7 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
             <CalendarIcon className="h-4 w-4 text-gray-500" />
-            <span className="text-sm">Due {formatDate(opportunity.responseDeadline)}</span>
+            <span className="text-sm">Response Deadline {formatDate(opportunity.responseDeadline)}</span>
           </div>
           <div className="flex items-center gap-2">
             <DollarSignIcon className="h-4 w-4 text-gray-500" />
@@ -87,12 +87,12 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
         </div>
         
         <div>
-          <h4 className="font-medium text-sm mb-1">Technology Focus</h4>
+          <h4 className="font-medium text-sm mb-1">Type</h4>
           <div className="flex flex-wrap gap-1">
             {opportunity.techFocus?.map((tech, i) => (
               <Badge key={i} variant="secondary" className="text-xs">{tech}</Badge>
             )) || (
-              <Badge variant="secondary" className="text-xs">{opportunity.category || 'N/A'}</Badge>
+              <Badge variant="secondary" className="text-xs">{opportunity.type || 'N/A'}</Badge>
             )}
           </div>
         </div>
