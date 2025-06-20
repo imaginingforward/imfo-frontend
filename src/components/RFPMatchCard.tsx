@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { CalendarIcon, DollarSignIcon, InfoIcon, MapPinIcon, TagIcon } from 'lucide-react';
+import { CalendarIcon, DollarSignIcon, InfoIcon, LinkIcon, MapPinIcon, TagIcon } from 'lucide-react';
 
 interface RFPMatchCardProps {
   match: MatchResult;
@@ -75,32 +75,38 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
           </div>
         </div>
         
-        {/* New fields: Type and State */}
+        {/* Location and URL */}
         <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center gap-2">
+            <MapPinIcon className="h-4 w-4 text-black" />
+            <span className="text-sm">
+              {opportunity.city && opportunity.state 
+                ? `${opportunity.city}, ${opportunity.state}` 
+                : opportunity.city || opportunity.state || 'Location N/A'}
+            </span>
+          </div>
           {opportunity.type && (
             <div className="flex items-center gap-2">
               <TagIcon className="h-4 w-4 text-black" />
               <span className="text-sm">{opportunity.type}</span>
             </div>
           )}
-          {opportunity.state && (
-            <div className="flex items-center gap-2">
-              <MapPinIcon className="h-4 w-4 text-black" />
-              <span className="text-sm">{opportunity.state}</span>
-            </div>
-          )}
         </div>
-        
-        <div>
-          <h4 className="font-medium text-sm mb-1">Type</h4>
-          <div className="flex flex-wrap gap-1">
-            {opportunity.techFocus?.map((tech, i) => (
-              <Badge key={i} variant="secondary" className="text-xs">{tech}</Badge>
-            )) || (
-              <Badge variant="secondary" className="text-xs">{opportunity.type || 'N/A'}</Badge>
-            )}
+
+        {/* URL Link */}
+        {opportunity.url && (
+          <div className="flex items-center gap-2">
+            <LinkIcon className="h-4 w-4 text-black" />
+            <a 
+              href={opportunity.url} 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-400 hover:underline"
+            >
+              View Opportunity
+            </a>
           </div>
-        </div>
+        )}
         
         <div>
           <h4 className="font-medium text-sm mb-2">Description</h4>
@@ -125,10 +131,6 @@ const RFPMatchCard: React.FC<RFPMatchCardProps> = ({ match, index }) => {
       </CardContent>
       
       <CardFooter className="pt-2 flex-col items-start gap-3">
-        <div className="grid grid-cols-2 gap-2 w-full">
-          {renderMatchDetail('Tech Focus', matchDetails.techFocusMatch)}
-          {renderMatchDetail('Stage', matchDetails.stageMatch)}
-        </div>
         <div className="grid grid-cols-2 gap-2 w-full">
           {renderMatchDetail('Budget', matchDetails.budgetMatch)}
           {renderMatchDetail('Timeline', matchDetails.timelineMatch)}

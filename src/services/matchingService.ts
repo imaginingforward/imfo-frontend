@@ -27,6 +27,7 @@ export interface MatchOpportunity {
   url?: string;
   // New fields
   type?: string;     // Contract Type
+  city?: string;     // City information
   state?: string;    // State information
   pointOfContact?: {
     name?: string;
