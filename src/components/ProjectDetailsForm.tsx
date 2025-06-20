@@ -48,7 +48,7 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="techSpecs">Technical Specifications *</Label>
+            <Label htmlFor="techSpecs">Technical Specifications</Label>
             <Textarea
               id="techSpecs"
               className="bg-white/5 border-white/20"
@@ -60,7 +60,7 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="keywords">Keywords</Label>
+            <Label htmlFor="keywords">Keywords *</Label>
             <TagInput
               value={data.keywords || []}
               onChange={(tags) => onChange({ keywords: tags })}

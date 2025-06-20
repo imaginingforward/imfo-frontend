@@ -182,7 +182,7 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="teamSize">Team Size *</Label>
+            <Label htmlFor="teamSize">Team Size</Label>
             <select
               id="teamSize"
               className="w-full bg-white/5 border-white/20 text-white rounded-md py-2 px-3"
@@ -200,7 +200,7 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="foundedYear">Founded Year *</Label>
+            <Label htmlFor="foundedYear">Founded Year</Label>
             <Input
               type="number"
               id="foundedYear"
@@ -214,7 +214,7 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">City *</Label>
               <Input
                 id="city"
                 className="bg-white/5 border-white/20"
@@ -224,7 +224,7 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
               />
             </div>
             <div>
-              <Label htmlFor="state">State</Label>
+              <Label htmlFor="state">State *</Label>
               <select
                 id="state"
                 className="w-full bg-white/5 border-white/20 text-white rounded-md py-2 px-3"
