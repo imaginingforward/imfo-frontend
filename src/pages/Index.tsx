@@ -18,34 +18,40 @@ const Index = () => {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Traditional Form Card */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* ImFo Intelligence Card */}
           <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 flex flex-col">
             <div className="flex-1">
               <div className="bg-primary/10 p-4 rounded-lg inline-block mb-4">
-                <Rocket className="h-8 w-8 text-primary" />
+                <Database className="h-8 w-8 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold mb-3">Standard Submission</h2>
+              <h2 className="text-2xl font-bold mb-3">ImFo Intelligence</h2>
               <p className="text-gray-300 mb-6">
-                Submit your company and project details through our traditional form.
+                Explore our comprehensive database of space tech companies.
               </p>
               <ul className="space-y-2 mb-8">
                 <li className="flex items-center">
                   <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
                     <span className="text-green-500 text-sm">✓</span>
                   </div>
-                  <span>Receive matches you can store in PDF/CSV</span>
+                  <span>Filter by sector, stage, and location</span>
+                </li>
+                <li className="flex items-center">
+                  <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
+                    <span className="text-green-500 text-sm">✓</span>
+                  </div>
+                  <span>View detailed company profiles</span>
                 </li>
               </ul>
             </div>
             <Button 
-              onClick={() => navigate('/standard-form')} 
+              onClick={() => navigate('/intelligence')} 
               className="w-full bg-primary hover:bg-primary/90"
             >
-              Start Standard Submission
+              View Companies
             </Button>
           </div>
-          
+        
           {/* AI Matching Card */}
           <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 flex flex-col relative overflow-hidden">
             {/* Highlight Banner */}
@@ -85,39 +91,34 @@ const Index = () => {
               Try AI Matching
             </Button>
           </div>
-
-          {/* ImFo Intelligence Card */}
+          
+          {/* Standard Submission Card - Commented out for now
           <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl p-6 flex flex-col">
             <div className="flex-1">
               <div className="bg-primary/10 p-4 rounded-lg inline-block mb-4">
-                <Database className="h-8 w-8 text-primary" />
+                <Rocket className="h-8 w-8 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold mb-3">ImFo Intelligence</h2>
+              <h2 className="text-2xl font-bold mb-3">Standard Submission</h2>
               <p className="text-gray-300 mb-6">
-                Explore our comprehensive database of space tech companies.
+                Submit your company and project details through our traditional form.
               </p>
               <ul className="space-y-2 mb-8">
                 <li className="flex items-center">
                   <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
                     <span className="text-green-500 text-sm">✓</span>
                   </div>
-                  <span>Filter by sector, stage, and location</span>
-                </li>
-                <li className="flex items-center">
-                  <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
-                    <span className="text-green-500 text-sm">✓</span>
-                  </div>
-                  <span>View detailed company profiles</span>
+                  <span>Receive matches you can store in PDF/CSV</span>
                 </li>
               </ul>
             </div>
             <Button 
-              onClick={() => navigate('/intelligence')} 
+              onClick={() => navigate('/standard-form')} 
               className="w-full bg-primary hover:bg-primary/90"
             >
-              View Companies
+              Start Standard Submission
             </Button>
           </div>
+          */}
         </div>
         
         <div className="text-center text-sm text-gray-400">

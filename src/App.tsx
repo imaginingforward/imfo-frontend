@@ -21,7 +21,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/standard-form" element={<SpaceForm />} />
+          {/* <Route path="/standard-form" element={<SpaceForm />} /> */}
           <Route path="/ai-matching" element={<AIMatchingPage />} />
           <Route path="/submission-result" element={<SubmissionResultPage />} />
           <Route path="/intelligence" element={<ImFoIntelligencePage />} />
