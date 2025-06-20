@@ -1,24 +1,31 @@
 import { getApiBaseUrl } from "@/utils/envConfig";
 
+// Interface for the value object structure used in many fields
+interface ValueObject {
+  id: number;
+  value: string;
+  color: string;
+}
+
 export interface Company {
   id: number;
   company_name: string;
   sector: string;
-  subsector_tags: string | null;
+  subsector_tags: ValueObject | null;
   description: string | null;
-  stage: string | null;
+  stage: ValueObject | null;
   latest_funding_raised: string | null;
   total_funding_raised: string | null;
-  capital_partners: string | null;
+  capital_partners: ValueObject[] | [];
   annual_revenue: string | null;
-  hq_location: string | null;
+  hq_location: ValueObject | null;
   founder: string | null;
   year_founded: string | null;
   hiring: string | null;
-  notable_partners: string | null;
+  notable_partners: ValueObject[] | [];
   competitors: string | null;
   public_ticker: string | null;
-  business_activity: string | null;
+  business_activity: ValueObject[] | [];
   website_url: string | null;
   crunchbase_url: string | null;
   linkedin_url: string | null;

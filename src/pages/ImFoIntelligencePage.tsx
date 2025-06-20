@@ -56,7 +56,7 @@ const ImFoIntelligencePage: React.FC = () => {
   const sectors = [...new Set(companies.map(c => c.sector).filter(Boolean))];
   
   // Extract unique stages for filter
-  const stages = [...new Set(companies.map(c => c.stage).filter(Boolean))];
+  const stages = [...new Set(companies.map(c => c.stage?.value).filter(Boolean))];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }));
@@ -128,7 +128,7 @@ const ImFoIntelligencePage: React.FC = () => {
               <SelectContent>
                 <SelectItem value="all">All Stages</SelectItem>
                 {stages.map(stage => (
-                  <SelectItem key={stage} value={stage}>{stage}</SelectItem>
+                  <SelectItem key={String(stage)} value={String(stage)}>{stage}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

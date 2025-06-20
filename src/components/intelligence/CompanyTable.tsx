@@ -48,8 +48,8 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
               <TableRow key={company.id} className="hover:bg-white/5">
                 <TableCell className="font-medium">{company.company_name}</TableCell>
                 <TableCell>{company.sector}</TableCell>
-                <TableCell>{company.stage || '—'}</TableCell>
-                <TableCell>{company.hq_location || '—'}</TableCell>
+                <TableCell>{company.stage?.value || '—'}</TableCell>
+                <TableCell>{company.hq_location?.value || '—'}</TableCell>
                 <TableCell>{company.total_funding_raised || '—'}</TableCell>
                 <TableCell>{company.year_founded || '—'}</TableCell>
                 <TableCell>

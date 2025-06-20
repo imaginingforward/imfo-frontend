@@ -78,7 +78,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 {company.hq_location && (
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
-                    <span>{company.hq_location}</span>
+                    <span>{company.hq_location.value}</span>
                   </div>
                 )}
                 
@@ -99,7 +99,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 {company.stage && (
                   <div className="flex items-center gap-1">
                     <Badge variant="outline" className="h-5 py-0 px-1">
-                      {company.stage}
+                      {company.stage.value}
                     </Badge>
                   </div>
                 )}
@@ -144,7 +144,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
               
               {company.subsector_tags && (
                 <div className="text-xs text-gray-400 truncate max-w-[150px]">
-                  {company.subsector_tags}
+                  {company.subsector_tags.value}
                 </div>
               )}
             </CardFooter>
