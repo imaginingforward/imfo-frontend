@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { TagInput } from "@/components/ui/tag-input";
 import type { CompanyData } from "@/types/form";
 
 // Define options aligned with government categories and funding types
@@ -103,35 +104,6 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
             </div>
           </div>
 
-          <div>
-            <Label htmlFor="fundingInstrumentTypes" className="mb-2 block">Funding Instrument Types *</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {fundingInstrumentTypes.map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={type}
-                    checked={data.fundingInstrumentTypes?.includes(type)}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        onChange({ 
-                          fundingInstrumentTypes: [...(data.fundingInstrumentTypes || []), type] 
-                        });
-                      } else {
-                        onChange({
-                          fundingInstrumentTypes: (data.fundingInstrumentTypes || []).filter(
-                            (item) => item !== type
-                          ),
-                        });
-                      }
-                    }}
-                  />
-                  <Label htmlFor={type} className="text-sm font-normal">
-                    {type}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
 
           <div>
             <Label htmlFor="eligibleAgencyCodes" className="mb-2 block">Eligible Agency Codes</Label>
@@ -261,6 +233,16 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
               value={data.patents || ""}
               onChange={(e) => onChange({ patents: e.target.value })}
               placeholder="List any patents"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="keywords">Keywords *</Label>
+            <TagInput
+              value={data.keywords || []}
+              onChange={(tags) => onChange({ keywords: tags })}
+              placeholder="Type keyword and press Enter or comma..."
+              className="mt-1"
             />
           </div>
 

@@ -7,6 +7,7 @@ export type CompanyData = {
   techCategory: string[];               // Will align with OpportunityCategory
   fundingInstrumentTypes: string[];     // NEW: Matches FundingInstrumentType
   eligibleAgencyCodes?: string[];       // NEW: Matches AgencyCode
+  keywords?: string[];                  // NEW: Keywords for matching
   city?: string;                        // NEW: City location
   state?: string;                       // NEW: State location
   stage: string;

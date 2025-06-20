@@ -8,8 +8,9 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight, Globe, Database, Linkedin, Twitter } from 'lucide-react';
 import { type Company } from "@/services/companyService";
+import { cn } from "@/lib/utils";
 
 interface CompanyTableProps {
   companies: Company[];
@@ -30,48 +31,117 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
   
   return (
     <div className="space-y-4">
-      <div className="rounded-md border border-white/20 overflow-hidden">
+      <div className="rounded-md border border-white/30 overflow-hidden overflow-x-auto">
         <Table>
-          <TableHeader className="bg-white/5">
-            <TableRow>
-              <TableHead>Company</TableHead>
-              <TableHead>Sector</TableHead>
-              <TableHead>Stage</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Funding</TableHead>
-              <TableHead>Founded</TableHead>
-              <TableHead>Links</TableHead>
+          <TableHeader className="bg-white/10">
+            <TableRow className="border-b border-white/20">
+              <TableHead className="text-white font-semibold">Company</TableHead>
+              <TableHead className="text-white font-semibold">Sector</TableHead>
+              <TableHead className="text-white font-semibold">Subsector</TableHead>
+              <TableHead className="text-white font-semibold">Stage</TableHead>
+              <TableHead className="text-white font-semibold">Location</TableHead>
+              <TableHead className="text-white font-semibold">Latest Funding</TableHead>
+              <TableHead className="text-white font-semibold">Total Funding</TableHead>
+              <TableHead className="text-white font-semibold">Annual Revenue</TableHead>
+              <TableHead className="text-white font-semibold">Business Activity</TableHead>
+              <TableHead className="text-white font-semibold">Founded</TableHead>
+              <TableHead className="text-white font-semibold">Hiring</TableHead>
+              <TableHead className="text-white font-semibold">Notable Partners</TableHead>
+              <TableHead className="text-white font-semibold">Website</TableHead>
+              <TableHead className="text-white font-semibold">LinkedIn</TableHead>
+              <TableHead className="text-white font-semibold">Twitter</TableHead>
+              <TableHead className="text-white font-semibold">Crunchbase</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {companies.map((company) => (
-              <TableRow key={company.id} className="hover:bg-white/5">
-                <TableCell className="font-medium">{company.company_name}</TableCell>
-                <TableCell>{company.sector}</TableCell>
-                <TableCell>{company.stage?.value || '—'}</TableCell>
-                <TableCell>{company.hq_location?.value || '—'}</TableCell>
-                <TableCell>{company.total_funding_raised || '—'}</TableCell>
-                <TableCell>{company.year_founded || '—'}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    {company.website_url && (
-                      <a 
-                        href={company.website_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
+            {companies.map((company, index) => (
+              <TableRow 
+                key={company.id} 
+                className={cn(
+                  "hover:bg-white/10",
+                  index % 2 === 0 ? "bg-transparent" : "bg-white/5"
+                )}
+              >
+                <TableCell className="font-medium text-white">{company.company_name}</TableCell>
+                <TableCell className="text-white">{company.sector}</TableCell>
+                <TableCell className="text-white">{company.subsector_tags?.value || '—'}</TableCell>
+                <TableCell className="text-white">{company.stage?.value || '—'}</TableCell>
+                <TableCell className="text-white">{company.hq_location?.value || '—'}</TableCell>
+                <TableCell className="text-white">{company.latest_funding_raised || '—'}</TableCell>
+                <TableCell className="text-white">{company.total_funding_raised || '—'}</TableCell>
+                <TableCell className="text-white">{company.annual_revenue || '—'}</TableCell>
+                <TableCell className="text-white">
+                  {company.business_activity && company.business_activity.length > 0
+                    ? company.business_activity.map(item => item.value).join(', ')
+                    : '—'}
+                </TableCell>
+                <TableCell className="text-white">{company.year_founded || '—'}</TableCell>
+                <TableCell className="text-white">
+                  {company.hiring === 'Y' ? 'Yes' : company.hiring === 'N' ? 'No' : '—'}
+                </TableCell>
+                <TableCell className="text-white">
+                  {company.notable_partners && company.notable_partners.length > 0
+                    ? company.notable_partners.map(partner => partner.value).join(', ')
+                    : '—'}
+                </TableCell>
+                <TableCell className="text-white">
+                  {company.website_url ? (
+                    <a 
+                      href={company.website_url.startsWith('http') ? company.website_url : `http://${company.website_url}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80"
+                      title="Website"
+                    >
+                      <Globe className="h-4 w-4" />
+                    </a>
+                  ) : '—'}
+                </TableCell>
+                <TableCell className="text-white">
+                  {company.linkedin_url ? (
+                    <a 
+                      href={company.linkedin_url.startsWith('http') ? company.linkedin_url : `http://${company.linkedin_url}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300"
+                      title="LinkedIn"
+                    >
+                      <Linkedin className="h-4 w-4" />
+                    </a>
+                  ) : '—'}
+                </TableCell>
+                <TableCell className="text-white">
+                  {company.twitter_url ? (
+                    <a 
+                      href={company.twitter_url.startsWith('http') ? company.twitter_url : `http://${company.twitter_url}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sky-400 hover:text-sky-300"
+                      title="Twitter"
+                    >
+                      <Twitter className="h-4 w-4" />
+                    </a>
+                  ) : '—'}
+                </TableCell>
+                <TableCell className="text-white">
+                  {company.crunchbase_url ? (
+                    <a 
+                      href={company.crunchbase_url.startsWith('http') ? company.crunchbase_url : `http://${company.crunchbase_url}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-orange-400 hover:text-orange-300"
+                      title="Crunchbase"
+                    >
+                      <Database className="h-4 w-4" />
+                    </a>
+                  ) : '—'}
                 </TableCell>
               </TableRow>
             ))}
             
             {companies.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-4">
+                <TableCell colSpan={16} className="text-center py-4 text-white">
                   No companies found matching your criteria
                 </TableCell>
               </TableRow>
@@ -83,7 +153,7 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-300">
             Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
           </div>
           <div className="flex gap-2">
