@@ -134,46 +134,44 @@ const ImFoIntelligencePage: React.FC = () => {
             </Select>
           </div>
           
-          <div className="mb-4">
-            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "cards")}>
-              <TabsList className="bg-white/10">
-                <TabsTrigger value="table">Table View</TabsTrigger>
-                <TabsTrigger value="cards">Card View</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-          
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : (
-            <>
-              <div className="text-sm text-gray-400 mb-4">
-                {totalCount} companies found
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "cards")} className="mb-4">
+            <TabsList className="bg-white/10">
+              <TabsTrigger value="table">Table View</TabsTrigger>
+              <TabsTrigger value="cards">Card View</TabsTrigger>
+            </TabsList>
+            
+            {loading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
-              
-              <TabsContent value="table" className="mt-0">
-                <CompanyTable 
-                  companies={companies} 
-                  currentPage={filters.page || 1}
-                  pageSize={filters.pageSize || 20}
-                  totalCount={totalCount}
-                  onPageChange={handlePageChange}
-                />
-              </TabsContent>
-              
-              <TabsContent value="cards" className="mt-0">
-                <CompanyCards 
-                  companies={companies} 
-                  currentPage={filters.page || 1}
-                  pageSize={filters.pageSize || 20}
-                  totalCount={totalCount}
-                  onPageChange={handlePageChange}
-                />
-              </TabsContent>
-            </>
-          )}
+            ) : (
+              <>
+                <div className="text-sm text-gray-400 mb-4 mt-4">
+                  {totalCount} companies found
+                </div>
+                
+                <TabsContent value="table" className="mt-0">
+                  <CompanyTable 
+                    companies={companies} 
+                    currentPage={filters.page || 1}
+                    pageSize={filters.pageSize || 20}
+                    totalCount={totalCount}
+                    onPageChange={handlePageChange}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="cards" className="mt-0">
+                  <CompanyCards 
+                    companies={companies} 
+                    currentPage={filters.page || 1}
+                    pageSize={filters.pageSize || 20}
+                    totalCount={totalCount}
+                    onPageChange={handlePageChange}
+                  />
+                </TabsContent>
+              </>
+            )}
+          </Tabs>
         </Card>
       </div>
     </div>
