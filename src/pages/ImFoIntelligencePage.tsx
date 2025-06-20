@@ -54,8 +54,10 @@ const ImFoIntelligencePage: React.FC = () => {
     loadCompanies();
   }, [filters, toast]);
 
-  // Extract unique sectors for filter
-  const sectors = [...new Set(companies.map(c => c.sector).filter(Boolean))];
+  // Extract unique sectors for filter with additional default sectors
+  const defaultSectors = ["Quantum", "Robotics", "Industrial Tech"];
+  const apiSectors = [...new Set(companies.map(c => c.sector).filter(Boolean))];
+  const sectors = [...new Set([...apiSectors, ...defaultSectors])];
   
   // Extract unique stages for filter
   const stages = [...new Set(companies.map(c => c.stage?.value).filter(Boolean))];
@@ -115,7 +117,7 @@ const ImFoIntelligencePage: React.FC = () => {
             <div className="relative flex-grow">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input 
-                className="bg-white/5 border-white/20 pl-10"
+                className="bg-white/5 border-white/20 pl-10 text-gray-100"
                 placeholder="Search companies..." 
                 value={filters.search || ''}
                 onChange={handleSearchChange}
@@ -123,8 +125,8 @@ const ImFoIntelligencePage: React.FC = () => {
             </div>
             
             <Select onValueChange={handleSectorChange} value={filters.sector || "all"}>
-              <SelectTrigger className="w-full md:w-[180px] bg-white/5 border-white/20">
-                <SelectValue placeholder="All Sectors" />
+              <SelectTrigger className="w-full md:w-[180px] bg-white/5 border-white/20 text-gray-400">
+                <SelectValue placeholder="All Sectors" className="text-gray-400" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Sectors</SelectItem>
@@ -135,8 +137,8 @@ const ImFoIntelligencePage: React.FC = () => {
             </Select>
             
             <Select onValueChange={handleStageChange} value={filters.stage || "all"}>
-              <SelectTrigger className="w-full md:w-[180px] bg-white/5 border-white/20">
-                <SelectValue placeholder="All Stages" />
+              <SelectTrigger className="w-full md:w-[180px] bg-white/5 border-white/20 text-gray-400">
+                <SelectValue placeholder="All Stages" className="text-gray-400" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Stages</SelectItem>
