@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import debugEnvironmentVariables from "@/debug-env";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
@@ -11,9 +12,10 @@ import { Button } from "@/components/ui/button";
 import RFPMatchList from "@/components/RFPMatchList";
 import { getMatchingOpportunities, MatchResult } from "@/services/matchingService";
 import { getBackendApiKey } from "@/utils/envConfig";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 
 const AIMatchingPage = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<MatchResult[]>([]);
@@ -126,6 +128,17 @@ const AIMatchingPage = () => {
   return (
     <div className="min-h-screen bg-primary-dark text-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
+        <div className="mb-8">
+          <Button 
+            onClick={() => navigate('/')}
+            variant="ghost" 
+            size="sm"
+            className="text-white hover:text-white hover:bg-white/10"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Button>
+        </div>
         <div className="text-center">
           <div className="flex justify-center mb-6">
             <img src="/logo.jpg" alt="IMFO Logo" className="h-16 w-auto" />

@@ -53,15 +53,18 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {companies.map((company) => (
-          <Card key={company.id} className="bg-white/5 border-white/10 overflow-hidden">
+        {companies.map((company, index) => (
+          <Card 
+            key={company.id} 
+            className={`${index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'} border-white/20 overflow-hidden hover:border-white/30 transition-all`}
+          >
             <div className="p-6">
               <div className="flex items-center gap-4 mb-4">
-                <div className="h-12 w-12 rounded-full flex items-center justify-center text-white font-bold text-lg bg-primary">
+                <div className="h-12 w-12 rounded-full flex items-center justify-center text-white font-bold text-lg bg-primary shadow-md">
                   {getLogoPlaceholder(company.company_name)}
                 </div>
                 <div>
-                  <h3 className="font-bold">{company.company_name}</h3>
+                  <h3 className="font-bold text-lg text-white">{company.company_name}</h3>
                   <Badge variant="outline" className={`${getSectorColor(company.sector)} bg-opacity-20 text-xs`}>
                     {company.sector}
                   </Badge>
@@ -69,12 +72,12 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
               </div>
               
               {company.description && (
-                <p className="text-sm text-gray-300 mb-4 line-clamp-3">
+                <p className="text-sm text-white mb-4 line-clamp-3">
                   {company.description}
                 </p>
               )}
               
-              <div className="grid grid-cols-2 gap-2 text-xs text-gray-400">
+              <div className="grid grid-cols-2 gap-2 text-xs text-white">
                 {company.hq_location && (
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
@@ -98,7 +101,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 
                 {company.stage && (
                   <div className="flex items-center gap-1">
-                    <Badge variant="outline" className="h-5 py-0 px-1">
+                    <Badge variant="outline" className="h-5 py-0 px-1 text-white border-white/30 bg-white/10">
                       {company.stage.value}
                     </Badge>
                   </div>
@@ -106,14 +109,14 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
               </div>
             </div>
             
-            <CardFooter className="border-t border-white/10 bg-white/5 p-3 flex justify-between">
-              <div className="flex gap-2">
+            <CardFooter className="border-t border-white/20 bg-white/10 p-3 flex justify-between">
+              <div className="flex gap-3">
                 {company.website_url && (
                   <a 
-                    href={company.website_url} 
+                    href={company.website_url.startsWith('http') ? company.website_url : `http://${company.website_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-gray-400 hover:text-primary"
+                    className="text-primary hover:text-primary/80"
                   >
                     <Globe className="h-4 w-4" />
                   </a>
@@ -121,10 +124,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 
                 {company.linkedin_url && (
                   <a 
-                    href={company.linkedin_url} 
+                    href={company.linkedin_url.startsWith('http') ? company.linkedin_url : `http://${company.linkedin_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-gray-400 hover:text-[#0077b5]"
+                    className="text-blue-400 hover:text-blue-300"
                   >
                     <Linkedin className="h-4 w-4" />
                   </a>
@@ -132,10 +135,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 
                 {company.twitter_url && (
                   <a 
-                    href={company.twitter_url} 
+                    href={company.twitter_url.startsWith('http') ? company.twitter_url : `http://${company.twitter_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-gray-400 hover:text-[#1DA1F2]"
+                    className="text-sky-400 hover:text-sky-300"
                   >
                     <Twitter className="h-4 w-4" />
                   </a>
@@ -143,7 +146,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
               </div>
               
               {company.subsector_tags && (
-                <div className="text-xs text-gray-400 truncate max-w-[150px]">
+                <div className="text-xs text-white truncate max-w-[150px]">
                   {company.subsector_tags.value}
                 </div>
               )}
@@ -153,7 +156,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
       </div>
       
       {companies.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-white">
           No companies found matching your criteria
         </div>
       )}
@@ -161,7 +164,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-white">
             Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
           </div>
           <div className="flex gap-2">
