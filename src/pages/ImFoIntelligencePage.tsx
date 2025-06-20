@@ -63,11 +63,19 @@ const ImFoIntelligencePage: React.FC = () => {
   };
 
   const handleSectorChange = (value: string) => {
-    setFilters(prev => ({ ...prev, sector: value, page: 1 }));
+    setFilters(prev => ({ 
+      ...prev, 
+      sector: value === "all" ? undefined : value, 
+      page: 1 
+    }));
   };
 
   const handleStageChange = (value: string) => {
-    setFilters(prev => ({ ...prev, stage: value, page: 1 }));
+    setFilters(prev => ({ 
+      ...prev, 
+      stage: value === "all" ? undefined : value, 
+      page: 1 
+    }));
   };
 
   const handlePageChange = (page: number) => {
@@ -101,24 +109,24 @@ const ImFoIntelligencePage: React.FC = () => {
               />
             </div>
             
-            <Select onValueChange={handleSectorChange} value={filters.sector}>
+            <Select onValueChange={handleSectorChange} value={filters.sector || "all"}>
               <SelectTrigger className="w-full md:w-[180px] bg-white/5 border-white/20">
                 <SelectValue placeholder="All Sectors" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Sectors</SelectItem>
+                <SelectItem value="all">All Sectors</SelectItem>
                 {sectors.map(sector => (
                   <SelectItem key={sector} value={sector}>{sector}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             
-            <Select onValueChange={handleStageChange} value={filters.stage}>
+            <Select onValueChange={handleStageChange} value={filters.stage || "all"}>
               <SelectTrigger className="w-full md:w-[180px] bg-white/5 border-white/20">
                 <SelectValue placeholder="All Stages" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Stages</SelectItem>
+                <SelectItem value="all">All Stages</SelectItem>
                 {stages.map(stage => (
                   <SelectItem key={stage} value={stage}>{stage}</SelectItem>
                 ))}
