@@ -16,9 +16,7 @@ function debugEnvironmentVariables() {
   if (import.meta.env.VITE_AERO_AI_BACKEND_API_KEY) {
     const apiKey = import.meta.env.VITE_AERO_AI_BACKEND_API_KEY;
     // Show first and last 4 chars only for security
-    console.log("✓ API Key present:", 
-                apiKey.substring(0, 4) + "..." + 
-                apiKey.substring(apiKey.length - 4));
+    console.log("✓ API Key present");
   } else {
     console.warn("⚠️ API Key not set - authentication will fail for /api/match endpoint");
   }
