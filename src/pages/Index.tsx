@@ -42,13 +42,13 @@ const Index = () => {
                   <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
                     <span className="text-green-500 text-sm">✓</span>
                   </div>
-                  <span>Skip the noise, access relevant, winnable opportunities.</span>
+                  <span>Access relevant, winnable opportunities.</span>
                 </li>
                 <li className="flex items-center">
                   <div className="h-5 w-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2">
                     <span className="text-green-500 text-sm">✓</span>
                   </div>
-                  <span>Smart filters on tech stack, TRL and region for you to act on today.</span>
+                  <span>Access smart filters on tech stack, TRL, and region.</span>
                 </li>
               </ul>
             </div>
