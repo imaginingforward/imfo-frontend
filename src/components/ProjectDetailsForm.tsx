@@ -2,7 +2,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { TagInput } from "@/components/ui/tag-input";
 import type { ProjectData } from "@/types/form";
 
@@ -19,11 +18,8 @@ interface ProjectDetailsFormProps {
 
 const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
   return (
-    <Card className="p-6 bg-white/5 backdrop-blur-lg border border-white/10">
-      <div className="space-y-6 text-white">
-        <h2 className="text-2xl font-semibold mb-6">Project Details</h2>
-        
-        <div className="space-y-4">
+    <div className="space-y-6 text-white">
+      <div className="space-y-4">
           <div>
             <Label htmlFor="projectTitle">Project Title *</Label>
             <Input
@@ -134,9 +130,8 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
               </div>
             </div>
           </div>
-        </div>
       </div>
-    </Card>
+    </div>
   );
 };
 
