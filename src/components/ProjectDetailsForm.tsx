@@ -98,9 +98,10 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="timeline">Project Duration *</Label>
+            <Label htmlFor="timeline">Project Timeline *</Label>
             <div className="grid grid-cols-2 gap-4">
               <div>
+                <Label htmlFor="timelineDuration" className="text-sm">Project Duration</Label>
                 <select
                   id="timelineDuration"
                   className="w-full bg-white/5 border-white/20 text-white rounded-md py-2 px-3"
