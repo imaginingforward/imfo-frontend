@@ -6,6 +6,7 @@
  */
 
 import type { MatchOpportunity } from "./matchingService";
+import { getBackendApiKey } from "@/utils/envConfig";
 
 // Baserow API details from environment variables
 const BASEROW_API_URL = import.meta.env.VITE_BASEROW_API_URL;
@@ -51,7 +52,9 @@ export async function getBaserowOpportunities(): Promise<MatchOpportunity[]> {
     const response = await fetch(url, {
       headers: {
         "Authorization": `Token ${BASEROW_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "x-api-key": getBackendApiKey()
       }
     });
     
@@ -128,6 +131,12 @@ export async function getBaserowOpportunities(): Promise<MatchOpportunity[]> {
         description: item.Description || "",
         postedDate: item.PostDate || new Date().toISOString(),
         responseDeadline: item.CloseDate || new Date().toISOString(),
+        archiveDate: item.LastUpdatedDate || (() => {
+          const deadline = item.CloseDate ? new Date(item.CloseDate) : new Date();
+          const archive = new Date(deadline);
+          archive.setDate(archive.getDate() + 30); // Add 30 days to deadline date
+          return archive.toISOString();
+        })(),
         awardAmount: awardAmount > 0 ? awardAmount : undefined,
         naicsCode: "",
         setAside: "",

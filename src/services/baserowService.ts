@@ -1,5 +1,5 @@
 // Baserow API service for handling submissions via the backend API
-import { getApiBaseUrl } from "@/utils/envConfig";
+import { getApiBaseUrl, getBackendApiKey } from "@/utils/envConfig";
 
 // Base URL for API requests
 const API_BASE_URL = getApiBaseUrl();
@@ -32,7 +32,9 @@ export const submitToBaserow = async (data: any) => {
     const response = await fetch(`${API_BASE_URL}/api/baserow/submit`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "x-api-key": getBackendApiKey()
       },
       body: JSON.stringify(data),
     });

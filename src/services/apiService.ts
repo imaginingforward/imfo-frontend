@@ -6,7 +6,7 @@
  */
 
 import type { FormData } from "@/types/form";
-import { getApiBaseUrl } from "@/utils/envConfig";
+import { getApiBaseUrl, getBackendApiKey } from "@/utils/envConfig";
 import type { MatchOpportunity, MatchResponse } from "./matchingService";
 
 // Base URL for API requests
@@ -31,7 +31,9 @@ export async function fetchOpportunities(
     // Make the request to the API
     const response = await fetch(url, {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "x-api-key": getBackendApiKey()
       }
     });
     
@@ -88,6 +90,8 @@ export async function submitMatch(formData: FormData): Promise<MatchResponse> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': getBackendApiKey()
       },
       body: JSON.stringify(normalizedFormData)
     });

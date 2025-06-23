@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "@/utils/envConfig";
+import { getApiBaseUrl, getBackendApiKey } from "@/utils/envConfig";
 
 // Interface for the value object structure used in many fields
 interface ValueObject {
@@ -58,7 +58,13 @@ export const fetchCompanies = async (filters: CompanyFilters = {}): Promise<Comp
     if (filters.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
     
     const url = `${getApiBaseUrl()}/api/companies?${queryParams.toString()}`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': getBackendApiKey()
+      }
+    });
     
     if (!response.ok) {
       throw new Error(`API Error: ${response.status}`);
@@ -73,7 +79,13 @@ export const fetchCompanies = async (filters: CompanyFilters = {}): Promise<Comp
 
 export const fetchCompanyById = async (id: number): Promise<Company> => {
   try {
-    const response = await fetch(`${getApiBaseUrl()}/api/companies/${id}`);
+    const response = await fetch(`${getApiBaseUrl()}/api/companies/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': getBackendApiKey()
+      }
+    });
     
     if (!response.ok) {
       throw new Error(`API Error: ${response.status}`);

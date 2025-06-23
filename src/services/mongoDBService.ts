@@ -5,7 +5,7 @@
  * that directly uses the MongoDB driver rather than the deprecated Data API
  */
 
-import { getApiBaseUrl } from '@/utils/envConfig';
+import { getApiBaseUrl, getBackendApiKey } from '@/utils/envConfig';
 import type { MatchOpportunity } from './matchingService';
 
 // Log initial startup message
@@ -36,7 +36,13 @@ export async function getAllOpportunities(): Promise<MatchOpportunity[]> {
     console.log('Requesting from MongoDB API:', apiUrl);
     
     // Make the request to our MongoDB API
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': getBackendApiKey()
+      }
+    });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -90,6 +96,15 @@ export async function getAllOpportunities(): Promise<MatchOpportunity[]> {
         responseDeadline: doc.closeDate ? 
           (typeof doc.closeDate === 'string' ? doc.closeDate : new Date(parseInt(doc.closeDate)).toISOString())
           : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        // Use archiveDate from document or calculate it as 30 days after response deadline
+        archiveDate: doc.archiveDate || (() => {
+          const deadline = doc.closeDate ? 
+            (typeof doc.closeDate === 'string' ? new Date(doc.closeDate) : new Date(parseInt(doc.closeDate))) 
+            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          const archive = new Date(deadline);
+          archive.setDate(archive.getDate() + 30); // Add 30 days to deadline
+          return archive.toISOString();
+        })(),
         awardAmount: awardAmount,
         naicsCode: doc.naicsCode,
         setAside: doc.setAside,
