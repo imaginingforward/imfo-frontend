@@ -60,16 +60,6 @@ const ProjectDetailsForm = ({ data, onChange }: ProjectDetailsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="keywords">Keywords *</Label>
-            <TagInput
-              value={data.keywords || []}
-              onChange={(tags) => onChange({ keywords: tags })}
-              placeholder="Type keyword and press Enter or comma..."
-              className="mt-1"
-            />
-          </div>
-
-          <div>
             <Label htmlFor="budget">Estimated Budget Range *</Label>
             <div className="grid grid-cols-2 gap-4">
               <div>
