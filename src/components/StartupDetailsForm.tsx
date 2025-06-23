@@ -43,6 +43,13 @@ const stages = [
 
 const teamSizes = ["1-5", "6-15", "16-30", "31-50", "51-100", "101+"];
 
+// Generate years from current year down to 1950
+const currentYear = new Date().getFullYear();
+const foundedYears = Array.from(
+  { length: currentYear - 1950 + 1 },
+  (_, index) => (currentYear - index).toString()
+);
+
 interface StartupDetailsFormProps {
   data: CompanyData;
   onChange: (data: Partial<CompanyData>) => void;
@@ -173,15 +180,20 @@ const StartupDetailsForm = ({ data, onChange }: StartupDetailsFormProps) => {
 
           <div>
             <Label htmlFor="foundedYear">Founded Year</Label>
-            <Input
-              type="number"
+            <select
               id="foundedYear"
-              className="bg-white/5 border-white/20"
-              value={data.foundedYear}
+              className="w-full bg-white/5 border-white/20 text-white rounded-md py-2 px-3"
+              value={data.foundedYear || ""}
               onChange={(e) => onChange({ foundedYear: e.target.value })}
-              placeholder="e.g., 2018"
               required
-            />
+            >
+              <option value="">Select Year</option>
+              {foundedYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
