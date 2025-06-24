@@ -49,6 +49,7 @@ export interface CompanyFilters {
 
 export const fetchCompanies = async (filters: CompanyFilters = {}): Promise<CompanyResponse> => {
   try {
+    console.log('fetchCompanies called with filters:', filters);
     const queryParams = new URLSearchParams();
     
     if (filters.search) queryParams.append('search', filters.search);
@@ -57,7 +58,10 @@ export const fetchCompanies = async (filters: CompanyFilters = {}): Promise<Comp
     if (filters.page) queryParams.append('page', filters.page.toString());
     if (filters.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
     
+    console.log('Query parameters:', Object.fromEntries(queryParams.entries()));
+    
     const url = `${getApiBaseUrl()}/api/companies?${queryParams.toString()}`;
+    console.log('API request URL:', url);
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +74,17 @@ export const fetchCompanies = async (filters: CompanyFilters = {}): Promise<Comp
       throw new Error(`API Error: ${response.status}`);
     }
     
-    return await response.json();
+    const responseData = await response.json();
+    console.log('API response headers:', {
+      contentType: response.headers.get('content-type'),
+      status: response.status
+    });
+    console.log('API response data structure:', {
+      hasCompanies: !!responseData.companies,
+      count: responseData.count,
+      companyCount: responseData.companies?.length || 0
+    });
+    return responseData;
   } catch (error) {
     console.error('Error fetching companies:', error);
     throw error;

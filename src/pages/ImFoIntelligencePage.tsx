@@ -35,12 +35,23 @@ const ImFoIntelligencePage: React.FC = () => {
 
   useEffect(() => {
     const loadCompanies = async () => {
+      console.log('Fetching companies with filters:', filters);
       setLoading(true);
       try {
         const result = await fetchCompanies(filters);
+        console.log('API response received:', { 
+          count: result.count, 
+          companyCount: result.companies.length,
+          firstCompany: result.companies[0] ? {
+            name: result.companies[0].company_name,
+            sector: result.companies[0].sector,
+            stage: result.companies[0].stage?.value
+          } : 'No companies'
+        });
         setCompanies(result.companies);
         setTotalCount(result.count);
       } catch (error: any) {
+        console.error('Error in API response:', error);
         toast({
           title: "Error loading companies",
           description: error.message,
@@ -67,19 +78,29 @@ const ImFoIntelligencePage: React.FC = () => {
   };
 
   const handleSectorChange = (value: string) => {
-    setFilters(prev => ({ 
-      ...prev, 
-      sector: value === "all" ? undefined : value, 
-      page: 1 
-    }));
+    console.log('Sector filter changed to:', value);
+    setFilters(prev => {
+      const newFilters = { 
+        ...prev, 
+        sector: value === "all" ? undefined : value, 
+        page: 1 
+      };
+      console.log('New filters after sector change:', newFilters);
+      return newFilters;
+    });
   };
 
   const handleStageChange = (value: string) => {
-    setFilters(prev => ({ 
-      ...prev, 
-      stage: value === "all" ? undefined : value, 
-      page: 1 
-    }));
+    console.log('Stage filter changed to:', value);
+    setFilters(prev => {
+      const newFilters = { 
+        ...prev, 
+        stage: value === "all" ? undefined : value, 
+        page: 1 
+      };
+      console.log('New filters after stage change:', newFilters);
+      return newFilters;
+    });
   };
 
   const handlePageChange = (page: number) => {
