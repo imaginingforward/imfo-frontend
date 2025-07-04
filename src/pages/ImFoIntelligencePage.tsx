@@ -73,10 +73,6 @@ const ImFoIntelligencePage: React.FC = () => {
   // Extract unique stages for filter
   const stages = [...new Set(companies.map(c => c.stage?.value).filter(Boolean))];
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }));
-  };
-
   const handleSectorChange = (value: string) => {
     console.log('Sector filter changed to:', value);
     setFilters(prev => {
@@ -102,6 +98,17 @@ const ImFoIntelligencePage: React.FC = () => {
       return newFilters;
     });
   };
+
+  const runQueryParser = async (query: string) => {
+  const res = await fetch('https://your-heroku-nlp-api.com/parse', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query })
+  });
+
+  const parsedFilters = await res.json();
+  setFilters(prev => ({ ...prev, ...parsedFilters, page: 1 }));
+};
 
   const handlePageChange = (page: number) => {
     setFilters(prev => ({ ...prev, page }));
@@ -140,8 +147,12 @@ const ImFoIntelligencePage: React.FC = () => {
               <Input 
                 className="bg-white/5 border-white/20 pl-10 text-gray-100"
                 placeholder="Search companies..." 
-                value={filters.search || ''}
-                onChange={handleSearchChange}
+                onKeyDown={(e) => {
+                  if (e.key==='Enter') {
+                    const target = e.target as HTMLInputElement;
+                    runQueryParser(target.value);
+                  }
+                }}
               />
             </div>
             
