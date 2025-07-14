@@ -38,8 +38,7 @@ const SpaceForm = () => {
           currency: "USD"
         },
         timeline: {
-          duration: "",
-          startDate: ""
+          duration: ""
         },
         categoryOfFundingActivity: [],
       },
@@ -49,8 +48,8 @@ const SpaceForm = () => {
   const formData = watch();
   const { isSubmitting, handleSubmit: submitForm } = useFormSubmission();
 
-  const onSubmit = async (data: FormData) => {
-    await submitForm(data);
+  const onSubmit = async (data: any) => {
+    await submitForm(data as FormData);
   };
 
   const handleCompanyDataChange = (data: Partial<typeof formData.company>) => {
