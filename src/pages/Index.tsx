@@ -5,6 +5,7 @@ import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, MapPin } f
 
 const Index = () => {
   const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const suggestedPrompts = [
@@ -39,18 +40,34 @@ const Index = () => {
       category: "Investment"
     }
   ];
-
+    
+    // Search API call
   const handleSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
-    
+
     setIsSearching(true);
     setQuery(searchQuery);
-    
-    // Simulate search - replace with actual API call
-    setTimeout(() => {
+
+    try {
+      const response = await fetch(`https://imfo-nlp-api-da20e5390e7c.herokuapp.com/?text=${encodeURIComponent(searchQuery)}`
+      );
+      if (!response.ok) {
+        throw new Error("API error");
+      }
+
+      const result = await response.json();
+      console.log("Parsed result:", result);
+ 
+      // TODO: Save the result in a new state variable for rendering cards
+      setResults(result.results || []); // assuming backend returns { results: [...] }
+    } catch (err) {
+      console.error("Search failed", err);
+      alert("Sorry, search failed. Try again.");
+    } finally {
       setIsSearching(false);
-    }, 2000);
+    }
   };
+      
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,23 +153,36 @@ const Index = () => {
                 <span>Searching the space technology ecosystem...</span>
               </div>
             </div>
-            
-            {/* Loading Skeleton Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-card border border-border rounded-lg p-6 animate-pulse">
-                  <div className="h-4 bg-muted rounded w-3/4 mb-3"></div>
-                  <div className="h-3 bg-muted/60 rounded w-full mb-2"></div>
-                  <div className="h-3 bg-muted/60 rounded w-2/3 mb-4"></div>
-                  <div className="flex justify-between items-center">
-                    <div className="h-6 bg-muted/40 rounded-full w-16"></div>
-                    <div className="h-6 bg-muted/40 rounded w-20"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
-        )}
+      )}
+
+{results.length > 0 && (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+    {results.map((item: any, index: number) => (
+      <div key={index} className="bg-card border border-border rounded-lg p-6 shadow-md">
+        <h3 className="text-lg font-bold mb-2">{item.company_name}</h3>
+        <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
+        <div className="flex flex-wrap gap-2 text-xs">
+          {item.business_activity && (
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded">
+              {item.business_activity}
+            </span>
+          )}
+          {item.hq_location && (
+            <span className="px-2 py-1 bg-secondary text-muted-foreground rounded">
+              {item.hq_location}
+            </span>
+          )}
+          {item.total_funding_raised && (
+            <span className="px-2 py-1 bg-accent text-foreground rounded">
+              ${item.total_funding_raised}
+            </span>
+          )}
+        </div>
+      </div>
+    ))}
+</div>
+)}
 
         {/* Trust Indicators */}
         <div className="mt-24 text-center">
