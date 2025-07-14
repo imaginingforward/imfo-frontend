@@ -54,7 +54,7 @@ const Index = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ text: searchQuery })
+      body: JSON.stringify({ query: searchQuery })
     });
 
       const result = await response.json();
