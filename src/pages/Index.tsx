@@ -49,11 +49,13 @@ const Index = () => {
     setQuery(searchQuery);
 
     try {
-      const response = await fetch(`https://imfo-nlp-api-da20e5390e7c.herokuapp.com/?text=${encodeURIComponent(searchQuery)}`
-      );
-      if (!response.ok) {
-        throw new Error("API error");
-      }
+    const response = await fetch("https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ text: searchQuery })
+    });
 
       const result = await response.json();
       console.log("Parsed result:", result);
