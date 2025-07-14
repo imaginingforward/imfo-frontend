@@ -60,42 +60,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       {/* SEO Meta Tags would be handled by helmet or similar */}
-      
-      {/* Header */}
-      <header className="w-full border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Satellite className="h-8 w-8 text-space-blue" />
-            <span className="text-xl font-bold bg-gradient-to-r from-space-blue to-space-purple bg-clip-text text-transparent">
-              SpaceTech Intelligence
-            </span>
-          </div>
-          <nav className="hidden md:flex space-x-6">
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              API
-            </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Contact
-            </a>
-          </nav>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
             <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
-              Discover the Space
-            </span>
-            <br />
-            <span className="text-foreground">Technology Ecosystem</span>
+              Discover the Aerospace Ecosystem</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Connect founders, government agencies, suppliers, investors, and ecosystem partners through intelligent search and discovery.
+            A smart hub to connect spacetech founders, government agencies, investors, and industry partners
           </p>
         </div>
 
@@ -108,7 +82,7 @@ const Index = () => {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Ask anything about the space technology ecosystem..."
+                placeholder="Ask anything..."
                 className="w-full pl-12 pr-24 py-6 text-lg border-2 border-muted focus:border-primary rounded-xl shadow-lg focus:shadow-xl transition-all duration-200"
                 disabled={isSearching}
               />
@@ -202,40 +176,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t bg-muted/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <Satellite className="h-6 w-6 text-space-blue" />
-                <span className="text-lg font-bold bg-gradient-to-r from-space-blue to-space-purple bg-clip-text text-transparent">
-                  SpaceTech Intelligence
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground max-w-md">
-                The definitive platform for discovering and connecting within the global space technology ecosystem.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Platform</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Search</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">API</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Analytics</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
