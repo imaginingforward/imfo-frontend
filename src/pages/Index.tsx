@@ -61,7 +61,8 @@ const Index = () => {
       console.log("Parsed result:", result);
  
       // TODO: Save the result in a new state variable for rendering cards
-      setResults(result.results || []); // assuming backend returns { results: [...] }
+      setResults(result);
+      console.log("Updated results state:", result);
     } catch (err) {
       console.error("Search failed", err);
       alert("Sorry, search failed. Try again.");
