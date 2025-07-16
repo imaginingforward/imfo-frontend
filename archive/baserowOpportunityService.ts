@@ -1,6 +1,6 @@
 /**
  * Baserow Opportunity Service
- * 
+ * moved from src/services/baserowOpportunityService.ts to archive b/c crashing heroku
  * This service connects to Baserow to fetch government opportunities
  * and converts them to the format expected by our matching system.
  */
