@@ -1,6 +1,6 @@
 /**
  * Test script for Baserow connection
- * 
+ * moved from original in src/test-baserow-connection.js b/c of baserow crashing heroku
  * This script tests the connection to Baserow using the environment variables
  * and displays the retrieved opportunities.
  * 
