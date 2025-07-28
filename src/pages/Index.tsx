@@ -11,13 +11,13 @@ const Index = () => {
   const suggestedPrompts = [
     {
       icon: <Rocket className="h-4 w-4" />,
-      text: "Startups solving PNT",
+      text: "Startups building in PNT",
       category: "Funding"
       //Propulsion companies that have raised > $5M
     },
     {
       icon: <Cpu className="h-4 w-4" />,
-      text: "What companies supply electrical components in California",
+      text: "Electrical components in California",
       category: "Suppliers"
     },
     {
@@ -27,7 +27,7 @@ const Index = () => {
     },
     {
       icon: <Users className="h-4 w-4" />,
-      text: "Space tech startups with SBIR contracts",
+      text: "Startups with SBIR/STRR contracts",
       category: "Government"
     },
     {
