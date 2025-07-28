@@ -11,8 +11,9 @@ const Index = () => {
   const suggestedPrompts = [
     {
       icon: <Rocket className="h-4 w-4" />,
-      text: "Propulsion companies that have raised > $5M",
+      text: "Startups solving PNT",
       category: "Funding"
+      //Propulsion companies that have raised > $5M
     },
     {
       icon: <Cpu className="h-4 w-4" />,
@@ -26,17 +27,17 @@ const Index = () => {
     },
     {
       icon: <Users className="h-4 w-4" />,
-      text: "Space tech startups with government contracts",
+      text: "Space tech startups with SBIR contracts",
       category: "Government"
     },
     {
       icon: <Building className="h-4 w-4" />,
-      text: "Manufacturing facilities for space hardware",
+      text: "Engineering companies for space hardware",
       category: "Manufacturing"
     },
     {
       icon: <DollarSign className="h-4 w-4" />,
-      text: "Recent Series A investments in space technology",
+      text: "Companies raised Series A in space tech",
       category: "Investment"
     }
   ];
@@ -86,10 +87,10 @@ const Index = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
             <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
-              Discover the Aerospace Ecosystem</span>
+              Search Engine for Space Tech</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            A smart hub to connect spacetech founders, government agencies, investors, and industry partners
+            Intel for founders, government, investors, and operators
           </p>
         </div>
 
@@ -190,7 +191,7 @@ const Index = () => {
         {/* Trust Indicators */}
         <div className="mt-24 text-center">
           <p className="text-sm text-muted-foreground mb-8">
-            Trusted by space technology leaders worldwide
+            Trusted by deep tech leaders worldwide
           </p>
           <div className="flex items-center justify-center space-x-8 opacity-60">
             <div className="flex items-center space-x-2">
