@@ -11,33 +11,34 @@ const Index = () => {
   const suggestedPrompts = [
     {
       icon: <Rocket className="h-4 w-4" />,
-      text: "Startups building in PNT",
-      category: "Funding"
+      text: "Companies in PNT",
+      category: "Use Case"
       //Propulsion companies that have raised > $5M
+      //category: "Funding"
     },
     {
       icon: <Cpu className="h-4 w-4" />,
-      text: "Electrical components in California",
+      text: "Cables in California",
       category: "Suppliers"
     },
     {
       icon: <Satellite className="h-4 w-4" />,
-      text: "Where can I buy cameras to build my satellite",
+      text: "Cameras for space",
       category: "Components"
     },
     {
       icon: <Users className="h-4 w-4" />,
-      text: "Startups with SBIR/STRR contracts",
+      text: "Startups with SBIR contracts",
       category: "Government"
     },
     {
       icon: <Building className="h-4 w-4" />,
-      text: "Engineering companies for space hardware",
+      text: "Engineering companies",
       category: "Manufacturing"
     },
     {
       icon: <DollarSign className="h-4 w-4" />,
-      text: "Companies raised Series A in space tech",
+      text: "Companies raised Series A",
       category: "Investment"
     }
   ];
