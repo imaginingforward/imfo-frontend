@@ -180,7 +180,15 @@ const ImFoIntelligencePage: React.FC = () => {
               </SelectContent>
             </Select>
           </div>
-          
+         
+          <div className="text-sm text-gray-400 mb-4 mt-4">
+                  {loading ? "" :
+                    (totalCount > 0
+                    ? `${totalCount} compan${totalCount === 1 ? 'y' : 'ies'} found`
+                    : "No companies found")
+                  } 
+                </div>
+
           <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "cards")} className="mb-4">
             <TabsList className="bg-white/10">
               <TabsTrigger value="table">Table View</TabsTrigger>
@@ -193,13 +201,6 @@ const ImFoIntelligencePage: React.FC = () => {
               </div>
             ) : (
               <>
-                <div className="text-sm text-gray-400 mb-4 mt-4">
-                  {loading ? "" :
-                    (totalCount > 0
-                    ? `${totalCount} compan${totalCount === 1 ? 'y' : 'ies'} found`
-                    : "No companies found")
-                  } 
-                </div>
                 
                 <TabsContent value="table" className="mt-0">
                   <CompanyTable 
