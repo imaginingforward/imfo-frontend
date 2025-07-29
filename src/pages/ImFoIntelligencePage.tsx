@@ -194,7 +194,11 @@ const ImFoIntelligencePage: React.FC = () => {
             ) : (
               <>
                 <div className="text-sm text-gray-400 mb-4 mt-4">
-                  {totalCount} companies found
+                  {loading ? "" :
+                    (totalCount > 0
+                    ? `${totalCount} compan${totalCount === 1 ? 'y' : 'ies'} found`
+                    : "No companies found")
+                  } 
                 </div>
                 
                 <TabsContent value="table" className="mt-0">
