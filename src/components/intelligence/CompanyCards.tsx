@@ -109,48 +109,49 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
               </div>
             </div>
             
-            <CardFooter className="border-t border-white/20 bg-white/10 p-3 flex justify-between">
+            <CardFooter className="border-t border-white/20 bg-white/10 p-3 flex justify-between items-center">
               <div className="flex gap-3">
                 {company.website_url && (
                   <a 
-                    href={company.website_url.startsWith('http') ? company.website_url : `http://${company.website_url}`} 
+                    href={company.website_url.startsWith('http') ? company.website_url : `https://${company.website_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-primary hover:text-primary/80"
+                    className="opacity-70 hover:opacity-100 transition-opacity"
                   >
-                    <img src="/website_logo.png" alt="Website URL" className="h-4 w-4" />
+                    <img src="/website_logo.png" alt="Website" className="h-4 w-4 object-contain" />
                   </a>
                 )}
                 
                 {company.linkedin_url && (
                   <a 
-                    href={company.linkedin_url.startsWith('http') ? company.linkedin_url : `http://${company.linkedin_url}`} 
+                    href={company.linkedin_url.startsWith('http') ? company.linkedin_url : `https://${company.linkedin_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-blue-400 hover:text-blue-300"
+                    className="opacity-70 hover:opacity-100 transition-opacity"
                   >
-                   <img src="/linkedin_logo.png" alt="LinkedIn URL" className="h-4 w-4" />
+                   <img src="/linkedin_logo.png" alt="LinkedIn" className="h-4 w-4 object-contain" />
                   </a>
                 )}
                 
                 {company.twitter_url && (
                   <a 
-                    href={company.twitter_url.startsWith('http') ? company.twitter_url : `http://${company.twitter_url}`} 
+                    href={company.twitter_url.startsWith('http') ? company.twitter_url : `https://${company.twitter_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-sky-400 hover:text-sky-300"
+                    className="opacity-70 hover:opacity-100 transition-opacity"
                   >
-                    <img src="/X_logo.png" alt="X URL" className="h-4 w-4" />
+                    <img src="/X_logo.jpeg" alt="X (Twitter)" className="h-4 w-4 object-contain" />
                   </a>
                 )}
-                 {company.crunchbase_url && (
+                
+                {company.crunchbase_url && (
                   <a 
-                    href={company.crunchbase_url.startsWith('http') ? company.crunchbase_url : `http://${company.crunchbase_url}`} 
+                    href={company.crunchbase_url.startsWith('http') ? company.crunchbase_url : `https://${company.crunchbase_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-sky-400 hover:text-sky-300"
+                    className="opacity-70 hover:opacity-100 transition-opacity"
                   >
-                    <img src="/cb_logo.png" alt="Crunchbase URL" className="h-4 w-4" />
+                    <img src="/cb_logo.png" alt="Crunchbase" className="h-4 w-4 object-contain" />
                   </a>
                 )}
               </div>

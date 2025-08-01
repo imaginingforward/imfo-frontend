@@ -189,8 +189,6 @@ const ImFoIntelligencePage: React.FC = () => {
                     : "No companies found")
                   } 
                 </div>
-          console.log('totalCount:', totalCOunt);
-          console.log('companies.length:', companies.length);
 
           <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "cards")} className="mb-4">
             <TabsList className="bg-white/10">
