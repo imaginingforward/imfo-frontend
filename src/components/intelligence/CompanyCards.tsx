@@ -118,7 +118,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                     rel="noopener noreferrer" 
                     className="text-primary hover:text-primary/80"
                   >
-                    <Globe className="h-4 w-4" />
+                    <img src="/website_logo.png" alt="Website URL" className="h-4 w-4" />
                   </a>
                 )}
                 
@@ -129,7 +129,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                     rel="noopener noreferrer" 
                     className="text-blue-400 hover:text-blue-300"
                   >
-                    <Linkedin className="h-4 w-4" />
+                   <img src="/linkedin_logo.png" alt="LinkedIn URL" className="h-4 w-4" />
                   </a>
                 )}
                 
@@ -140,7 +140,17 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                     rel="noopener noreferrer" 
                     className="text-sky-400 hover:text-sky-300"
                   >
-                    <Twitter className="h-4 w-4" />
+                    <img src="/x_logo.png" alt="X URL" className="h-4 w-4" />
+                  </a>
+                )}
+                 {company.crunchbase_url && (
+                  <a 
+                    href={company.crunchbase_url.startsWith('http') ? company.crunchbase_url : `http://${company.crunchbase_url}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-sky-400 hover:text-sky-300"
+                  >
+                    <img src="/cb_logo.png" alt="Crunchbase URL" className="h-4 w-4" />
                   </a>
                 )}
               </div>
@@ -164,7 +174,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center">
-          <div className="text-sm text-white">
+          <div className="text-sm text-black">
             Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
           </div>
           <div className="flex gap-2">
