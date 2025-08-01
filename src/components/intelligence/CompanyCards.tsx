@@ -173,7 +173,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   <a 
                     href={company.crunchbase_url.trim().startsWith('http') 
                       ? company.crunchbase_url.trim()
-                      : `https://${company.crunchbase_url.tim()}`} 
+                      : `https://${company.crunchbase_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
