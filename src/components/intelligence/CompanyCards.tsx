@@ -128,51 +128,61 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 )}
               </div>
 
-              {/* VISUAL DEBUG - Replace your social icons section with this */}
-              <div className="bg-red-500 p-4 mb-4 text-white text-xs">
-                <p><strong>DEBUG INFO:</strong></p>
-                <p>Website URL: {company.website_url || 'MISSING'}</p>
-                <p>LinkedIn URL: {company.linkedin_url || 'MISSING'}</p>
-                <p>Twitter URL: {company.twitter_url || 'MISSING'}</p>
-                <p>Crunchbase URL: {company.crunchbase_url || 'MISSING'}</p>
-                <p>Website Valid: {isValidUrl(company.website_url) ? 'YES' : 'NO'}</p>
-                <p>LinkedIn Valid: {isValidUrl(company.linkedin_url) ? 'YES' : 'NO'}</p>
-                <p>Twitter Valid: {isValidUrl(company.twitter_url) ? 'YES' : 'NO'}</p>
-                <p>Crunchbase Valid: {isValidUrl(company.crunchbase_url) ? 'YES' : 'NO'}</p>
-              </div>
-
-              {/* Force show all icons regardless of validation */}
-              <div className="bg-blue-500 p-2 mb-2">
-                <p className="text-white text-xs mb-2">FORCE SHOW ICONS:</p>
-                <div className="flex gap-3">
-                  <img src="/website_logo.png" alt="Website" className="h-6 w-6 bg-white" />
-                  <img src="/linkedin_logo.png" alt="LinkedIn" className="h-6 w-6 bg-white" />
-                  <img src="/X_logo.jpeg" alt="X" className="h-6 w-6 bg-white" />
-                  <img src="/cb_logo.png" alt="Crunchbase" className="h-6 w-6 bg-white" />
-                </div>
-              </div>
-
-              {/* Original conditional logic */}
-              <div className="flex gap-3 mb-2 bg-green-500 p-2">
-                <p className="text-white text-xs">CONDITIONAL ICONS:</p>
+              {/* Working Social Icons using Lucide (like your table view) */}
+              <div className="flex gap-3 mb-2">
                 {isValidUrl(company.website_url) && (
-                  <a href={company.website_url} target="_blank" rel="noopener noreferrer">
-                    <img src="/website_logo.png" alt="Website" className="h-4 w-4 bg-white" />
+                  <a 
+                    href={company.website_url.trim().startsWith('http') 
+                      ? company.website_url.trim() 
+                      : `https://${company.website_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-primary hover:text-primary/80 transition-colors"
+                    title="Website"
+                  >
+                    <Globe className="h-4 w-4" />
                   </a>
                 )}
+                
                 {isValidUrl(company.linkedin_url) && (
-                  <a href={company.linkedin_url} target="_blank" rel="noopener noreferrer">
-                    <img src="/linkedin_logo.png" alt="LinkedIn" className="h-4 w-4 bg-white" />
+                  <a 
+                    href={company.linkedin_url.trim().startsWith('http') 
+                      ? company.linkedin_url.trim()
+                      : `https://${company.linkedin_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    title="LinkedIn"
+                  >
+                    <Linkedin className="h-4 w-4" />
                   </a>
                 )}
+                
                 {isValidUrl(company.twitter_url) && (
-                  <a href={company.twitter_url} target="_blank" rel="noopener noreferrer">
-                    <img src="/X_logo.jpeg" alt="X" className="h-4 w-4 bg-white" />
+                  <a 
+                    href={company.twitter_url.trim().startsWith('http') 
+                      ? company.twitter_url.trim()
+                      : `https://${company.twitter_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-sky-400 hover:text-sky-300 transition-colors"
+                    title="Twitter/X"
+                  >
+                    <Twitter className="h-4 w-4" />
                   </a>
                 )}
+                
                 {isValidUrl(company.crunchbase_url) && (
-                  <a href={company.crunchbase_url} target="_blank" rel="noopener noreferrer">
-                    <img src="/cb_logo.png" alt="Crunchbase" className="h-4 w-4 bg-white" />
+                  <a 
+                    href={company.crunchbase_url.trim().startsWith('http') 
+                      ? company.crunchbase_url.trim()
+                      : `https://${company.crunchbase_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-orange-400 hover:text-orange-300 transition-colors"
+                    title="Crunchbase"
+                  >
+                    <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
               </div>
