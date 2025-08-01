@@ -231,3 +231,4 @@ const ImFoIntelligencePage: React.FC = () => {
   );
 };
 
+export default ImFoIntelligencePage;
