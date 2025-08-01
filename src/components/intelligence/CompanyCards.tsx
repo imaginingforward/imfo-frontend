@@ -42,6 +42,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
     
     return initials;
   };
+
+  // Helper function
+  const isValidUrl = (url?: string): boolean => {
+  return !!url && typeof url === "string" && url.trim().length > 5;
+  };
   
   // Function to get a color based on sector
   const getSectorColor = (sector: string) => {
@@ -125,9 +130,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
 
               {/* Social Media Icons - Below location info */}
               <div className="flex gap-3 mb-2">
-                {(company as any).website_url && (
+                {isValidUrl(company.website_url) && (
                   <a 
-                    href={(company as any).website_url.startsWith('http') ? (company as any).website_url : `https://${(company as any).website_url}`} 
+                    href={company.website_url.trim().startsWith('http') 
+                      ? company.website_url.trim() 
+                      : `https://${company.website_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
@@ -136,9 +143,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </a>
                 )}
                 
-                {(company as any).linkedin_url && (
+                {isValidUrl(company.linkedin_url) && (
                   <a 
-                    href={(company as any).linkedin_url.startsWith('http') ? (company as any).linkedin_url : `https://${(company as any).linkedin_url}`} 
+                    href={company.linkedin_url.trim().startsWith('http') 
+                      ? company.linkedin_url.trim()
+                      : `https://${company.linkedin_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
@@ -147,20 +156,24 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </a>
                 )}
                 
-                {(company as any).twitter_url && (
+                {isValidUrl(company.twitter_url) && (
                   <a 
-                    href={(company as any).twitter_url.startsWith('http') ? (company as any).twitter_url : `https://${(company as any).twitter_url}`} 
+                    href={company.twitter_url.trim().startsWith('http') 
+                      ? company.twitter_url.trim()
+                      : `https://${company.twitter_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
                   >
-                    <img src="/X_logo.jpeg" alt="X (Twitter)" className="h-4 w-4 object-contain" />
+                    <img src="/X_logo.jpeg" alt="X" className="h-4 w-4 object-contain" />
                   </a>
                 )}
                 
-                {(company as any).crunchbase_url && (
+                {isValidUrl(company.crunchbase_url) && (
                   <a 
-                    href={(company as any).crunchbase_url.startsWith('http') ? (company as any).crunchbase_url : `https://${(company as any).crunchbase_url}`} 
+                    href={company.crunchbase_url.trim().startsWith('http') 
+                      ? company.crunchbase_url.trim()
+                      : `https://${company.crunchbase_url.tim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
