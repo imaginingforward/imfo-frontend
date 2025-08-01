@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -77,7 +78,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 </p>
               )}
               
-              <div className="grid grid-cols-2 gap-2 text-xs text-white">
+              <div className="grid grid-cols-2 gap-2 text-xs text-white mb-3">
                 {company.hq_location && (
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
@@ -107,10 +108,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </div>
                 )}
               </div>
-            </div>
-            
-            <CardFooter className="border-t border-white/20 bg-white/10 p-3 flex justify-between items-center">
-              <div className="flex gap-3">
+
+              {/* Social Media Icons - Below location info */}
+              <div className="flex gap-3 mb-2">
                 {company.website_url && (
                   <a 
                     href={company.website_url.startsWith('http') ? company.website_url : `https://${company.website_url}`} 
@@ -155,9 +155,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </a>
                 )}
               </div>
-              
+            </div>
+            
+            <CardFooter className="border-t border-white/20 bg-white/10 p-3 flex justify-between items-center">
               {company.subsector_tags && (
-                <div className="text-xs text-white truncate max-w-[150px]">
+                <div className="text-xs text-white truncate">
                   {company.subsector_tags.value}
                 </div>
               )}
