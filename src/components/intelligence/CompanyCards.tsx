@@ -140,7 +140,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                     rel="noopener noreferrer" 
                     className="text-sky-400 hover:text-sky-300"
                   >
-                    <img src="/x_logo.png" alt="X URL" className="h-4 w-4" />
+                    <img src="/X_logo.png" alt="X URL" className="h-4 w-4" />
                   </a>
                 )}
                  {company.crunchbase_url && (
