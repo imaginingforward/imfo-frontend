@@ -185,7 +185,7 @@ const ImFoIntelligencePage: React.FC = () => {
                   {loading 
                     ? "" 
                     : (totalCount > 0
-                    ? `Displaying ${totalCount} compan${totalCount === 1 ? 'y' : 'ies'}`
+                    ? `Displaying ${companies.length} compan${companies.length === 1 ? 'y' : 'ies'}`
                     : "No companies found")
                   } 
                 </div>
