@@ -129,6 +129,16 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
               </div>
 
               {/* Social Media Icons - Below location info */}
+              {console.log('URL Debug:', {
+                website: company.website_url,
+                linkedin: company.linkedin_url, 
+                twitter: company.twitter_url,
+                crunchbase: company.crunchbase_url,
+                websiteValid: isValidUrl(company.website_url),
+                linkedinValid: isValidUrl(company.linkedin_url),
+                twitterValid: isValidUrl(company.twitter_url),
+                crunchbaseValid: isValidUrl(company.crunchbase_url)
+              })}
               <div className="flex gap-3 mb-2">
                 {isValidUrl(company.website_url) && (
                   <a 
