@@ -181,7 +181,7 @@ const ImFoIntelligencePage: React.FC = () => {
             </Select>
           </div>
          
-          <div className="text-sm text-gray-400 mb-4 mt-4">
+          <div className="text-sm text-white-400 mb-4 mt-4">
                   {loading 
                     ? "" 
                     : (totalCount > 0
