@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,14 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
   onPageChange,
 }) => {
   const totalPages = Math.ceil(totalCount / pageSize);
+  
+  // Debug: Log company data to see URLs  
+  useEffect(() => {
+    if (companies.length > 0) {
+      console.log('Full company object keys:', Object.keys(companies[0]));
+      console.log('Sample company:', companies[0]);
+    }
+  }, [companies]);
 
   // Function to get logo placeholder with company initials
   const getLogoPlaceholder = (name: string) => {
@@ -78,11 +86,17 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                 </p>
               )}
               
+              {(company as any).business_activity && (
+                <p className="text-sm text-white/80 mb-3">
+                  <span className="font-medium">Activities:</span> {(company as any).business_activity}
+                </p>
+              )}
+              
               <div className="grid grid-cols-2 gap-2 text-xs text-white mb-3">
-                {company.hq_location && (
+                {(company as any).hq_location && (
                   <div className="flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
-                    <span>{company.hq_location.value}</span>
+                    <span>{(company as any).hq_location}</span>
                   </div>
                 )}
                 
@@ -111,9 +125,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
 
               {/* Social Media Icons - Below location info */}
               <div className="flex gap-3 mb-2">
-                {company.website_url && (
+                {(company as any).website_url && (
                   <a 
-                    href={company.website_url.startsWith('http') ? company.website_url : `https://${company.website_url}`} 
+                    href={(company as any).website_url.startsWith('http') ? (company as any).website_url : `https://${(company as any).website_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
@@ -122,9 +136,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </a>
                 )}
                 
-                {company.linkedin_url && (
+                {(company as any).linkedin_url && (
                   <a 
-                    href={company.linkedin_url.startsWith('http') ? company.linkedin_url : `https://${company.linkedin_url}`} 
+                    href={(company as any).linkedin_url.startsWith('http') ? (company as any).linkedin_url : `https://${(company as any).linkedin_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
@@ -133,9 +147,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </a>
                 )}
                 
-                {company.twitter_url && (
+                {(company as any).twitter_url && (
                   <a 
-                    href={company.twitter_url.startsWith('http') ? company.twitter_url : `https://${company.twitter_url}`} 
+                    href={(company as any).twitter_url.startsWith('http') ? (company as any).twitter_url : `https://${(company as any).twitter_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
@@ -144,9 +158,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                   </a>
                 )}
                 
-                {company.crunchbase_url && (
+                {(company as any).crunchbase_url && (
                   <a 
-                    href={company.crunchbase_url.startsWith('http') ? company.crunchbase_url : `https://${company.crunchbase_url}`} 
+                    href={(company as any).crunchbase_url.startsWith('http') ? (company as any).crunchbase_url : `https://${(company as any).crunchbase_url}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="opacity-70 hover:opacity-100 transition-opacity"
