@@ -2,20 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CompanyCards } from "@/components/intelligence/CompanyCards";
 import { Loader2, Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-// Define the backend response type to match your API
+// Define the backend response type to match API
 interface BackendCompany {
   company_name: string;
   business_activity: string;
@@ -44,48 +36,54 @@ interface BackendResponse {
 interface FrontendCompany {
   id: string;
   company_name: string;
+  business_activity: string;
+  business_area: string;
   sector: string;
   description: string;
-  business_activity: string;
   hq_location: string;
+  leadership: string;
+  latest_funding_stage: string;
+  latest_funding_raised: string;
+  total_funding_raised: string;
+  capital_partners: string;
+  notable_partners: string;
   website_url: string;
   linkedin_url: string;
-  twitter_url: string;
   crunchbase_url: string;
-  total_funding_raised: string;
-  stage?: { value: string };
-  year_founded?: string;
-  subsector_tags?: { value: string };
+  twitter_url: string;
 }
 
 const ImFoIntelligencePage: React.FC = () => {
   const navigate = useNavigate();
-  const [companies, setCompanies] = useState<FrontendCompany[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
   const { toast } = useToast();
 
-  // Function to transform backend company to frontend format
-  const transformCompany = (backendCompany: BackendCompany, index: number): FrontendCompany => {
-    return {
-      id: `company-${index}`,
-      company_name: backendCompany.company_name,
-      sector: backendCompany.sector || 'Unknown',
-      description: backendCompany.description,
-      business_activity: backendCompany.business_activity,
-      hq_location: backendCompany.hq_location,
-      website_url: backendCompany.website_url,
-      linkedin_url: backendCompany.linkedin_url,
-      twitter_url: backendCompany.twitter_url,
-      crunchbase_url: backendCompany.crunchbase_url,
-      total_funding_raised: backendCompany.total_funding_raised,
-      stage: backendCompany.latest_funding_stage ? { value: backendCompany.latest_funding_stage } : undefined,
-      subsector_tags: backendCompany.business_area ? { value: backendCompany.business_area } : undefined,
+// Function to transform backend company to frontend format
+const transformCompany = (backendCompany: BackendCompany, index: number): FrontendCompany => {
+  return {
+    id: `company-${index}`,
+    company_name: backendCompany.company_name,
+    sector: backendCompany.sector || 'Unknown',
+    description: backendCompany.description,
+    business_activity: backendCompany.business_activity,
+    hq_location: backendCompany.hq_location,
+    website_url: backendCompany.website_url,
+    linkedin_url: backendCompany.linkedin_url,
+    twitter_url: backendCompany.twitter_url,
+    crunchbase_url: backendCompany.crunchbase_url,
+    total_funding_raised: backendCompany.total_funding_raised,
+    capital_partners: backendCompany.capital_partners,
+    notable_partners: backendCompany.notable_partners,
+    leadership: backendCompany.leadership,
+    latest_funding_stage: backendCompany.latest_funding_stage,
+    latest_funding_raised: backendCompany.latest_funding_raised,
     };
   };
-
+  
   // Direct API call function
   const searchCompanies = async (query: string = '') => {
     setLoading(true);
@@ -126,13 +124,10 @@ const ImFoIntelligencePage: React.FC = () => {
     }
   };
 
-  // Load initial data on component mount
-  useEffect(() => {
-    searchCompanies('los angeles');
-  }, []);
-
   const handleSearch = () => {
-    searchCompanies(searchQuery);
+    if (searchQuery.trim()) {
+      searchCompanies(searchQuery);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -140,10 +135,6 @@ const ImFoIntelligencePage: React.FC = () => {
       handleSearch();
     }
   };
-
-  // Extract unique sectors from current results
-  const sectors = [...new Set(companies.map(c => c.sector).filter(Boolean))];
-  const stages = [...new Set(companies.map(c => c.stage?.value).filter(Boolean))];
 
   return (
     <div className="min-h-screen bg-primary-dark text-white py-12 px-4 sm:px-6 lg:px-8">
@@ -168,7 +159,7 @@ const ImFoIntelligencePage: React.FC = () => {
             ImFo Intelligence
           </h1>
           <p className="text-lg text-gray-300 mb-8">
-            Comprehensive database of space tech companies and related industries
+            Intel for founders, government, investors, and operators.
           </p>
         </div>
         
@@ -178,14 +169,14 @@ const ImFoIntelligencePage: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input 
                 className="bg-white/5 border-white/20 pl-10 text-gray-100"
-                placeholder="Search companies (e.g., 'pnt', 'gnss', 'los angeles')..." 
+                placeholder="Ask anything" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
             </div>
             
-            <Button onClick={handleSearch} disabled={loading}>
+            <Button onClick={handleSearch} disabled={loading || !searchQuery.trim()}>
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : (
@@ -204,45 +195,28 @@ const ImFoIntelligencePage: React.FC = () => {
             Loading: {loading.toString()}
           </div>
          
-          <div className="text-sm text-white-400 mb-4 mt-4">
+         <div className="text-sm text-white-400 mb-4 mt-4">
             {loading 
               ? "Searching..." 
               : (totalCount > 0
               ? `Displaying ${companies.length} compan${companies.length === 1 ? 'y' : 'ies'} of ${totalCount} total`
-              : "No companies found")
+              : companies.length === 0 && searchQuery ? "No companies found" : "Enter a search query to get started")
             } 
           </div>
-
-          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "cards")} className="mb-4">
-            <TabsList className="bg-white/10">
-              <TabsTrigger value="cards">Card View</TabsTrigger>
-              <TabsTrigger value="table">Table View</TabsTrigger>
-            </TabsList>
             
             {loading ? (
               <div className="flex justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : (
-              <>
-                <TabsContent value="cards" className="mt-0">
-                  <CompanyCards 
-                    companies={companies} 
-                    currentPage={1}
-                    pageSize={20}
-                    totalCount={totalCount}
-                    onPageChange={() => {}} // Simplified for debugging
-                  />
-                </TabsContent>
-                
-                <TabsContent value="table" className="mt-0">
-                  <div className="text-center py-8 text-gray-400">
-                    Table view temporarily disabled for debugging
-                  </div>
-                </TabsContent>
-              </>
+              <CompanyCards 
+                  companies={companies} 
+                  currentPage={1}
+                  pageSize={20}
+                  totalCount={totalCount}
+                  onPageChange={() => {}}
+              />
             )}
-          </Tabs>
         </Card>
       </div>
     </div>
