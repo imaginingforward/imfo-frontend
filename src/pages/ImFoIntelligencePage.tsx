@@ -14,6 +14,9 @@ interface BackendCompany {
   business_area: string;
   sector: string;
   description: string;
+  hq_city: string;
+  hq_state: string;
+  hq_country: string;
   hq_location: string;
   leadership: string;
   latest_funding_stage: string;
@@ -40,6 +43,9 @@ interface FrontendCompany {
   business_area: string;
   sector: string;
   description: string;
+  hq_city: string;
+  hq_state: string;
+  hq_country: string;
   hq_location: string;
   leadership: string;
   latest_funding_stage: string;
@@ -70,6 +76,9 @@ const transformCompany = (backendCompany: BackendCompany, index: number): Fronte
     sector: backendCompany.sector || 'Unknown',
     description: backendCompany.description,
     business_activity: backendCompany.business_activity,
+    hq_city: backendCompany.hq_city,
+    hq_state: backendCompany.hq_state,
+    hq_country: backendCompany.hq_country,
     hq_location: backendCompany.hq_location,
     website_url: backendCompany.website_url,
     linkedin_url: backendCompany.linkedin_url,
