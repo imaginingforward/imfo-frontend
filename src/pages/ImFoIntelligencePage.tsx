@@ -100,7 +100,7 @@ const ImFoIntelligencePage: React.FC = () => {
   };
 
   const runQueryParser = async (query: string) => {
-  const res = await fetch('https://your-heroku-nlp-api.com/parse', {
+  const res = await fetch('https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query })
