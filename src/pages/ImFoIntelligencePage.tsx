@@ -61,7 +61,7 @@ interface FrontendCompany {
 
 const ImFoIntelligencePage: React.FC = () => {
   const navigate = useNavigate();
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<FrontendCompany[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -165,10 +165,10 @@ const transformCompany = (backendCompany: BackendCompany, index: number): Fronte
             <img src="/logo.jpg" alt="IMFO Logo" className="h-16 w-auto" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            ImFo Intelligence
+            Search Engine for Space Tech
           </h1>
           <p className="text-lg text-gray-300 mb-8">
-            Intel for founders, government, investors, and operators.
+            Intel for founders, government, investors, operators
           </p>
         </div>
         
@@ -219,11 +219,7 @@ const transformCompany = (backendCompany: BackendCompany, index: number): Fronte
               </div>
             ) : (
               <CompanyCards 
-                  companies={companies} 
-                  currentPage={1}
-                  pageSize={20}
-                  totalCount={totalCount}
-                  onPageChange={() => {}}
+                  companies={companies}
               />
             )}
         </Card>
