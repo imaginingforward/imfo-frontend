@@ -1,9 +1,8 @@
-
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Globe, Linkedin, Twitter, ChevronLeft, ChevronRight, DollarSign, MapPin, Calendar } from 'lucide-react';
+import { ExternalLink, Globe, Linkedin, Twitter, DollarSign, Calendar } from 'lucide-react';
 import { type Company } from "@/services/companyService";
 
 interface CompanyCardsProps {
@@ -87,15 +86,14 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 </p>
               )}
               
-              <div className="grid grid-cols-2 gap-2 text-xs text-white mb-3">
-                {(company as any).hq_location && (
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    <span>{(company as any).hq_location}</span>
-                  </div>
-                )}
+              {/* Location info */}
+              {company.hq_location && (
+                <div className="text-xs text-white mb-3">
+                  {company.hq_location}
+                </div>
+              )}
 
-              {/* Working Social Icons using Lucide */}
+              {/* Social Icons using Lucide */}
               <div className="flex gap-3 mb-2">
                 {isValidUrl(company.website_url) && (
                   <a 
@@ -133,7 +131,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-sky-400 hover:text-sky-300 transition-colors"
-                    title="Twitter/X"
+                    title="X"
                   >
                     <Twitter className="h-4 w-4" />
                   </a>
@@ -154,14 +152,6 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 )}
               </div>
             </div>
-            
-            <CardFooter className="border-t border-white/20 bg-white/10 p-3 flex justify-between items-center">
-              {company.subsector_tags && (
-                <div className="text-xs text-white truncate">
-                  {company.subsector_tags.value}
-                </div>
-              )}
-            </CardFooter>
           </Card>
         ))}
       </div>
