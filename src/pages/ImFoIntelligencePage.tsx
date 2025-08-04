@@ -6,138 +6,74 @@ import { Card } from "@/components/ui/card";
 import { CompanyCards } from "@/components/intelligence/CompanyCards";
 import { Loader2, Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-// Define the backend response type to match API
-interface BackendCompany {
-  company_name: string;
-  business_activity: string;
-  business_area: string;
-  sector: string;
-  description: string;
-  hq_city: string;
-  hq_state: string;
-  hq_country: string;
-  hq_location: string;
-  leadership: string;
-  latest_funding_stage: string;
-  latest_funding_raised: string;
-  total_funding_raised: string;
-  capital_partners: string;
-  notable_partners: string;
-  website_url: string;
-  linkedin_url: string;
-  crunchbase_url: string;
-  twitter_url: string;
-}
-
-interface BackendResponse {
-  companies: BackendCompany[];
-  count: number;
-}
-
-// Transform backend data to match frontend expectations
-interface FrontendCompany {
-  id: string;
-  company_name: string;
-  business_activity: string;
-  business_area: string;
-  sector: string;
-  description: string;
-  hq_city: string;
-  hq_state: string;
-  hq_country: string;
-  hq_location: string;
-  leadership: string;
-  latest_funding_stage: string;
-  latest_funding_raised: string;
-  total_funding_raised: string;
-  capital_partners: string;
-  notable_partners: string;
-  website_url: string;
-  linkedin_url: string;
-  crunchbase_url: string;
-  twitter_url: string;
-}
+import { searchCompanies, transformCompany, type Company, type CompanyResponse } from "@/services/companyService";
 
 const ImFoIntelligencePage: React.FC = () => {
   const navigate = useNavigate();
-  const [companies, setCompanies] = useState<FrontendCompany[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
   const { toast } = useToast();
 
-// Function to transform backend company to frontend format
-const transformCompany = (backendCompany: BackendCompany, index: number): FrontendCompany => {
-  return {
-    id: `company-${index}`,
-    company_name: backendCompany.company_name,
-    sector: backendCompany.sector || 'Unknown',
-    description: backendCompany.description,
-    business_activity: backendCompany.business_activity,
-    hq_city: backendCompany.hq_city,
-    hq_state: backendCompany.hq_state,
-    hq_country: backendCompany.hq_country,
-    hq_location: backendCompany.hq_location,
-    website_url: backendCompany.website_url,
-    linkedin_url: backendCompany.linkedin_url,
-    twitter_url: backendCompany.twitter_url,
-    crunchbase_url: backendCompany.crunchbase_url,
-    total_funding_raised: backendCompany.total_funding_raised,
-    capital_partners: backendCompany.capital_partners,
-    notable_partners: backendCompany.notable_partners,
-    leadership: backendCompany.leadership,
-    latest_funding_stage: backendCompany.latest_funding_stage,
-    latest_funding_raised: backendCompany.latest_funding_raised,
-    };
-  };
+// Keyword click handler function
+const handleKeywordClick = async (keyword: string) => {
+  setSearchQuery(keyword);
+  setLoading(true);
   
-  // Direct API call function
-  const searchCompanies = async (query: string = '') => {
-    setLoading(true);
-    try {
-      console.log('Searching with query:', query);
-      
-      const response = await fetch('https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: query || 'los angeles' }) // Default to 'los angeles' if empty
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const data: CompanyResponse = await searchCompanies(keyword);
+    const transformed = data.companies.map((company, index) => {
+      if (company.id) {
+        return company;
+      } else {
+        const { id, ...companyWithoutId } = company;
+        return transformCompany(companyWithoutId, index);
       }
+    });
+    
+    setCompanies(transformed);
+    setTotalCount(data.count);
+    
+    // Optional: Show toast notification
+    toast({
+      title: "Search Updated",
+      description: `Searching for companies with "${keyword}"`,
+    });
+    
+  } catch (error: any) {
+    toast({
+      title: "Search Error",
+      description: error.message || "Failed to search companies",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+  
+  const handleSearch = async () => {
+  if (!searchQuery.trim()) return;
 
-      const data: BackendResponse = await response.json();
-      console.log('Raw API response:', data);
-      
-      // Transform the data
-      const transformedCompanies = data.companies.map(transformCompany);
-      console.log('Transformed companies:', transformedCompanies);
-      
-      setCompanies(transformedCompanies);
-      setTotalCount(data.count);
-      
-    } catch (error: any) {
-      console.error('Search error:', error);
-      toast({
-        title: "Search Error",
-        description: error.message || 'Failed to search companies',
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      searchCompanies(searchQuery);
-    }
-  };
+  setLoading(true);
+  try {
+    const data: CompanyResponse = await searchCompanies(searchQuery);
+    const transformed = data.companies.map((company, index) =>
+      company.id ? company : transformCompany(company, index)
+    );
+    setCompanies(transformed);
+    setTotalCount(data.count);
+  } catch (error: any) {
+    toast({
+      title: "Search Error",
+      description: error.message || "Failed to search companies",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -220,6 +156,7 @@ const transformCompany = (backendCompany: BackendCompany, index: number): Fronte
             ) : (
               <CompanyCards 
                   companies={companies}
+                  onKeywordClick={handleKeywordClick}
               />
             )}
         </Card>
