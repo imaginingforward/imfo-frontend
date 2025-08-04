@@ -63,6 +63,7 @@ export const searchCompanies = async (query: string = ''): Promise<CompanyRespon
 export const transformCompany = (backendCompany: Omit<Company, 'id'>, index: number): Company => {
   return {
     id: `company-${index}`,
+    business_area: backendCompany.business_area || '',
     ...backendCompany
   };
 };
