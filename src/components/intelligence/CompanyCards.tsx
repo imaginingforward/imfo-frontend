@@ -96,11 +96,8 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               
             {/* Location */}
             {company.hq_location && (
-              <div className="mb-4 text-left">
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-3 w-3 text-white/60" />
+              <div className="mb-3 text-left">
                   <span className="text-sm text-white/90">{company.hq_location}</span>
-                </div>
               </div>
             )}
 
@@ -116,7 +113,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   className="text-blue-400 hover:text-blue-300 transition-colors"
                   title="LinkedIn"
                 >
-                  <Linkedin className="h-4 w-4" />
+                  <img src="/linkedin_logo.png" alt="LinkedIn" className="h-4 w-4" />
                 </a>
               )}
               
@@ -130,7 +127,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   className="text-sky-400 hover:text-sky-300 transition-colors"
                   title="X"
                 >
-                  <Twitter className="h-4 w-4" />
+                  <img src="/X_logo.png" alt="X" className="h-4 w-4" />
                 </a>
               )}
               
@@ -144,7 +141,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   className="text-orange-400 hover:text-orange-300 transition-colors"
                   title="Crunchbase"
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  <img src="/crunchbase-logo.png" alt="Crunchbase" className="h-4 w-4" />
                 </a>
               )}
               
