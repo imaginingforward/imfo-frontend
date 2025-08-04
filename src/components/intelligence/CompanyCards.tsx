@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Globe, Linkedin, Twitter, DollarSign, Calendar } from 'lucide-react';
 
-interface ElasticsearchCompany {
+interface FrontendCompany {
   id: string;
   company_name: string;
   business_activity: string;
@@ -28,7 +28,7 @@ interface ElasticsearchCompany {
 }
 
 interface CompanyCardsProps {
-  companies: ElasticsearchCompany[];
+  companies: FrontendCompany[];
 }
 
 export const CompanyCards: React.FC<CompanyCardsProps> = 
