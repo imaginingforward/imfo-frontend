@@ -3,10 +3,32 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Globe, Linkedin, Twitter, DollarSign, Calendar } from 'lucide-react';
-import { type Company } from "@/services/companyService";
+
+interface ElasticsearchCompany {
+  id: string;
+  company_name: string;
+  business_activity: string;
+  business_area: string;
+  sector: string;
+  description: string;
+  hq_city: string;
+  hq_state: string;
+  hq_country: string;
+  hq_location: string;
+  leadership: string;
+  latest_funding_stage: string;
+  latest_funding_raised: string;
+  total_funding_raised: string;
+  capital_partners: string;
+  notable_partners: string;
+  website_url: string;
+  linkedin_url: string;
+  crunchbase_url: string;
+  twitter_url: string;
+}
 
 interface CompanyCardsProps {
-  companies: Company[];
+  companies: ElasticsearchCompany[];
 }
 
 export const CompanyCards: React.FC<CompanyCardsProps> = 
@@ -20,21 +42,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     }
   }, [companies]);
 
-  // Function to get logo placeholder with company initials
-  const getLogoPlaceholder = (name: string) => {
-    const initials = name
-      .split(' ')
-      .slice(0, 2)
-      .map(word => word[0])
-      .join('')
-      .toUpperCase();
-    
-    return initials;
-  };
-
   // Helper function
   const isValidUrl = (url?: string): boolean => {
-  return !!url && typeof url === "string" && url.trim().length > 5;
+    return !!url && typeof url === "string" && url.trim().length > 5;
   };
   
   // Function to get a color based on sector
@@ -61,96 +71,96 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
             key={company.id} 
             className={`${index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'} border-white/20 overflow-hidden hover:border-white/30 transition-all`}
           >
-            <div className="p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-12 w-12 rounded-full flex items-center justify-center text-white font-bold text-lg bg-primary shadow-md">
-                  {getLogoPlaceholder(company.company_name)}
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-white">{company.company_name}</h3>
-                  <Badge variant="outline" className={`${getSectorColor(company.sector)} bg-opacity-20 text-xs`}>
-                    {company.sector}
-                  </Badge>
-                </div>
-              </div>
-              
-              {company.description && (
-                <p className="text-sm text-white mb-4 line-clamp-3">
-                  {company.description}
-                </p>
-              )}
-              
-              {(company as any).business_activity && (
-                <p className="text-sm text-white/80 mb-3">
-                  <span className="font-medium">Activities:</span> {(company as any).business_activity}
-                </p>
-              )}
-              
-              {/* Location info */}
-              {company.hq_location && (
-                <div className="text-xs text-white mb-3">
-                  {company.hq_location}
-                </div>
-              )}
+            {/* Company Name */}
+            <div className="mb-3">
+              <h3 className="font-bold text-lg text-white text-left">{company.company_name}</h3>
+              <Badge variant="outline" className={`${getSectorColor(company.sector)} bg-opacity-20 text-xs mt-1`}>
+                {company.sector}
+              </Badge>
+            </div>
 
-              {/* Social Icons using Lucide */}
-              <div className="flex gap-3 mb-2">
-                {isValidUrl(company.website_url) && (
-                  <a 
-                    href={company.website_url.trim().startsWith('http') 
-                      ? company.website_url.trim() 
-                      : `https://${company.website_url.trim()}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-primary hover:text-primary/80 transition-colors"
-                    title="Website"
-                  >
-                    <Globe className="h-4 w-4" />
-                  </a>
-                )}
-                
-                {isValidUrl(company.linkedin_url) && (
-                  <a 
-                    href={company.linkedin_url.trim().startsWith('http') 
-                      ? company.linkedin_url.trim()
-                      : `https://${company.linkedin_url.trim()}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-blue-400 hover:text-blue-300 transition-colors"
-                    title="LinkedIn"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                )}
-                
-                {isValidUrl(company.twitter_url) && (
-                  <a 
-                    href={company.twitter_url.trim().startsWith('http') 
-                      ? company.twitter_url.trim()
-                      : `https://${company.twitter_url.trim()}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-sky-400 hover:text-sky-300 transition-colors"
-                    title="X"
-                  >
-                    <Twitter className="h-4 w-4" />
-                  </a>
-                )}
-                
-                {isValidUrl(company.crunchbase_url) && (
-                  <a 
-                    href={company.crunchbase_url.trim().startsWith('http') 
-                      ? company.crunchbase_url.trim()
-                      : `https://${company.crunchbase_url.trim()}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-orange-400 hover:text-orange-300 transition-colors"
-                    title="Crunchbase"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                )}
+            {/* Description */}
+            {company.description && (
+              <p className="text-sm text-white mb-3 text-left line-clamp-3">
+                {company.description}
+              </p>
+            )}
+
+            {/* Keywords and Tags */}
+            {(company as any).business_activity && (
+              <div className="mb-3 text-left">
+                <span className="text-xs text-white/60 font-medium">Activities:</span>
+                <p className="text-sm text-white/90 mt-1">{company.business_activity}</p>
               </div>
+            )}
+              
+            {/* Location */}
+            {company.hq_location && (
+              <div className="mb-4 text-left">
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3 text-white/60" />
+                  <span className="text-sm text-white/90">{company.hq_location}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Social Icons using Lucide */}
+            <div className="flex gap-3 items-center">
+              {isValidUrl(company.linkedin_url) && (
+                <a 
+                  href={company.linkedin_url.trim().startsWith('http') 
+                    ? company.linkedin_url.trim()
+                    : `https://${company.linkedin_url.trim()}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                  title="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              )}
+              
+              {isValidUrl(company.twitter_url) && (
+                <a 
+                  href={company.twitter_url.trim().startsWith('http') 
+                    ? company.twitter_url.trim()
+                    : `https://${company.twitter_url.trim()}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-sky-400 hover:text-sky-300 transition-colors"
+                  title="X"
+                >
+                  <Twitter className="h-4 w-4" />
+                </a>
+              )}
+              
+              {isValidUrl(company.crunchbase_url) && (
+                <a 
+                  href={company.crunchbase_url.trim().startsWith('http') 
+                    ? company.crunchbase_url.trim()
+                    : `https://${company.crunchbase_url.trim()}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-orange-400 hover:text-orange-300 transition-colors"
+                  title="Crunchbase"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
+              
+              {isValidUrl(company.website_url) && (
+                <a 
+                  href={company.website_url.trim().startsWith('http') 
+                    ? company.website_url.trim() 
+                    : `https://${company.website_url.trim()}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-primary hover:text-primary/80 transition-colors"
+                  title="Website"
+                >
+                  <Globe className="h-4 w-4" />
+                </a>
+              )}
             </div>
           </Card>
         ))}
