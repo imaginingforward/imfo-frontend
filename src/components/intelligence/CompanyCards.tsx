@@ -189,6 +189,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 </a>
               )}
             </div>
+            </CardContent>
           </Card>
         ))}
       </div>
