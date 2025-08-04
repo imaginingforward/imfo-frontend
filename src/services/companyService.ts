@@ -1,113 +1,68 @@
-import { getApiBaseUrl, getBackendApiKey } from "@/utils/envConfig";
-
-// Interface for the value object structure used in many fields
-interface ValueObject {
-  id: number;
-  value: string;
-  color: string;
-}
-
+// Elasticsearch company interface matching your API response
 export interface Company {
-  id: number;
+  id: string;
   company_name: string;
+  business_activity: string;
+  business_area: string;
   sector: string;
-  subsector_tags: ValueObject | null;
-  description: string | null;
-  stage: ValueObject | null;
-  latest_funding_raised: string | null;
-  total_funding_raised: string | null;
-  capital_partners: ValueObject[] | [];
-  annual_revenue: string | null;
-  hq_location: ValueObject | null;
-  founder: string | null;
-  year_founded: string | null;
-  hiring: string | null;
-  notable_partners: ValueObject[] | [];
-  competitors: string | null;
-  public_ticker: string | null;
-  business_activity: ValueObject[] | [];
-  website_url: string | null;
-  crunchbase_url: string | null;
-  linkedin_url: string | null;
-  twitter_url: string | null;
+  description: string;
+  hq_city: string;
+  hq_state: string;
+  hq_country: string;
+  hq_location: string;
+  leadership: string;
+  latest_funding_stage: string;
+  latest_funding_raised: string;
+  total_funding_raised: string;
+  capital_partners: string;
+  notable_partners: string;
+  website_url: string;
+  linkedin_url: string;
+  crunchbase_url: string;
+  twitter_url: string;
 }
 
 export interface CompanyResponse {
   companies: Company[];
   count: number;
-  next: string | null;
-  previous: string | null;
 }
 
-export interface CompanyFilters {
-  search?: string;
-  sector?: string;
-  stage?: string;
-  page?: number;
-  pageSize?: number;
+// Simple search interface for Elasticsearch
+export interface SearchFilters {
+  query?: string;
 }
 
-export const fetchCompanies = async (filters: CompanyFilters = {}): Promise<CompanyResponse> => {
+// Direct Elasticsearch API call - matches your main page implementation
+export const searchCompanies = async (query: string = ''): Promise<CompanyResponse> => {
   try {
-    console.log('fetchCompanies called with filters:', filters);
-    const queryParams = new URLSearchParams();
+    console.log('Searching with query:', query);
     
-    if (filters.search) queryParams.append('search', filters.search);
-    if (filters.sector) queryParams.append('sector', filters.sector);
-    if (filters.stage) queryParams.append('stage', filters.stage);
-    if (filters.page) queryParams.append('page', filters.page.toString());
-    if (filters.pageSize) queryParams.append('pageSize', filters.pageSize.toString());
-    
-    console.log('Query parameters:', Object.fromEntries(queryParams.entries()));
-    
-    const url = `${getApiBaseUrl()}/api/companies?${queryParams.toString()}`;
-    console.log('API request URL:', url);
-    const response = await fetch(url, {
-      headers: {
+    const response = await fetch('https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse', {
+      method: 'POST',
+      headers: { 
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'x-api-key': getBackendApiKey()
-      }
+      },
+      body: JSON.stringify({ query: query || 'los angeles' })
     });
-    
+
     if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const data: CompanyResponse = await response.json();
+    console.log('API response:', data);
     
-    const responseData = await response.json();
-    console.log('API response headers:', {
-      contentType: response.headers.get('content-type'),
-      status: response.status
-    });
-    console.log('API response data structure:', {
-      hasCompanies: !!responseData.companies,
-      count: responseData.count,
-      companyCount: responseData.companies?.length || 0
-    });
-    return responseData;
-  } catch (error) {
-    console.error('Error fetching companies:', error);
+    return data;
+  } catch (error: any) {
+    console.error('Search error:', error);
     throw error;
   }
 };
 
-export const fetchCompanyById = async (id: number): Promise<Company> => {
-  try {
-    const response = await fetch(`${getApiBaseUrl()}/api/companies/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'x-api-key': getBackendApiKey()
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching company ${id}:`, error);
-    throw error;
-  }
+// Transform function to add IDs if needed
+export const transformCompany = (backendCompany: Omit<Company, 'id'>, index: number): Company => {
+  return {
+    id: `company-${index}`,
+    ...backendCompany
+  };
 };
