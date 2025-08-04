@@ -62,9 +62,9 @@ const Index = () => {
       const result = await response.json();
       console.log("Parsed result:", result);
  
-      // TODO: Save the result in a new state variable for rendering cards
-      setResults(result);
-      console.log("Updated results state:", result);
+      // Save the companies array from the result
+      setResults(result.companies || []);
+      console.log("Updated results state:", result.companies || []);
     } catch (err) {
       console.error("Search failed", err);
       alert("Sorry, search failed. Try again.");
