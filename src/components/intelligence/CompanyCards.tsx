@@ -141,7 +141,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   className="text-orange-400 hover:text-orange-300 transition-colors"
                   title="Crunchbase"
                 >
-                  <img src="/crunchbase-logo.png" alt="Crunchbase" className="h-4 w-4" />
+                  <img src="/cb_logo.png" alt="Crunchbase" className="h-4 w-4" />
                 </a>
               )}
               
