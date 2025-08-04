@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Globe, Linkedin, Twitter, DollarSign, Calendar } from 'lucide-react';
+import { ExternalLink, Globe, DollarSign, Calendar } from 'lucide-react';
 
 interface FrontendCompany {
   id: string;
@@ -29,10 +29,11 @@ interface FrontendCompany {
 
 interface CompanyCardsProps {
   companies: FrontendCompany[];
+  onKeywordClick?: (keyword: string) => void;
 }
 
 export const CompanyCards: React.FC<CompanyCardsProps> = 
-  ({ companies }) => {
+  ({ companies, onKeywordClick }) => {
   
   // Debug: Log company data to see URLs  
   useEffect(() => {
@@ -42,57 +43,86 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     }
   }, [companies]);
 
-  // Helper function
+  // Helper function to validate URLs
   const isValidUrl = (url?: string): boolean => {
     return !!url && typeof url === "string" && url.trim().length > 5;
   };
-  
+
+  // Function to parse business activities into clickable keywords
+  const parseBusinessActivities = (activities: string): string[] => {
+    if (!activities) return [];
+    
+    // Split by period, semicolon, and clean up
+    return activities
+      .split(/[;.]/)
+      .map(activity => activity.trim())
+      .filter(activity => activity.length > 0 && activity.length < 50) // Filter reasonable lengths
+      .slice(0, 6); // Limit to 6 keywords max
+  };
+
   // Function to get a color based on sector
   const getSectorColor = (sector: string) => {
     const colorMap: Record<string, string> = {
-      'Space Tech': 'bg-blue-500',
-      'Health Tech': 'bg-green-500',
-      'Industrial Tech': 'bg-amber-500',
-      'Robotics': 'bg-violet-500',
-      'Cybersecurity': 'bg-red-500',
-      'Climate Tech': 'bg-emerald-500',
-      'Quantum': 'bg-purple-500',
-      'Bio Tech': 'bg-teal-500'
+      'Space Tech': 'bg-blue-500/20 text-blue-200 border-blue-400/30',
+      'Health Tech': 'bg-green-500/20 text-green-200 border-green-400/30',
+      'Industrial Tech': 'bg-amber-500/20 text-amber-200 border-amber-400/30',
+      'Robotics': 'bg-violet-500/20 text-violet-200 border-violet-400/30',
+      'Cybersecurity': 'bg-red-500/20 text-red-200 border-red-400/30',
+      'Climate Tech': 'bg-emerald-500/20 text-emerald-200 border-emerald-400/30',
+      'Quantum': 'bg-purple-500/20 text-purple-200 border-purple-400/30',
+      'Bio Tech': 'bg-teal-500/20 text-teal-200 border-teal-400/30'
     };
     
-    return colorMap[sector] || 'bg-gray-500';
+    return colorMap[sector] || 'bg-gray-500/20 text-gray-200 border-gray-400/30';
   };
   
+  // Handle keyword click
+  const handleKeywordClick = (keyword: string) => {
+    if (onKeywordClick) {
+      onKeywordClick(keyword);
+    }
+  };
+    
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {companies.map((company, index) => (
           <Card 
             key={company.id} 
-            className={`${index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'} border-white/20 overflow-hidden hover:border-white/30 transition-all`}
+            className="bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden hover:border-purple-300/40 hover:bg-white/15 transition-all duration-300 shadow-lg hover:shadow-purple-500/10"
           >
+            <CardContent className="p-6">
             {/* Company Name */}
-            <div className="mb-3">
-              <h3 className="font-bold text-lg text-white text-left">{company.company_name}</h3>
-              <Badge variant="outline" className={`${getSectorColor(company.sector)} bg-opacity-20 text-xs mt-1`}>
-                {company.sector}
-              </Badge>
-            </div>
+              <div className="mb-3">
+                <h3 className="font-bold text-lg text-white text-left">{company.company_name}</h3>
+                <Badge variant="outline" className={`${getSectorColor(company.sector)} bg-opacity-20 text-xs mt-1`}>
+                  {company.sector}
+                </Badge>
+              </div>
 
             {/* Description */}
             {company.description && (
-              <p className="text-sm text-white mb-3 text-left line-clamp-3">
+              <p className="text-sm text-gray-200 mb-4 text-left line-clamp-3 leading-relaxed">
                 {company.description}
               </p>
             )}
 
             {/* Keywords and Tags */}
-            {(company as any).business_activity && (
-              <div className="mb-3 text-left">
-                <span className="text-xs text-white/60 font-medium">Activities:</span>
-                <p className="text-sm text-white/90 mt-1">{company.business_activity}</p>
-              </div>
-            )}
+            {company.business_activity && (
+                <div className="mb-4 text-left">
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {parseBusinessActivities(company.business_activity).map((keyword, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleKeywordClick(keyword)}
+                        className="px-3 py-1 text-xs bg-purple-500/20 text-purple-200 border border-purple-400/30 rounded-full hover:bg-purple-500/30 hover:border-purple-300/50 transition-all duration-200 cursor-pointer"
+                      >
+                        {keyword}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               
             {/* Location */}
             {company.hq_location && (
@@ -110,7 +140,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.linkedin_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                  className="text-blue-300 hover:text-blue-200 transition-colors p-1 hover:bg-white/10 rounded"
                   title="LinkedIn"
                 >
                   <img src="/linkedin_logo.png" alt="LinkedIn" className="h-4 w-4" />
@@ -124,7 +154,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.twitter_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-sky-400 hover:text-sky-300 transition-colors"
+                  className="text-silver-300 hover:text-silver-200 transition-colors p-1 hover:bg-white/10 rounded"
                   title="X"
                 >
                   <img src="/X_logo.png" alt="X" className="h-4 w-4" />
@@ -138,7 +168,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.crunchbase_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-orange-400 hover:text-orange-300 transition-colors"
+                  className="text-blue-300 hover:text-blue-200 transition-colors p-1 hover:bg-white/10 rounded"
                   title="Crunchbase"
                 >
                   <img src="/cb_logo.png" alt="Crunchbase" className="h-4 w-4" />
@@ -152,7 +182,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.website_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-primary hover:text-primary/80 transition-colors"
+                  className="text-purple-300 hover:text-purple-200 transition-colors p-1 hover:bg-white/10 rounded"
                   title="Website"
                 >
                   <Globe className="h-4 w-4" />
