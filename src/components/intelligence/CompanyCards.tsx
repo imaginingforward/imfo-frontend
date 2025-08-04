@@ -8,20 +8,10 @@ import { type Company } from "@/services/companyService";
 
 interface CompanyCardsProps {
   companies: Company[];
-  currentPage: number;
-  pageSize: number;
-  totalCount: number;
-  onPageChange: (page: number) => void;
 }
 
-export const CompanyCards: React.FC<CompanyCardsProps> = ({
-  companies,
-  currentPage,
-  pageSize,
-  totalCount,
-  onPageChange,
-}) => {
-  const totalPages = Math.ceil(totalCount / pageSize);
+export const CompanyCards: React.FC<CompanyCardsProps> = 
+  ({ companies }) => {
   
   // Debug: Log company data to see URLs  
   useEffect(() => {
@@ -104,31 +94,8 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
                     <span>{(company as any).hq_location}</span>
                   </div>
                 )}
-                
-                {company.year_founded && (
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    <span>Founded {company.year_founded}</span>
-                  </div>
-                )}
-                
-                {company.total_funding_raised && (
-                  <div className="flex items-center gap-1">
-                    <DollarSign className="h-3 w-3" />
-                    <span>{company.total_funding_raised}</span>
-                  </div>
-                )}
-                
-                {company.stage && (
-                  <div className="flex items-center gap-1">
-                    <Badge variant="outline" className="h-5 py-0 px-1 text-white border-white/30 bg-white/10">
-                      {company.stage.value}
-                    </Badge>
-                  </div>
-                )}
-              </div>
 
-              {/* Working Social Icons using Lucide (like your table view) */}
+              {/* Working Social Icons using Lucide */}
               <div className="flex gap-3 mb-2">
                 {isValidUrl(company.website_url) && (
                   <a 
@@ -202,49 +169,6 @@ export const CompanyCards: React.FC<CompanyCardsProps> = ({
       {companies.length === 0 && (
         <div className="text-center py-12 text-white">
           No companies found matching your criteria
-        </div>
-      )}
-      
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-black">
-            Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => onPageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            
-            {/* Page numbers */}
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageNumber = i + 1;
-              return (
-                <Button 
-                  key={i}
-                  variant={currentPage === pageNumber ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => onPageChange(pageNumber)}
-                >
-                  {pageNumber}
-                </Button>
-              );
-            })}
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => onPageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
         </div>
       )}
     </div>
