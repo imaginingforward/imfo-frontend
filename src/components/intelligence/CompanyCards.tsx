@@ -102,25 +102,25 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
         {companies.map((company, index) => (
           <Card 
             key={company.id} 
-            className="bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden hover:border-purple-300/40 hover:bg-white/15 transition-all duration-300 shadow-lg hover:shadow-purple-500/10"
+            className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <CardContent className="p-6">
             {/* Company Name */}
               <div className="mb-3">
                 <h3 
-                  className="font-bold text-lg text-white text-left cursor-pointer hover:text-purple-200 transition-colors" 
+                  className="font-bold text-lg text-foreground text-left cursor-pointer hover:text-primary transition-colors" 
                   onClick={() => openCompanyDetails(company)}
                 >
                   {company.company_name}
                 </h3>
-                <Badge variant="outline" className={`${getSectorColor(company.sector)} bg-opacity-20 text-xs mt-1`}>
+                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
                   {company.sector}
                 </Badge>
               </div>
 
             {/* Description */}
             {company.description && (
-              <p className="text-sm text-gray-200 mb-4 text-left line-clamp-3 leading-relaxed">
+              <p className="text-sm text-muted-foreground mb-4 text-left line-clamp-3 leading-relaxed">
                 {company.description}
               </p>
             )}
@@ -133,7 +133,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                       <button
                         key={idx}
                         onClick={() => handleKeywordClick(keyword)}
-                        className="px-3 py-1 text-xs bg-purple-500/20 text-purple-200 border border-purple-400/30 rounded-full hover:bg-purple-500/30 hover:border-purple-300/50 transition-all duration-200 cursor-pointer"
+                        className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 hover:border-primary/30 transition-all duration-200 cursor-pointer"
                       >
                         {keyword}
                       </button>
@@ -145,7 +145,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
             {/* Location */}
             {company.hq_location && (
               <div className="mb-3 text-left">
-                  <span className="text-sm text-white">{company.hq_location}</span>
+                  <span className="text-sm text-muted-foreground">{company.hq_location}</span>
               </div>
             )}
 
@@ -158,7 +158,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.linkedin_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-blue-300 hover:text-blue-200 transition-colors p-1 hover:bg-white/10 rounded"
+                  className="text-blue-600 hover:text-blue-500 transition-colors p-1 hover:bg-accent rounded"
                   title="LinkedIn"
                 >
                   <img src="/linkedin_logo.png" alt="LinkedIn" className="h-4 w-4" />
@@ -172,7 +172,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.twitter_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-silver-300 hover:text-silver-200 transition-colors p-1 hover:bg-white/10 rounded"
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-accent rounded"
                   title="X"
                 >
                   <img src="/X_logo.png" alt="X" className="h-4 w-4" />
@@ -186,7 +186,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.crunchbase_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-blue-300 hover:text-blue-200 transition-colors p-1 hover:bg-white/10 rounded"
+                  className="text-orange-600 hover:text-orange-500 transition-colors p-1 hover:bg-accent rounded"
                   title="Crunchbase"
                 >
                   <img src="/cb_logo.png" alt="Crunchbase" className="h-4 w-4" />
@@ -200,7 +200,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     : `https://${company.website_url.trim()}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-purple-300 hover:text-purple-200 transition-colors p-1 hover:bg-white/10 rounded"
+                  className="text-primary hover:text-primary/80 transition-colors p-1 hover:bg-accent rounded"
                   title="Website"
                 >
                   <Globe className="h-4 w-4" />
@@ -213,17 +213,17 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
       </div>
       
       {companies.length === 0 && (
-        <div className="text-center py-12 text-white">
+        <div className="text-center py-12 text-muted-foreground">
           No companies found matching your criteria
         </div>
       )}
 
       {/* Company Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-background text-foreground border border-border">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <Building className="h-6 w-6 text-purple-600" />
+            <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
+              <Building className="h-6 w-6 text-primary" />
               {selectedCompany?.company_name}
             </DialogTitle>
           </DialogHeader>
@@ -233,16 +233,16 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               {/* Header Section */}
               <div className="border-b pb-4">
                 <div className="flex flex-wrap gap-2 mb-3">
-                  <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+                  <Badge className="bg-primary/10 text-primary border-primary/20">
                     {selectedCompany.sector}
                   </Badge>
                   {selectedCompany.stage && (
-                    <Badge variant="outline" className="border-gray-300">
+                    <Badge variant="outline" className="border-border">
                       {selectedCompany.stage}
                     </Badge>
                   )}
                 </div>
-                <p className="text-gray-700 leading-relaxed">{selectedCompany.description}</p>
+                <p className="text-muted-foreground leading-relaxed">{selectedCompany.description}</p>
               </div>
 
               {/* Key Information Grid */}
@@ -252,10 +252,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   {/* Location */}
                   {selectedCompany.hq_location && (
                     <div className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Location</h4>
-                        <p className="text-gray-700">{selectedCompany.hq_location}</p>
+                        <h4 className="font-semibold text-foreground">Location</h4>
+                        <p className="text-muted-foreground">{selectedCompany.hq_location}</p>
                       </div>
                     </div>
                   )}
@@ -263,10 +263,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   {/* Leadership */}
                   {selectedCompany.leadership && (
                     <div className="flex items-start gap-3">
-                      <Users className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Leadership</h4>
-                        <p className="text-gray-700">{selectedCompany.leadership}</p>
+                        <h4 className="font-semibold text-foreground">Leadership</h4>
+                        <p className="text-muted-foreground">{selectedCompany.leadership}</p>
                       </div>
                     </div>
                   )}
@@ -274,10 +274,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   {/* Founded */}
                   {selectedCompany.year_founded && (
                     <div className="flex items-start gap-3">
-                      <Calendar className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Founded</h4>
-                        <p className="text-gray-700">{selectedCompany.year_founded}</p>
+                        <h4 className="font-semibold text-foreground">Founded</h4>
+                        <p className="text-muted-foreground">{selectedCompany.year_founded}</p>
                       </div>
                     </div>
                   )}
@@ -288,10 +288,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   {/* Funding Stage */}
                   {selectedCompany.latest_funding_stage && (
                     <div className="flex items-start gap-3">
-                      <Award className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <Award className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Funding Stage</h4>
-                        <p className="text-gray-700">{selectedCompany.latest_funding_stage}</p>
+                        <h4 className="font-semibold text-foreground">Funding Stage</h4>
+                        <p className="text-muted-foreground">{selectedCompany.latest_funding_stage}</p>
                       </div>
                     </div>
                   )}
@@ -299,10 +299,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   {/* Total Funding */}
                   {selectedCompany.total_funding_raised && (
                     <div className="flex items-start gap-3">
-                      <DollarSign className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Total Funding</h4>
-                        <p className="text-gray-700">{selectedCompany.total_funding_raised}</p>
+                        <h4 className="font-semibold text-foreground">Total Funding</h4>
+                        <p className="text-muted-foreground">{selectedCompany.total_funding_raised}</p>
                       </div>
                     </div>
                   )}
@@ -310,10 +310,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   {/* Revenue */}
                   {selectedCompany.annual_revenue && (
                     <div className="flex items-start gap-3">
-                      <Target className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <Target className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Annual Revenue</h4>
-                        <p className="text-gray-700">{selectedCompany.annual_revenue}</p>
+                        <h4 className="font-semibold text-foreground">Annual Revenue</h4>
+                        <p className="text-muted-foreground">{selectedCompany.annual_revenue}</p>
                       </div>
                     </div>
                   )}
@@ -323,7 +323,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               {/* Business Activity */}
               {selectedCompany.business_activity && (
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <h4 className="font-semibold text-foreground flex items-center gap-2">
                     <Building className="h-4 w-4" />
                     Business Activities
                   </h4>
@@ -332,7 +332,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                       <Badge 
                         key={idx} 
                         variant="outline" 
-                        className="bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100 cursor-pointer"
+                        className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 cursor-pointer"
                         onClick={() => handleKeywordClick(activity)}
                       >
                         {activity}
@@ -345,18 +345,18 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               {/* Partners */}
               {(selectedCompany.capital_partners || selectedCompany.notable_partners) && (
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-900">Partners & Investors</h4>
+                  <h4 className="font-semibold text-foreground">Partners & Investors</h4>
                   <div className="space-y-2">
                     {selectedCompany.capital_partners && (
                       <div>
-                        <span className="text-sm font-medium text-gray-600">Capital Partners: </span>
-                        <span className="text-gray-700">{selectedCompany.capital_partners}</span>
+                        <span className="text-sm font-medium text-muted-foreground">Capital Partners: </span>
+                        <span className="text-foreground">{selectedCompany.capital_partners}</span>
                       </div>
                     )}
                     {selectedCompany.notable_partners && (
                       <div>
-                        <span className="text-sm font-medium text-gray-600">Notable Partners: </span>
-                        <span className="text-gray-700">{selectedCompany.notable_partners}</span>
+                        <span className="text-sm font-medium text-muted-foreground">Notable Partners: </span>
+                        <span className="text-foreground">{selectedCompany.notable_partners}</span>
                       </div>
                     )}
                   </div>
@@ -372,7 +372,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                       : `https://${selectedCompany.website_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors"
                   >
                     <Globe className="h-4 w-4" />
                     Website
@@ -385,7 +385,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                       : `https://${selectedCompany.linkedin_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 text-blue-600 rounded-md hover:bg-blue-500/20 transition-colors"
                   >
                     <ExternalLink className="h-4 w-4" />
                     LinkedIn
@@ -398,7 +398,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                       : `https://${selectedCompany.crunchbase_url.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-md hover:bg-orange-200 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 text-orange-600 rounded-md hover:bg-orange-500/20 transition-colors"
                   >
                     <ExternalLink className="h-4 w-4" />
                     Crunchbase
