@@ -145,7 +145,9 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
             {/* Location */}
             {company.hq_location && (
               <div className="mb-3 text-left">
-                  <span className="text-sm text-muted-foreground">{company.hq_location}</span>
+                  <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
+                    {formatLocation(company.hq_location)}
+                  </span>
               </div>
             )}
 
