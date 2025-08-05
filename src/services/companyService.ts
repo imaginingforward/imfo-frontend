@@ -5,6 +5,8 @@ export interface Company {
   business_activity: string;
   business_area: string;
   sector: string;
+  subsector_tags?: string;
+  stage?: string;
   description: string;
   hq_city: string;
   hq_state: string;
@@ -14,12 +16,15 @@ export interface Company {
   latest_funding_stage: string;
   latest_funding_raised: string;
   total_funding_raised: string;
+  annual_revenue?: string;
   capital_partners: string;
   notable_partners: string;
   website_url: string;
   linkedin_url: string;
   crunchbase_url: string;
   twitter_url: string;
+  year_founded?: string;
+  hiring?: string;
 }
 
 export interface CompanyResponse {

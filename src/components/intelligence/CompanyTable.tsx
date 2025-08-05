@@ -64,25 +64,21 @@ export const CompanyTable: React.FC<CompanyTableProps> = ({
               >
                 <TableCell className="font-medium text-gray-100">{company.company_name}</TableCell>
                 <TableCell className="text-gray-200">{company.sector}</TableCell>
-                <TableCell className="text-gray-200">{company.subsector_tags?.value || '—'}</TableCell>
-                <TableCell className="text-gray-200">{company.stage?.value || '—'}</TableCell>
-                <TableCell className="text-gray-200">{company.hq_location?.value || '—'}</TableCell>
+                <TableCell className="text-gray-200">{company.subsector_tags || '—'}</TableCell>
+                <TableCell className="text-gray-200">{company.stage || '—'}</TableCell>
+                <TableCell className="text-gray-200">{company.hq_location || '—'}</TableCell>
                 <TableCell className="text-gray-200">{company.latest_funding_raised || '—'}</TableCell>
                 <TableCell className="text-gray-200">{company.total_funding_raised || '—'}</TableCell>
                 <TableCell className="text-gray-200">{company.annual_revenue || '—'}</TableCell>
                 <TableCell className="text-gray-200">
-                  {company.business_activity && company.business_activity.length > 0
-                    ? company.business_activity.map(item => item.value).join(', ')
-                    : '—'}
+                  {company.business_activity || '—'}
                 </TableCell>
                 <TableCell className="text-gray-200">{company.year_founded || '—'}</TableCell>
                 <TableCell className="text-gray-200">
                   {company.hiring === 'Y' ? 'Yes' : company.hiring === 'N' ? 'No' : '—'}
                 </TableCell>
                 <TableCell className="text-gray-200">
-                  {company.notable_partners && company.notable_partners.length > 0
-                    ? company.notable_partners.map(partner => partner.value).join(', ')
-                    : '—'}
+                  {company.notable_partners || '—'}
                 </TableCell>
                 <TableCell className="text-white">
                   {company.website_url ? (
