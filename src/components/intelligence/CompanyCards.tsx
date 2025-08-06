@@ -149,7 +149,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               </div>
             )}
 
-            {/* Social Icons using Lucide */}
+            {/* Social Icons using /public */}
             <div className="flex gap-2 sm:gap-3 items-center">
               {isValidUrl(company.linkedin_url) && (
                 <a 
@@ -175,7 +175,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                   title="X"
                 >
-                  <img src="/X_logo.png" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <img src="/X_logo.jpeg" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </a>
               )}
               
@@ -206,6 +206,16 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </a>
               )}
+              
+                <a 
+                  href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-green-600 hover:text-green-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                  title="Book a Meeting"
+                >
+                  <img src="/calendly_logo.png" alt="Calendly" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                </a>
             </div>
             </CardContent>
           </Card>
