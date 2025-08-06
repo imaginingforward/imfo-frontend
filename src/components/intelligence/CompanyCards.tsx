@@ -146,16 +146,16 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     </div>
                   </div>
                 )}
-              
-                {/* Location */}
-                {company.hq_location && (
-                  <div className="mb-3 text-left">
-                    <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
-                      {company.hq_location}
-                    </span>
-                  </div>
-                )}
               </div>
+              
+              {/* Location */}
+               {company.hq_location && (
+                 <div className="mb-3 text-left">
+                   <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
+                     {company.hq_location}
+                  </span>
+                 </div>
+               )}
 
               {/* Social Icons using /public */}
               <div className="flex gap-2 sm:gap-3 items-center">
