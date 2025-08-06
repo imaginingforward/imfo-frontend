@@ -92,7 +92,7 @@ const Index = () => {
               Search Engine for Space Tech</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2">
-            Intel for founders, government, investors, and operators
+            Discovery to deals : connect with 1,500+ space companies in seconds
           </p>
         </div>
 
@@ -185,7 +185,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-60">
             <div className="flex items-center space-x-2">
               <Building className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">500+ Companies</span>
+              <span className="text-xs sm:text-sm font-medium">1500+ Companies</span>
             </div>
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -193,7 +193,7 @@ const Index = () => {
             </div>
             <div className="flex items-center space-x-2">
               <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">50+ Countries</span>
+              <span className="text-xs sm:text-sm font-medium">7+ Countries</span>
             </div>
           </div>
         </div>
