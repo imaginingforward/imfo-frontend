@@ -222,7 +222,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
 
       {/* Company Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto bg-background text-foreground border border-border m-4">
+        <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] max-h-[95vh] sm:max-h-[90vh] overflow-y-auto bg-background text-foreground border border-border p-4 sm:p-6 m-2 sm:m-4">
           <DialogHeader>
             <DialogTitle className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 sm:gap-3 pr-8">
               <Building className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
