@@ -105,108 +105,110 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
             className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 cursor-pointer"
             onClick={() => openCompanyDetails(company)}
           >
-            <CardContent className="p-4 sm:p-6">
-            {/* Company Name */}
-              <div className="mb-3">
-                <h3 className="font-bold text-base sm:text-lg text-foreground text-left hover:text-primary transition-colors line-clamp-2">
-                  {company.company_name}
-                </h3>
-                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
-                  {company.sector}
-                </Badge>
-              </div>
-
-            {/* Description */}
-            {company.description && (
-              <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 text-left line-clamp-3 leading-relaxed">
-                {company.description}
-              </p>
-            )}
-
-            {/* Keywords and Tags */}
-            {company.business_activity && (
-                <div className="mb-3 sm:mb-4 text-left">
-                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
-                    {parseBusinessActivities(company.business_activity).slice(0, 4).map((keyword, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleKeywordClick(keyword)}
-                        className="px-2 sm:px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 hover:border-primary/30 transition-all duration-200 cursor-pointer active:scale-95"
-                      >
-                        {keyword}
-                      </button>
-                    ))}
-                  </div>
+            <CardContent className="p-4 sm:p-6 flex flex-col h-full">
+              <div className="flex-1">
+                {/* Company Name */}
+                <div className="mb-3">
+                  <h3 className="font-bold text-base sm:text-lg text-foreground text-left hover:text-primary transition-colors line-clamp-2">
+                    {company.company_name}
+                  </h3>
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
+                    {company.sector}
+                  </Badge>
                 </div>
-              )}
-              
-            {/* Location */}
-            {company.hq_location && (
-              <div className="mb-3 text-left">
-                  <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
-                    {company.hq_location}
-                  </span>
-              </div>
-            )}
 
-            {/* Social Icons using /public */}
-            <div className="flex gap-2 sm:gap-3 items-center">
-              {isValidUrl(company.linkedin_url) && (
-                <a 
-                  href={company.linkedin_url.trim().startsWith('http') 
-                    ? company.linkedin_url.trim()
-                    : `https://${company.linkedin_url.trim()}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
-                  title="LinkedIn"
-                >
-                  <img src="/linkedin_logo.png" alt="LinkedIn" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </a>
-              )}
+                {/* Description */}
+                {company.description && (
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 text-left line-clamp-3 leading-relaxed">
+                    {company.description}
+                  </p>
+                )}
+
+                {/* Keywords and Tags */}
+                {company.business_activity && (
+                  <div className="mb-3 sm:mb-4 text-left">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
+                      {parseBusinessActivities(company.business_activity).slice(0, 4).map((keyword, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleKeywordClick(keyword)}
+                          className="px-2 sm:px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 hover:border-primary/30 transition-all duration-200 cursor-pointer active:scale-95"
+                        >
+                          {keyword}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               
-              {isValidUrl(company.twitter_url) && (
-                <a 
-                  href={company.twitter_url.trim().startsWith('http') 
-                    ? company.twitter_url.trim()
-                    : `https://${company.twitter_url.trim()}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
-                  title="X"
-                >
-                  <img src="/X_logo.jpeg" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </a>
-              )}
-              
-              {isValidUrl(company.crunchbase_url) && (
-                <a 
-                  href={company.crunchbase_url.trim().startsWith('http') 
-                    ? company.crunchbase_url.trim()
-                    : `https://${company.crunchbase_url.trim()}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-orange-600 hover:text-orange-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
-                  title="Crunchbase"
-                >
-                  <img src="/cb_logo.png" alt="Crunchbase" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </a>
-              )}
-              
-              {isValidUrl(company.website_url) && (
-                <a 
-                  href={company.website_url.trim().startsWith('http') 
-                    ? company.website_url.trim() 
-                    : `https://${company.website_url.trim()}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
-                  title="Website"
-                >
-                  <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </a>
-              )}
-              
+                {/* Location */}
+                {company.hq_location && (
+                  <div className="mb-3 text-left">
+                    <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
+                      {company.hq_location}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Social Icons using /public */}
+              <div className="flex gap-2 sm:gap-3 items-center">
+                {isValidUrl(company.linkedin_url) && (
+                  <a 
+                    href={company.linkedin_url.trim().startsWith('http') 
+                      ? company.linkedin_url.trim()
+                      : `https://${company.linkedin_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="LinkedIn"
+                  >
+                    <img src="/linkedin_logo.png" alt="LinkedIn" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+                
+                {isValidUrl(company.twitter_url) && (
+                  <a 
+                    href={company.twitter_url.trim().startsWith('http') 
+                      ? company.twitter_url.trim()
+                      : `https://${company.twitter_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="X"
+                  >
+                    <img src="/X_logo.jpeg" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+                
+                {isValidUrl(company.crunchbase_url) && (
+                  <a 
+                    href={company.crunchbase_url.trim().startsWith('http') 
+                      ? company.crunchbase_url.trim()
+                      : `https://${company.crunchbase_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-orange-600 hover:text-orange-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="Crunchbase"
+                  >
+                    <img src="/cb_logo.png" alt="Crunchbase" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+                
+                {isValidUrl(company.website_url) && (
+                  <a 
+                    href={company.website_url.trim().startsWith('http') 
+                      ? company.website_url.trim() 
+                      : `https://${company.website_url.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="Website"
+                  >
+                    <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+                
                 <a 
                   href="https://calendly.com/imaginingforward/techweek-discovery?" 
                   target="_blank" 
@@ -216,7 +218,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 >
                   <img src="/calendly_logo.png" alt="Calendly" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </a>
-            </div>
+              </div>
             </CardContent>
           </Card>
         ))}
