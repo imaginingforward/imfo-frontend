@@ -102,15 +102,13 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
         {companies.map((company, index) => (
           <Card 
             key={company.id} 
-            className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98"
+            className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 cursor-pointer"
+            onClick={() => openCompanyDetails(company)}
           >
             <CardContent className="p-4 sm:p-6">
             {/* Company Name */}
               <div className="mb-3">
-                <h3 
-                  className="font-bold text-base sm:text-lg text-foreground text-left cursor-pointer hover:text-primary transition-colors line-clamp-2" 
-                  onClick={() => openCompanyDetails(company)}
-                >
+                <h3 className="font-bold text-base sm:text-lg text-foreground text-left hover:text-primary transition-colors line-clamp-2">
                   {company.company_name}
                 </h3>
                 <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
@@ -222,7 +220,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
 
       {/* Company Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] max-h-[95vh] sm:max-h-[90vh] overflow-y-auto bg-background text-foreground border border-border p-4 sm:p-6 m-2 sm:m-4">
+        <DialogContent className="max-w-4xl w-[98vw] sm:w-[90vw] h-[98vh] sm:h-[90vh] overflow-y-auto bg-background text-foreground border border-border p-3 sm:p-6 mx-1 sm:mx-4 my-1 sm:my-4 flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 sm:gap-3 pr-8">
               <Building className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
@@ -231,7 +229,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
           </DialogHeader>
           
           {selectedCompany && (
-            <div className="space-y-4 sm:space-y-6 mt-4 sm:mt-6">
+            <div className="space-y-4 sm:space-y-6 mt-2 sm:mt-4 flex-1 overflow-y-auto">
               {/* Header Section */}
               <div className="border-b pb-3 sm:pb-4">
                 <div className="flex flex-wrap gap-2 mb-2 sm:mb-3">
