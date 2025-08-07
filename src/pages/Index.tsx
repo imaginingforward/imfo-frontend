@@ -92,7 +92,7 @@ const Index = () => {
               Search Engine for Space Tech</span>
           </h1>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2">
-            Discovery to deals : connect with 1,500+ space companies in seconds
+            Discovery to Deals, Source Qualified Leads Fast
           </p>
         </div>
 
