@@ -96,6 +96,19 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     }
   };
 
+  // Add this function to your frontend
+  const trackClick = (company, linkType) => {
+    fetch('/api/track', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        event: 'link_click',
+        company: company,
+        link_type: linkType
+      })
+    }).catch(err => console.log('Tracking failed:', err));
+  };
+
   // Results in grid form  
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -168,6 +181,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="LinkedIn"
+                    onClick={() => trackClick(company.company_name, 'linkedin')}
                   >
                     <img src="/linkedin_logo.png" alt="LinkedIn" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -182,6 +196,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="X"
+                    onClick={() => trackClick(company.company_name, 'twitter')}
                   >
                     <img src="/X_logo.jpeg" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -196,6 +211,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-orange-600 hover:text-orange-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="Crunchbase"
+                    onClick={() => trackClick(company.company_name, 'crunchbase')}
                   >
                     <img src="/cb_logo.png" alt="Crunchbase" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -210,6 +226,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="Website"
+                    onClick={() => trackClick(company.company_name, 'website')}
                   >
                     <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -221,6 +238,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   rel="noopener noreferrer" 
                   className="text-green-600 hover:text-green-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                   title="Book a Meeting"
+                  onClick={() => trackClick(company.company_name, 'calendly')}
                 >
                   <img src="/calendly_logo.png" alt="Calendly" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </a>
