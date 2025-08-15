@@ -7,6 +7,7 @@ import { CompanyCards } from "@/components/intelligence/CompanyCards";
 import { Loader2, Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { searchCompanies, transformCompany, type Company, type CompanyResponse } from "@/services/companyService";
+import mixpanel from "mixpanel-browser";
 
 const ImFoIntelligencePage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,8 +18,23 @@ const ImFoIntelligencePage: React.FC = () => {
   const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
   const { toast } = useToast();
 
+  useEffect(() => {
+  mixpanel.track("Page Viewed", {
+    page_url: window.location.href,
+    referrer_url: document.referrer || 'direct',
+    timestamp: new Date().toISOString(),
+    device_type: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+  });
+}, []);
+
 // Keyword click handler function
 const handleKeywordClick = async (keyword: string) => {
+  mixpanel.track("Search Submitted", {
+    search_term: keyword,
+    search_location: "ImFoIntelligencePage (Keyword Click)",
+    timestamp: new Date().toISOString(),
+  });
+  
   setSearchQuery(keyword);
   setLoading(true);
   
@@ -64,7 +80,21 @@ const handleKeywordClick = async (keyword: string) => {
     );
     setCompanies(transformed);
     setTotalCount(data.count);
+
+    mixpanel.track("Search Submitted", {
+      search_term: searchQuery,
+      search_location: "ImFoIntelligencePage",
+      timestamp: new Date().toISOString(),
+      result_count: data.count,
+      device_type: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+    });
+    
   } catch (error: any) {
+    mixpanel.track("Search Failed", {
+      search_term: searchQuery,
+      error_message: error.message,
+      timestamp: new Date().toISOString()
+    });
     toast({
       title: "Search Error",
       description: error.message || "Failed to search companies",
@@ -157,6 +187,7 @@ const handleKeywordClick = async (keyword: string) => {
               <CompanyCards 
                   companies={companies}
                   onKeywordClick={handleKeywordClick}
+                  searchQuery={searchQuery}
               />
             )}
         </Card>
