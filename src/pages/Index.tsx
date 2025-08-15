@@ -1,21 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CompanyCards } from "@/components/intelligence/CompanyCards";
 import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, MapPin } from "lucide-react";
+import mixpanel from "mixpanel-browser";
+
+// Initialize Mixpanel outside component
+const initializeMixpanel = () => {
+  try {
+    mixpanel.init("85be2acaaa02972b55b436a76e63cf0c", {
+      track_pageview: true,
+      persistence: "localStorage",
+    });
+  } catch (error) {
+    console.error("Failed to initialize Mixpanel:", error);
+  }
+};
 
 const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
+  // Initialize Mixpanel on component mount
+  useEffect(() => {
+    initializeMixpanel();
+
+    // Track page view
+    try {
+      mixpanel.track("Page Viewed", {
+        page: "Search Landing",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Failed to track page view:", error);
+    }
+  }, []);
+
   const suggestedPrompts = [
     {
       icon: <Rocket className="h-4 w-4" />,
       text: "Companies in PNT",
       category: "Use Case"
-      //Propulsion companies that have raised > $5M
-      //category: "Funding"
     },
     {
       icon: <Cpu className="h-4 w-4" />,
@@ -44,46 +70,93 @@ const Index = () => {
     }
   ];
     
-    // Search API call
-  const handleSearch = async (searchQuery: string) => {
+  // Search API call with Mixpanel tracking
+  const handleSearch = async (searchQuery: string, source: "manual" | "suggested" = "manual") => {
     if (!searchQuery.trim()) return;
-
     setIsSearching(true);
     setQuery(searchQuery);
 
+    // Track search start
     try {
-    const response = await fetch("https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ query: searchQuery })
-    });
+      mixpanel.track("Search Started", {
+        query: searchQuery,
+        source: source,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Failed to track search start:", error);
+    }
 
+    try {
+      const response = await fetch("https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: searchQuery })
+      });
       const result = await response.json();
-      console.log("Parsed result:", result);
- 
+
       // Save the companies array from the result
-      setResults(result.companies || []);
-      console.log("Updated results state:", result.companies || []);
+      const companies = result.companies || [];
+      setResults(companies);
+
+      // Track successful search
+      try {
+        mixpanel.track("Search Completed", {
+          query: searchQuery,
+          source: source,
+          results_count: companies.length,
+          success: true,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error("Failed to track search completion:", error);
+      }
     } catch (err) {
       console.error("Search failed", err);
+      
+      // Track failed search
+      try {
+        mixpanel.track("Search Failed", {
+          query: searchQuery,
+          source: source,
+          error: err instanceof Error ? err.message : "Unknown error",
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error("Failed to track search failure:", error);
+      }
+      
       alert("Sorry, search failed. Try again.");
     } finally {
       setIsSearching(false);
     }
   };
-      
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSearch(query);
+    handleSearch(query, "manual");
+  };
+
+  const handleSuggestedPromptClick = (promptText: string, category: string) => {
+    // Track suggested prompt click
+    try {
+      mixpanel.track("Suggested Prompt Clicked", {
+        prompt: promptText,
+        category: category,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Failed to track prompt click:", error);
+    }
+    
+    handleSearch(promptText, "suggested");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       {/* SEO Meta Tags would be handled by helmet or similar */}
-
       {/* Hero Section */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16 pb-16 sm:pb-24">
         <div className="text-center mb-8 sm:mb-12">
@@ -95,7 +168,6 @@ const Index = () => {
             Discovery to Deals, Source Qualified Leads Fast
           </p>
         </div>
-
         {/* Search Interface */}
         <div className="mb-12 sm:mb-16">
           <form onSubmit={handleSubmit} className="relative mb-6 sm:mb-8">
@@ -125,13 +197,12 @@ const Index = () => {
               </Button>
             </div>
           </form>
-
           {/* Suggested Prompts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {suggestedPrompts.map((prompt, index) => (
               <button
                 key={index}
-                onClick={() => handleSearch(prompt.text)}
+                onClick={() => handleSuggestedPromptClick(prompt.text, prompt.category)}
                 className="group p-3 sm:p-4 bg-card hover:bg-accent/50 border border-border hover:border-primary/50 rounded-lg transition-all duration-200 text-left hover:shadow-md active:scale-95"
                 disabled={isSearching}
               >
@@ -152,7 +223,6 @@ const Index = () => {
             ))}
           </div>
         </div>
-
         {/* Search Results Placeholder */}
         {isSearching && (
           <div className="space-y-6">
@@ -163,20 +233,29 @@ const Index = () => {
               </div>
             </div>
           </div>
-      )}
-
-{results.length > 0 && (
-  <div className="mt-12">
-    <CompanyCards 
-      companies={results.map((company: any, index: number) => ({
-        id: company.id || `company-${index}`,
-        ...company
-      }))}
-      onKeywordClick={(keyword) => handleSearch(keyword)}
-    />
-  </div>
-)}
-
+        )}
+        {results.length > 0 && (
+          <div className="mt-12">
+            <CompanyCards 
+              companies={results.map((company: any, index: number) => ({
+                id: company.id || `company-${index}`,
+                ...company
+              }))}
+              onKeywordClick={(keyword) => {
+                // Track keyword click
+                try {
+                  mixpanel.track("Keyword Clicked", {
+                    keyword: keyword,
+                    timestamp: new Date().toISOString()
+                  });
+                } catch (error) {
+                  console.error("Failed to track keyword click:", error);
+                }
+                handleSearch(keyword, "suggested");
+              }}
+            />
+          </div>
+        )}
         {/* Trust Indicators */}
         <div className="mt-16 sm:mt-24 text-center">
           <p className="text-sm text-muted-foreground mb-6 sm:mb-8">
@@ -198,7 +277,6 @@ const Index = () => {
           </div>
         </div>
       </main>
-
     </div>
   );
 };
