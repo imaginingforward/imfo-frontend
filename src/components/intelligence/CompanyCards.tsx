@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ExternalLink, Globe, MapPin, Building, Users, Calendar, DollarSign, Award, Target } from 'lucide-react';
+import mixpanel from "mixpanel-browser";
 
 interface FrontendCompany {
   id: string;
@@ -35,6 +36,7 @@ interface FrontendCompany {
 interface CompanyCardsProps {
   companies: FrontendCompany[];
   onKeywordClick?: (keyword: string) => void;
+  searchQuery?: string;
 }
 
 export const CompanyCards: React.FC<CompanyCardsProps> = 
@@ -96,17 +98,25 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     }
   };
 
-  // Add this function to your frontend
-  const trackClick = (company, linkType) => {
-    fetch('/api/track', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        event: 'link_click',
-        company: company,
-        link_type: linkType
-      })
-    }).catch(err => console.log('Tracking failed:', err));
+  // Mixpanel
+  const trackClick = (company: string, linkType: string, searchTerm?: string) => {
+    mixpanel.track("Result Clicked", {
+      result_type: linkType,           
+      result_id: company,
+      search_term: searchTerm || 'unknown',
+      timestamp: new Date().toISOString(),
+      click_position: companies.findIndex(c => c.company_name === company) + 1
+    });
+  };
+
+  const trackCompanyCardClick = (company: string, searchTerm?: string) => {
+    mixpanel.track("Result Clicked", {
+      result_type: "company_card",
+      result_id: company,
+      search_term: searchTerm || 'unknown',
+      timestamp: new Date().toISOString(),
+      click_position: companies.findIndex(c => c.company_name === company) + 1
+    });
   };
 
   // Results in grid form  
@@ -122,7 +132,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
           <Card 
             key={company.id} 
             className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 cursor-pointer"
-            onClick={() => openCompanyDetails(company)}
+            onClick={() => {
+              trackCompanyCardClick(company.company_name, searchQuery);
+              openCompanyDetails(company);
+            }}
           >
             <CardContent className="p-4 sm:p-6 flex flex-col h-full">
               <div className="flex-1">
@@ -181,7 +194,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="LinkedIn"
-                    onClick={() => trackClick(company.company_name, 'linkedin')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(company.company_name, 'linkedin', searchQuery);
+                    }}
                   >
                     <img src="/linkedin_logo.png" alt="LinkedIn" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -196,7 +212,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="X"
-                    onClick={() => trackClick(company.company_name, 'twitter')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(company.company_name, 'twitter', searchQuery);
+                    }}
                   >
                     <img src="/X_logo.jpeg" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -211,7 +230,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-orange-600 hover:text-orange-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="Crunchbase"
-                    onClick={() => trackClick(company.company_name, 'crunchbase')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(company.company_name, 'crunchbase', searchQuery);
+                    }}
                   >
                     <img src="/cb_logo.png" alt="Crunchbase" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -226,7 +248,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     rel="noopener noreferrer" 
                     className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                     title="Website"
-                    onClick={() => trackClick(company.company_name, 'website')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(company.company_name, 'website', searchQuery);
+                    }}
                   >
                     <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
@@ -237,8 +262,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-green-600 hover:text-green-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
-                  title="Book a Meeting"
-                  onClick={() => trackClick(company.company_name, 'calendly')}
+                  title="Request Intro"
+                  onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(company.company_name, 'calendly', searchQuery);
+                  }}
                 >
                   <img src="/calendly_logo.png" alt="Calendly" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </a>
