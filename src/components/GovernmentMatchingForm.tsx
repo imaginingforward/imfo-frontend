@@ -3,7 +3,11 @@ import TypeformQuestion from "./TypeformQuestion";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import type { FormData, CompanyData, ProjectData } from "@/types/form";
 
-// Question definitions - Updated to match comprehensive matching service
+interface TypeformContainerProps {
+  onSubmit: (formData: FormData) => Promise<void>;
+}
+
+// Question definitions
 const questions = [
   // Company Questions
   {
@@ -194,7 +198,7 @@ const questions = [
   }
 ];
 
-const TypeformContainer: React.FC = () => {
+const TypeformContainer: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     company: {
@@ -294,7 +298,7 @@ const TypeformContainer: React.FC = () => {
         keywords: formData.keywords || []
       };
       
-      await handleSubmit(transformedData);
+      await onSubmit(transformedData);
     } else {
       setCurrentStep(currentStep + 1);
     }
