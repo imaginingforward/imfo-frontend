@@ -11,37 +11,44 @@ const __dirname = path.dirname(__filename);
 
 // CORS setup
 app.use(cors({
-  origin: '*', // Allow all for now - we'll restrict later
+  origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
 }));
 
-// Middleware for embedding support
+// Headers for embedding
 app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'ALLOWALL');
   res.setHeader('Content-Security-Policy', "frame-ancestors *");
   next();
 });
 
-// SPECIFIC route for RFP match tool (BEFORE the catch-all)
+// Serve the RFP match tool directly (BEFORE any other routes)
 app.get('/rfp-match', (req, res) => {
-  console.log('RFP match route hit');
   res.sendFile(path.join(__dirname, 'public', 'rfp-match.html'));
 });
 
-// Serve static files from public directory
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from public
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
-// Serve static files from the dist directory (your React app)
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// Catch-all handler: send back React's index.html file for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+// Try to serve React app, but don't fail if dist doesn't exist
+try {
+  app.use(express.static(path.join(__dirname, 'dist')));
+  
+  // Only set up React routing if dist/index.html exists
+  app.get('*', (req, res) => {
+    const indexPath = path.join(__dirname, 'dist', 'index.html');
+    try {
+      res.sendFile(indexPath);
+    } catch (error) {
+      res.status(404).send('React app not built');
+    }
+  });
+} catch (error) {
+  console.log('React dist folder not found - serving only static files');
+}
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Main app: https://imfo-intelligence-756b7e94aea3.herokuapp.com/`);
+  console.log(`Server running on port ${PORT}`);
   console.log(`RFP Match: https://imfo-intelligence-756b7e94aea3.herokuapp.com/rfp-match`);
 });
