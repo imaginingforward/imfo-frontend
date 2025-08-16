@@ -164,7 +164,7 @@ const Index = () => {
             <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
               Search Engine for Space Tech</span>
           </h1>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2">
+          <p className="text-xl sm:text-2xl md:text-4xl text-muted-foreground mx-auto leading-relaxed font-medium">
             Discovery to Deals, Source Qualified Leads Fast
           </p>
         </div>
