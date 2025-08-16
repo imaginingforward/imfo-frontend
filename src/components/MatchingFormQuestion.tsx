@@ -22,7 +22,7 @@ interface TypeformQuestionProps {
   totalSteps: number;
 }
 
-const TypeformQuestion: React.FC<TypeformQuestionProps> = ({
+const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
   question,
   type,
   value,
@@ -256,4 +256,4 @@ const TypeformQuestion: React.FC<TypeformQuestionProps> = ({
   );
 };
 
-export default TypeformQuestion;
+export default MatchingFormQuestion;
