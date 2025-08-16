@@ -1,0 +1,1094 @@
+
+I have this RFP match tool code backend and frontend. I need to embed the tool on a wix custom liquid box. The code base is hosted on a private github repo. Deployed and hosted on Heroku. But end user interacts with the tool on wix. I have a lean free techstack. And I have no terminal access, only web versions. Can you decipher what this code does in max 3 sentences? # SAM.gov Opportunity Scraper for Space Tech Startups
+This application scrapes government contract opportunities from SAM.gov specifically for space tech startups and stores them in a MongoDB database. The data can then be used to match companies with relevant opportunities.
+## Features
+- Fetches opportunities from SAM.gov API using space-related NAICS codes and keywords
+- Scrapes SAM.gov website for opportunities when API is not available
+- Transforms data to extract key information like tech focus, eligible stages, and timeline
+- Stores opportunities in MongoDB for easy querying and matching
+- Generates sample data when SAM.gov API is unavailable or for testing purposes
+- Scheduled job to automatically fetch new opportunities daily
+## Setup
+1. Clone the repository
+2. Install dependencies:
+   
+   npm install
+   
+3. Create a .env file with the following variables:
+   
+   # Server Configuration
+   PORT=3002
+   NODE_ENV=development
+   # MongoDB Configuration
+   MONGODB_URI=your_mongodb_connection_string
+   # Data Source Configuration
+   USE_SAMPLE_DATA=false
+   FALLBACK_TO_SAMPLE_DATA=true
+   # SAM API
+   SAM_API_KEY=your_sam_api_key
+   SAM_API_BASE_URL=https://api.sam.gov/opportunities/v1
+   SAM_API_FETCH_LIMIT=100
+   # Scheduling Configuration
+   RFP_FETCH_SCHEDULE=0 2 * **
+   
+4. Build the TypeScript files:
+   
+   npm run build
+   
+## Usage
+### Fetch Opportunities
+To fetch opportunities from SAM.gov and store them in MongoDB:
+
+./fetch-and-store-mongodb.sh
+
+This script will:
+1. Fetch opportunities from SAM.gov API
+2. Transform them to extract relevant information
+3. Store them in MongoDB
+4. If MongoDB is not available or SAM.gov API fails, it will generate and display sample data
+### Run the API Server
+To start the API server:
+
+npm run dev
+
+This will start the server on the port specified in the .env file (default: 3002).
+## API Endpoints
+- GET /api/opportunities - Get all opportunities
+- GET /api/opportunities/:id - Get a specific opportunity by ID
+- GET /api/matching - Match companies with opportunities
+## Data Structure
+Each opportunity contains the following information:
+- noticeId: Unique identifier for the opportunity
+- title: Title of the opportunity
+- agency: Government agency issuing the opportunity
+- description: Detailed description of the opportunity
+- postedDate: Date the opportunity was posted
+- responseDeadline: Deadline for submitting proposals
+- awardAmount: Estimated award amount (if available)
+- naicsCode: NAICS code for the opportunity
+- techFocus: Array of technology focus areas (e.g., Satellites, AI/ML, Propulsion)
+- eligibleStages: Array of eligible company stages (e.g., Seed, Series A, Series B+)
+- timeline: Expected timeline for the project
+- url: URL to the opportunity on SAM.gov
+- source: Source of the opportunity data (SAM.gov API, SAM.gov Scraper, or Sample Data)
+## MongoDB Integration
+The application uses MongoDB to store and retrieve opportunity data. The connection string is specified in the .env file. If the MongoDB connection is not available, the application will fall back to generating sample data.
+## Scheduled Jobs
+The application uses node-cron to schedule jobs to fetch new opportunities daily. The schedule is specified in the .env file using cron syntax.
+## Development
+### Build
+
+npm run build
+
+### Test
+
+npm test
+
+### Lint
+
+npm run lint
+
+## License
+MIT
+
+This code creates a backend service that automatically scrapes government contract opportunities from SAM.gov (the U.S. government's contracting website) specifically filtered for space technology startups using relevant NAICS codes and keywords. It processes and stores these opportunities in a MongoDB database, extracting key information like technology focus areas, eligible company stages, timelines, and award amounts. The system provides a REST API for accessing this data and includes matching functionality to connect companies with relevant opportunities, plus automated daily fetching via scheduled jobs.
+
+For embedding on Wix with your lean tech stack constraints, you'll likely need to:
+
+Use the existing Heroku-deployed API endpoints directly in your Wix custom HTML/JavaScript component
+Make AJAX calls from the Wix frontend to your /api/opportunities and /api/matching endpoints
+Handle CORS configuration in your backend to allow requests from your Wix domain
+Would you like me to help you create the Wix embed code that connects to your existing Heroku backend?
+
+
+
+
+
+
+PASTED
+
+Okay now can you decipher what this code does in max 3 sentences?
+
+This code creates a backend service that connects to Baserow (a database platform) to fetch government funding opportunities and matches them with companies/projects using a sophisticated scoring algorithm. The matching system evaluates compatibility across five criteria: technology focus alignment (35%), company stage matching (25%), timeline compatibility (15%), budget alignment (15%), and keyword matching (10%), returning the top 3 matches with detailed scoring breakdowns. It provides REST API endpoints for retrieving opportunities and performing matches, designed to help startups find relevant government funding opportunities like SBIR grants and contracts from agencies like DOD and NASA.
+
+
+
+
+
+
+PASTED
+
+finally what does this code do in max 3 sentences?
+
+This is a React frontend component that creates a two-step form interface for companies to input their startup details (step 1) and project specifications (step 2), then submit this data to find matching government funding opportunities. When submitted, it calls the backend matching API service to analyze the company/project data against available opportunities and displays the top matches with scoring details in a user-friendly interface. The component handles the complete user flow from data collection through results display, including loading states, error handling, and the ability to start new searches.
+
+
+
+
+
+
+PASTED
+
+I want to display this on my wix site imfo.space/match but this doesn't match my new typeform style form questions "GovernmentMatchingForm.tsx and MatchingFormQuestion.tsx". It still is using my old form questions. What do you need from me to update this correctly?
+
+To update your React component to use the new Typeform-style form questions, I need to see:
+
+GovernmentMatchingForm.tsx - The new form component that should replace the old StartupDetailsForm and ProjectDetailsForm
+MatchingFormQuestion.tsx - The individual question component structure
+Updated FormData type definition - The new data structure that matches your Typeform questions (from @/types/form)
+Currently your code is using:
+
+StartupDetailsForm and ProjectDetailsForm (old forms)
+A two-step process with separate company/project sections
+The old FormData structure with company and project nested objects
+But I can see you're importing GovernmentMatchingForm at the top but not using it. Once you share those three files, I can help you refactor the component to use your new Typeform-style questions and update the form flow accordingly.
+
+
+
+
+
+
+PASTED
+
+
+
+PASTED
+
+Based on these give me the final copy-paste version of MatchingPage.tsx. // Final form.ts - Combines your existing structure with comprehensive matching service requirements
+export type CompanyData = {
+  name: string;
+  description: string;
+  website?: string;
+  patents?: string;
+  techCategory: string[];               // Will align with OpportunityCategory
+  fundingInstrumentTypes: string[];     // Matches FundingInstrumentType
+  eligibleAgencyCodes?: string[];       // Matches AgencyCode - for agency preferences
+  preferredDepartments?: string[];      // NEW: For department-level matching
+  keywords?: string[];                  // Keywords for matching (kept for backward compatibility)
+  city?: string;                        // City location (kept flat for backward compatibility)
+  state?: string;                       // State location (kept flat for backward compatibility)
+  location?: {                          // NEW: Nested location structure for comprehensive matching
+    city: string;
+    state: string;
+  };
+  stage: string;
+  teamSize: string;
+  foundedYear: string;
+  email: string;
+};
+export type ProjectData = {
+  title: string;
+  description: string;
+  techSpecs: string;
+  keywords?: string[];                  // Keywords for matching (kept for backward compatibility)
+  budget: {                             // ENHANCED: More structured for matching
+    min: number;                        // Matches AwardFloor
+    max: number;                        // Matches AwardCeiling
+    currency: string;                   // For display purposes
+  };
+  timeline: {                           // ENHANCED: More structured for matching
+    deadline?: string;                  // Changed from startDate to deadline
+    duration: string;                   // For matching with duration between PostDate and CloseDate
+  };
+  categoryOfFundingActivity?: string[]; // Made optional as we're removing from UI
+  interests?: string[];                 // NEW: Areas of interest for government contracts
+};
+export type FormData = {
+  company: CompanyData;
+  project: ProjectData;
+  keywords?: string[];                  // NEW: Root-level keywords for comprehensive matching
+};
+// Additional types for backend compatibility and matching results
+export interface MatchResult {
+  opportunity: {
+    noticeId: string;
+    title: string;
+    agency: string;
+    description: string;
+    postedDate: string;
+    responseDeadline: string;
+    awardAmount?: number;
+    naicsCode?: string;
+    setAside?: string;
+    placeOfPerformance?: string;
+    techFocus: string[];
+    eligibleStages: string[];
+    timeline: string;
+    url?: string;
+    type?: string;
+    state?: string;
+  };
+  score: number;
+  matchPercentage: number;
+  confidenceLevel: 'high' | 'medium' | 'low';
+  matchDetails: {
+    techFocusMatch: number;
+    stageMatch: number;
+    timelineMatch: number;
+    budgetMatch: number;
+    locationMatch?: number;
+    departmentMatch?: number;
+    matchedKeywords: string[];
+    aiRecommendation?: string;
+  };
+}
+// Utility type for transforming form data to backend format
+export type BackendFormData = {
+  company: {
+    name: string;
+    description: string;
+    website?: string;
+    patents?: string;
+    techCategory: string[];
+    eligibleAgencyCodes?: string[];
+    preferredDepartments?: string[];
+    stage: string;
+    teamSize: string;
+    foundedYear: string;
+    email: string;
+    location: {
+      city: string;
+      state: string;
+    };
+  };
+  project: {
+    title: string;
+    description: string;
+    techSpecs: string;
+    budget: string; // Transformed to string format for backend
+    timeline: string; // Flattened timeline for backend
+    interests?: string[];
+    deadline?: string;
+  };
+  keywords: string[]; // Root-level keywords array
+};
+
+Looking at your new Typeform-style components, I can see the structure is quite different from your current React page. Here's the updated AIMatchingPage.tsx that uses your new TypeformContainer:
+
+
+Updated AIMatchingPage.tsx for Typeform Integration
+Code 
+However, I noticed that your TypeformContainer doesn't currently accept an onSubmit prop. You'll need to update your TypeformContainer to accept this prop and call it when the form is submitted. Here's what you need to change in your TypeformContainer.tsx:
+
+Add an onSubmit prop to the component interface
+Call this prop instead of the handleSubmit from useFormSubmission
+Update your TypeformContainer like this:
+
+typescript
+interface TypeformContainerProps {
+  onSubmit: (formData: FormData) => Promise<void>;
+}
+
+const TypeformContainer: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
+  // ... existing state code ...
+
+  const handleNext = async () => {
+    if (currentStep === questions.length - 1) {
+      // Transform data to match backend expectations before submission
+      const transformedData = {
+        company: {
+          ...formData.company,
+          location: formData.company.location || { city: "", state: "" }
+        },
+        project: {
+          ...formData.project,
+          interests: formData.project.interests || []
+        },
+        keywords: formData.keywords || []
+      };
+      
+      await onSubmit(transformedData); // Call the passed onSubmit function
+    } else {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  // ... rest of component remains the same
+};
+The key changes in the updated AIMatchingPage.tsx are:
+
+Simplified state management - Removed the complex step-based form state since TypeformContainer handles that
+Single form component - Uses TypeformContainer instead of separate form components
+Form submission handling - Accepts the form data from TypeformContainer and processes it
+Data transformation - Converts the Typeform data structure to match your backend API expectations
+Results display - Shows results or errors after form submission
+This should work seamlessly with your Wix embed once you make the small update to TypeformContainer to accept the onSubmit prop.
+
+
+
+
+
+okay i have this on heroku imaginingforward/imfo-rfp-match-backend and imaginingforward/imfo-frontend. similarly i hosted an AI search engine on imfo.space/search using this custom HTML embed on wix https://imfo-intelligence-756b7e94aea3.herokuapp.com/. How do i get this rfp match similarly displayed on imfo.space/match? walk me through the steps. search engine and match have separate heroku backend pipes/github repos but both have the same frontend repo/pipe. is this a problem?
+
+To get your RFP match tool displayed on imfo.space/match similar to your AI search engine, here's the step-by-step process:
+
+Step 1: Create a Standalone HTML Page for Wix Embed
+Your current setup has separate React components, but for Wix embedding, you need a single HTML page (like your search engine). You'll need to create an HTML endpoint in your frontend Heroku app.
+
+Add this route to your frontend app (probably in your main server file):
+
+javascript
+// Add this route to serve the RFP match tool as standalone HTML
+app.get('/rfp-match-embed', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>RFP Match Tool</title>
+      <!-- Add your CSS and JS dependencies -->
+    </head>
+    <body>
+      <div id="rfp-match-root"></div>
+      <!-- Bundle your React components into this page -->
+      <script src="/static/js/rfp-match-bundle.js"></script>
+    </body>
+    </html>
+  `);
+});
+Step 2: Bundle Your React Components
+You need to create a production build of your TypeformContainer and matching logic that can run as a standalone page.
+
+Option A: Create a separate build for the RFP match tool Option B: Add it to your existing build but serve it at a specific route
+
+Step 3: Update Your Wix Page
+Go to imfo.space/match in Wix editor
+Add an HTML Embed (Custom Code) element
+Set it to full width/height
+Add this embed code:
+html
+<iframe 
+  src="https://imfo-frontend-[your-app-id].herokuapp.com/rfp-match-embed" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"
+  style="min-height: 100vh;">
+</iframe>
+Step 4: CORS Configuration
+Make sure your frontend Heroku app allows embedding from imfo.space:
+
+javascript
+// In your frontend server
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'ALLOWALL');
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'self' https://*.wix.com https://imfo.space");
+  next();
+});
+Regarding Your Dual Backend Setup
+This is actually FINE and quite common! Many apps have:
+
+One frontend that serves multiple tools
+Multiple specialized backends for different services
+Your setup:
+
+imfo-frontend → Serves both search UI and RFP match UI
+imfo-intelligence-backend → Handles search functionality
+imfo-rfp-match-backend → Handles RFP matching
+This is perfectly valid architecture. Just make sure your frontend knows which backend to call for which feature.
+
+Quick Alternative Approach
+If you want to get this working immediately, you could:
+
+Create a simple HTML file with your RFP match form
+Host it directly on your frontend Heroku app at /rfp-match
+Embed it in Wix using the same iframe approach as your search engine
+Would you like me to help you create the standalone HTML version first, or do you prefer to build out the full React integration?
+
+
+
+
+
+what's the difference between the two? pros and cons?
+
+Great question! Let me break down both approaches with their pros and cons:
+
+Option 1: Standalone HTML Version (Quick & Simple)
+What it is: A single HTML file with vanilla JavaScript that replicates your TypeformContainer functionality
+
+Pros:
+✅ Fast to implement (1-2 hours vs 1-2 days)
+✅ Lightweight - smaller file size, faster loading
+✅ Simple deployment - just add one route to your existing frontend
+✅ Less complexity - no build processes, bundling, or dependency management
+✅ Easy debugging - all code in one file, easier to troubleshoot in Wix
+✅ Better Wix compatibility - fewer potential conflicts
+Cons:
+❌ Code duplication - you'll rewrite your TypeformContainer logic in vanilla JS
+❌ Harder to maintain - changes need to be made in multiple places
+❌ Less sophisticated - no React hooks, state management, or component reusability
+❌ Manual styling - need to recreate your Tailwind styles manually
+Option 2: Full React Integration (Robust & Scalable)
+What it is: Bundle your existing React components into a standalone app that runs in the iframe
+
+Pros:
+✅ Code reuse - leverage your existing TypeformContainer and components
+✅ Maintainability - single source of truth for your form logic
+✅ Rich features - keep all your React hooks, state management, animations
+✅ Consistent styling - your existing Tailwind classes work
+✅ Future-proof - easier to add features later
+Cons:
+❌ Complex setup - need build processes, bundling, deployment pipelines
+❌ Larger bundle size - React + dependencies = bigger initial load
+❌ Potential conflicts - React might conflict with Wix's environment
+❌ Debugging complexity - harder to troubleshoot iframe + React issues
+❌ Longer development time - need to set up proper build configuration
+My Recommendation:
+Start with Option 1 (Standalone HTML) for these reasons:
+
+You already have a working model - your search engine is presumably HTML-based and working well on Wix
+Faster time to market - get it live and generating value immediately
+Lower risk - fewer moving parts means fewer things can break
+Easy to iterate - you can always upgrade to React later once it's working
+Timeline Comparison:
+Standalone HTML:
+
+Day 1: Convert TypeformContainer to vanilla JS ✅
+Day 1: Deploy and test on Wix ✅
+Day 2: Polish and go live ✅
+React Integration:
+
+Day 1-2: Set up build pipeline and bundling
+Day 3: Configure iframe integration
+Day 4-5: Debug Wix compatibility issues
+Day 6: Deploy and test
+Day 7+: Fix inevitable iframe/React conflicts
+Would you like me to help you create the standalone HTML version first? We can get you live quickly, then you can always upgrade to React later if needed.
+
+
+
+
+Yes let's do the immediate fix. What do I need to do for HTML? I have github web access only. no terminal/CLI
+
+Perfect! Let's get you a working standalone HTML version. Since you only have web GitHub access, here's exactly what to do:
+
+Step 1: Create the HTML File
+Go to your imfo-frontend GitHub repo and create a new file. Here's the path and content:
+
+File path: public/rfp-match.html (or wherever your static files are served)
+
+
+Standalone RFP Match Tool HTML
+Interactive artifact 
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFP Match Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .question-container {
+            text-align: left;
+            max-width: 600px;
+        }
+        
+        .step-indicator {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 1.2;
+            margin-bottom: 30px;
+        }
+        
+        .required {
+            color: #ef4444;
+        }
+        
+        .input-container {
+            margin-bottom: 30px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #3b82f6;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .checkbox-group, .select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .checkbox-item, .select-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-item:hover, .select-item:hover {
+            border-color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .checkbox-item.selected, .select-item.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+        
+        .checkbox-item input, .select-item input {
+            width: auto;
+            margin-right: 12px;
+        }
+        
+        .tags-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            min-height: 56px;
+        }
+        
+        .tag {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tag-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            min-width: 120px;
+        }
+        
+        .budget-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .budget-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .budget-field label {
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+        }
+        
+        button {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .hint {
+            margin-top: 16px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .results-container {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .results-container.show {
+            display: block;
+        }
+        
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .match-result {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        
+        .match-score {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        
+        .match-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .match-agency {
+            color: #3b82f6;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .match-description {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        
+        .match-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            font-size: 14px;
+        }
+        
+        .match-detail {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .question {
+                font-size: 24px;
+            }
+            
+            .budget-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div id="questionContainer" class="question-container">
+            <!-- Questions will be populated here -->
+        </div>
+        
+        <div id="resultsContainer" class="results-container">
+            <div class="logo"></div>
+            <h1>Finding Your Matches...</h1>
+            <div class="loading">
+                <div class="spinner"></div>
+                <span>Analyzing opportunities...</span>
+            </div>
+            <div id="matchResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // Form configuration
+        const questions = [
+            {
+                id: "company.name",
+                question: "What's your company name?",
+                type: "text",
+                placeholder: "e.g., SpaceX",
+                required: true
+            },
+            {
+                id: "company.description",
+                question: "Tell us about your company",
+                type: "textarea",
+                placeholder: "Describe what your company does, your mission, and key achievements...",
+                required: true
+            },
+            {
+                id: "company.techCategory",
+                question: "Which technology categories best describe your company?",
+                type: "checkboxes",
+                options: ["Propulsion", "Satellites", "Robotics", "AI/ML", "Earth Observation", "Communications", "Manufacturing", "Materials Science", "Quantum", "Cybersecurity", "Other"],
+                required: true
+            },
+            {
+                id: "company.stage",
+                question: "What stage is your company at?",
+                type: "select",
+                options: ["Pre-seed", "Seed", "Series A", "Series B", "Series C+", "Public", "Small Business", "Disadvantaged Business", "Women-Owned Business", "Veteran-Owned Business", "HUBZone"],
+                required: true
+            },
+            {
+                id: "company.teamSize",
+                question: "What's your team size?",
+                type: "select",
+                options: ["1-5", "6-15", "16-30", "31-50", "51-100", "101+"],
+                required: true
+            },
+            {
+                id: "company.foundedYear",
+                question: "When was your company founded?",
+                type: "select",
+                options: Array.from({length: new Date().getFullYear() - 1950 + 1}, (_, i) => (new Date().getFullYear() - i).toString()),
+                required: true
+            },
+            {
+                id: "company.location.city",
+                question: "Which city is your company based in?",
+                type: "text",
+                placeholder: "e.g., Austin",
+                required: true
+            },
+            {
+                id: "company.location.state",
+                question: "Which state is your company based in?",
+                type: "select",
+                options: ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC", "PR", "VI", "AS", "GU", "MP"],
+                required: true
+            },
+            {
+                id: "company.eligibleAgencyCodes",
+                question: "Which government agencies would you prefer to work with?",
+                type: "checkboxes",
+                options: ["NASA", "DOD", "DARPA", "Space Force", "USAF", "Navy", "Army", "DOE", "DHS", "NOAA", "NSF", "NIST", "Any"],
+                required: false
+            },
+            {
+                id: "company.email",
+                question: "What's your company email?",
+                type: "email",
+                placeholder: "contact@yourcompany.com",
+                required: true
+            },
+            {
+                id: "project.title",
+                question: "What's your project title?",
+                type: "text",
+                placeholder: "Give your project a descriptive name",
+                required: true
+            },
+            {
+                id: "project.description",
+                question: "Describe your project",
+                type: "textarea",
+                placeholder: "Describe your project objectives, goals, and expected outcomes...",
+                required: true
+            },
+            {
+                id: "project.techSpecs",
+                question: "What are the technical specifications?",
+                type: "textarea",
+                placeholder: "Detail the technical requirements and specifications...",
+                required: true
+            },
+            {
+                id: "keywords",
+                question: "What keywords best describe your technology and capabilities?",
+                type: "tags",
+                placeholder: "Type keyword and press Enter",
+                required: true
+            },
+            {
+                id: "project.budget",
+                question: "What's your estimated budget range?",
+                type: "budget",
+                required: true
+            },
+            {
+                id: "project.timeline",
+                question: "What's your preferred project timeline?",
+                type: "select",
+                options: ["Immediate (0-3 months)", "Short-term (3-6 months)", "6-12 months", "12-18 months", "18-24 months", "24-36 months", "Long-term (36+ months)", "Flexible timeline"],
+                required: true
+            }
+        ];
+
+        // Form state
+        let currentStep = 0;
+        let formData = {};
+
+        // Initialize the form
+        function init() {
+            showQuestion(currentStep);
+        }
+
+        // Show current question
+        function showQuestion(stepIndex) {
+            const question = questions[stepIndex];
+            const container = document.getElementById('questionContainer');
+            const progressFill = document.getElementById('progressFill');
+            
+            // Update progress
+            progressFill.style.width = `${((stepIndex + 1) / questions.length) * 100}%`;
+            
+            container.innerHTML = `
+                <div class="step-indicator">${stepIndex + 1} → ${questions.length}</div>
+                <div class="question">
+                    ${question.question}
+                    ${question.required ? '<span class="required">*</span>' : ''}
+                </div>
+                <div class="input-container">
+                    ${renderInput(question, stepIndex)}
+                </div>
+                <div class="buttons">
+                    ${stepIndex > 0 ? '<button type="button" class="btn-secondary" onclick="previousQuestion()">Back</button>' : ''}
+                    <button type="button" class="btn-primary" id="nextBtn" onclick="nextQuestion()" ${!canProceed(question) ? 'disabled' : ''}>
+                        ${stepIndex === questions.length - 1 ? 'Submit' : 'Next'}
+                    </button>
+                </div>
+                ${!['checkboxes', 'select', 'budget'].includes(question.type) ? '<div class="hint">Press Enter to continue</div>' : ''}
+            `;
+            
+            // Add event listeners
+            setupEventListeners(question, stepIndex);
+        }
+
+        // Render input based on question type
+        function renderInput(question, stepIndex) {
+            const currentValue = getNestedValue(formData, question.id);
+            
+            switch (question.type) {
+                case 'text':
+                case 'email':
+                    return `<input type="${question.type}" id="input_${stepIndex}" value="${currentValue || ''}" placeholder="${question.placeholder || ''}" />`;
+                
+                case 'textarea':
+                    return `<textarea id="input_${stepIndex}" placeholder="${question.placeholder || ''}">${currentValue || ''}</textarea>`;
+                
+                case 'select':
+                    return `
+                        <div class="select-group">
+                            ${question.options.map(option => `
+                                <div class="select-item ${currentValue === option ? 'selected' : ''}" data-value="${option}">
+                                    <span>${option}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                
+                case 'checkboxes':
+                    return `
+                        <div class="checkbox-group">
+                            ${question.options.map(option => `
+                                <div class="checkbox-item ${Array.isArray(currentValue) && currentValue.includes(option) ? 'selected' : ''}" data-value="${option}">
+                                    <input type="checkbox" ${Array.isArray(currentValue) && currentValue.includes(option) ? 'checked' : ''} />
+                                    <span>${option}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                
+                case 'tags':
+                    return `
+                        <div class="tags-input" id="tagsInput_${stepIndex}">
+                            ${Array.isArray(currentValue) ? currentValue.map(tag => `
+                                <span class="tag">${tag}<span class="tag-remove" onclick="removeTag('${tag}', ${stepIndex})">&times;</span></span>
+                            `).join('') : ''}
+                            <input type="text" class="tag-input" id="tagInput_${stepIndex}" placeholder="${question.placeholder || ''}" />
+                        </div>
+                    `;
+                
+                case 'budget':
+                    return `
+                        <div class="budget-group">
+                            <div class="budget-field">
+                                <label>Minimum Budget ($)</label>
+                                <input type="number" id="budgetMin_${stepIndex}" value="${currentValue?.min || ''}" placeholder="100000" />
+                            </div>
+                            <div class="budget-field">
+                                <label>Maximum Budget ($)</label>
+                                <input type="number" id="budgetMax_${stepIndex}" value="${currentValue?.max || ''}" placeholder="500000" />
+                            </div>
+                        </div>
+                    `;
+                
+                default:
+                    return '';
+            }
+        }
+
+        // Setup event listeners for current question
+        function setupEventListeners(question, stepIndex) {
+            const nextBtn = document.getElementById('nextBtn');
+            
+            switch (question.type) {
+                case 'text':
+                case 'email':
+                case 'textarea':
+                    const input = document.getElementById(`input_${stepIndex}`);
+                    input.addEventListener('input', () => updateFormData(question.id, input.value));
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && question.type !== 'textarea' && canProceed(question)) {
+                            nextQuestion();
+                        }
+                    });
+                    input.focus();
+                    break;
+                
+                case 'select':
+                    document.querySelectorAll('.select-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            document.querySelectorAll('.select-item').forEach(i => i.classList.remove('selected'));
+                            item.classList.add('selected');
+                            updateFormData(question.id, item.dataset.value);
+                            updateNextButton(question);
+                        });
+                    });
+                    break;
+                
+                case 'checkboxes':
+                    document.querySelectorAll('.checkbox-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const checkbox = item.querySelector('input[type="checkbox"]');
+                            checkbox.checked = !checkbox.checked;
+                
+Pls Continue
