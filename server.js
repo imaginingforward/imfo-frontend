@@ -962,7 +962,7 @@ try {
   app.use(express.static(path.join(__dirname, 'dist')));
   
   // Only set up React routing if dist/index.html exists
-  app.get('*', (req, res) => {
+  app.get('/dashboard/*', (req, res) => {
     const indexPath = path.join(__dirname, 'dist', 'index.html');
     try {
       res.sendFile(indexPath);
