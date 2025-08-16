@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SubmissionResultPage from "./pages/SubmissionResultPage";
-import AIMatchingPage from "./pages/AIMatchingPage";
 import SpaceForm from "./components/SpaceForm";
 import ImFoIntelligencePage from "./pages/ImFoIntelligencePage";
 
@@ -22,7 +21,6 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           {/* <Route path="/standard-form" element={<SpaceForm />} /> */}
-          <Route path="/ai-matching" element={<AIMatchingPage />} />
           <Route path="/submission-result" element={<SubmissionResultPage />} />
           <Route path="/intelligence" element={<ImFoIntelligencePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
