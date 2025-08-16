@@ -170,8 +170,8 @@ const Index = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className="mt-16 sm:mt-24 text-center">
-          <p className="text-sm text-muted-foreground mb-6 sm:mb-8">
+        <div className="mt-8 sm:mt-12 mb-8 sm:mb-12 text-center">
+          <p className="text-sm text-muted-foreground mb-4 sm:mb-6">
             Trusted by space tech leaders worldwide
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-60">
