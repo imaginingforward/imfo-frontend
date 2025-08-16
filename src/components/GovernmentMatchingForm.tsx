@@ -3,7 +3,7 @@ import TypeformQuestion from "./TypeformQuestion";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import type { FormData, CompanyData, ProjectData } from "@/types/form";
 
-// Question definitions
+// Question definitions - Updated to match comprehensive matching service
 const questions = [
   // Company Questions
   {
@@ -26,7 +26,8 @@ const questions = [
     type: "checkboxes" as const,
     options: [
       "Propulsion", "Satellites", "Robotics", "AI/ML", "Earth Observation", 
-      "Communications", "Manufacturing", "Materials Science", "Other"
+      "Communications", "Manufacturing", "Materials Science", "Quantum", 
+      "Cybersecurity", "Other"
     ],
     required: true
   },
@@ -58,15 +59,16 @@ const questions = [
     ),
     required: true
   },
+  // Location Questions (Updated structure)
   {
-    id: "company.city",
+    id: "company.location.city",
     question: "Which city is your company based in?",
     type: "text" as const,
     placeholder: "e.g., Austin",
     required: true
   },
   {
-    id: "company.state",
+    id: "company.location.state",
     question: "Which state is your company based in?",
     type: "select" as const,
     options: [
@@ -78,6 +80,30 @@ const questions = [
       "DC", "PR", "VI", "AS", "GU", "MP"
     ],
     required: true
+  },
+  // New Agency Preferences Question
+  {
+    id: "company.eligibleAgencyCodes",
+    question: "Which government agencies would you prefer to work with?",
+    type: "checkboxes" as const,
+    options: [
+      "NASA", "DOD", "DARPA", "Space Force", "USAF", "Navy", "Army", 
+      "DOE", "DHS", "NOAA", "NSF", "NIST", "Any"
+    ],
+    required: false
+  },
+  // New Department Preferences Question
+  {
+    id: "company.preferredDepartments",
+    question: "Any specific departments or offices you'd like to target?",
+    type: "checkboxes" as const,
+    options: [
+      "Department of Defense", "Department of Energy", "Department of Homeland Security",
+      "Department of Transportation", "Department of Interior", "NASA Headquarters",
+      "Air Force Research Laboratory", "Naval Research Laboratory", "Army Research Laboratory",
+      "DARPA", "Any"
+    ],
+    required: false
   },
   {
     id: "company.website",
@@ -92,13 +118,6 @@ const questions = [
     type: "text" as const,
     placeholder: "List any patents or intellectual property",
     required: false
-  },
-  {
-    id: "company.keywords",
-    question: "What keywords best describe your technology?",
-    type: "tags" as const,
-    placeholder: "Type keyword and press Enter...",
-    required: true
   },
   {
     id: "company.email",
@@ -130,6 +149,14 @@ const questions = [
     placeholder: "Detail the technical requirements and specifications...",
     required: true
   },
+  // Keywords Question (moved to project level to match backend)
+  {
+    id: "keywords",
+    question: "What keywords best describe your technology and capabilities?",
+    type: "tags" as const,
+    placeholder: "Type keyword and press Enter (e.g., propulsion, AI, satellite)...",
+    required: true
+  },
   {
     id: "project.budget",
     question: "What's your estimated budget range?",
@@ -137,18 +164,31 @@ const questions = [
     required: true
   },
   {
-    id: "project.timeline.duration",
-    question: "How long do you expect this project to take?",
+    id: "project.timeline",
+    question: "What's your preferred project timeline?",
     type: "select" as const,
     options: [
-      "0-6 months", "6-12 months", "12-18 months", 
-      "18-24 months", "24-36 months", "36+ months"
+      "Immediate (0-3 months)", "Short-term (3-6 months)", "6-12 months", 
+      "12-18 months", "18-24 months", "24-36 months", "Long-term (36+ months)",
+      "Flexible timeline"
     ],
     required: true
   },
   {
-    id: "project.timeline.deadline",
-    question: "Do you have a preferred deadline?",
+    id: "project.interests",
+    question: "What are your areas of interest for government contracts?",
+    type: "checkboxes" as const,
+    options: [
+      "Research & Development", "Prototype Development", "Manufacturing", 
+      "Testing & Validation", "Software Development", "Hardware Development",
+      "Consulting Services", "Training & Education", "Maintenance & Support"
+    ],
+    required: true
+  },
+  // Optional deadline question
+  {
+    id: "project.deadline",
+    question: "Do you have a preferred start date or deadline?",
     type: "date" as const,
     required: false
   }
@@ -161,33 +201,29 @@ const TypeformContainer: React.FC = () => {
       name: "",
       description: "",
       techCategory: [],
-      fundingInstrumentTypes: [],
-      eligibleAgencyCodes: [],
+      eligibleAgencyCodes: [], // Updated to match backend
+      preferredDepartments: [], // New field
       stage: "",
       teamSize: "",
       foundedYear: "",
       website: "",
       patents: "",
       email: "",
-      keywords: [],
-      city: "",
-      state: "",
+      location: { // Updated structure
+        city: "",
+        state: "",
+      },
     },
     project: {
       title: "",
       description: "",
       techSpecs: "",
-      budget: {
-        min: 0,
-        max: 0,
-        currency: "USD"
-      },
-      timeline: {
-        duration: "",
-        deadline: ""
-      },
-      categoryOfFundingActivity: [],
+      budget: "", // Updated to match backend expectation
+      timeline: "",
+      interests: [], // New field
+      deadline: "", // Optional deadline
     },
+    keywords: [], // Moved to root level to match backend
   });
 
   const { isSubmitting, handleSubmit } = useFormSubmission();
@@ -205,13 +241,15 @@ const TypeformContainer: React.FC = () => {
     }
     
     if (path === "project.budget") {
-      current[keys[keys.length - 1]] = { ...value, currency: "USD" };
-    } else if (path === "project.timeline.duration") {
-      if (!current.timeline) current.timeline = {};
-      current.timeline.duration = value;
-    } else if (path === "project.timeline.deadline") {
-      if (!current.timeline) current.timeline = {};
-      current.timeline.deadline = value;
+      // Convert budget object to string format expected by backend
+      if (typeof value === 'object' && value.min && value.max) {
+        current[keys[keys.length - 1]] = `$${value.min} - $${value.max}`;
+      } else {
+        current[keys[keys.length - 1]] = value;
+      }
+    } else if (path === "keywords") {
+      // Handle keywords at root level
+      newFormData.keywords = value;
     } else {
       current[keys[keys.length - 1]] = value;
     }
@@ -220,6 +258,10 @@ const TypeformContainer: React.FC = () => {
   };
 
   const getNestedValue = (path: string) => {
+    if (path === "keywords") {
+      return formData.keywords;
+    }
+    
     const keys = path.split(".");
     let current: any = formData;
     
@@ -236,8 +278,23 @@ const TypeformContainer: React.FC = () => {
 
   const handleNext = async () => {
     if (currentStep === questions.length - 1) {
-      // Submit form
-      await handleSubmit(formData);
+      // Transform data to match backend expectations before submission
+      const transformedData = {
+        company: {
+          ...formData.company,
+          // Ensure location is properly nested
+          location: formData.company.location || { city: "", state: "" }
+        },
+        project: {
+          ...formData.project,
+          // Ensure interests array exists
+          interests: formData.project.interests || []
+        },
+        // Include keywords at root level
+        keywords: formData.keywords || []
+      };
+      
+      await handleSubmit(transformedData);
     } else {
       setCurrentStep(currentStep + 1);
     }
