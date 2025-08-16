@@ -170,21 +170,21 @@ const Index = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className="mt-8 sm:mt-12 mb-8 sm:mb-12 text-center">
-          <p className="text-sm text-muted-foreground mb-4 sm:mb-6">
+        <div className="mt-6 sm:mt-12 mb-6 sm:mb-12 text-center px-4">
+          <p className="text-sm text-muted-foreground mb-3 sm:mb-6">
             Trusted by space tech leaders worldwide
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-60">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 opacity-60">
             <div className="flex items-center space-x-2">
-              <Building className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Building className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               <span className="text-xs sm:text-sm font-medium">1000+ Companies</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               <span className="text-xs sm:text-sm font-medium">10K+ Professionals</span>
             </div>
             <div className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
+              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               <span className="text-xs sm:text-sm font-medium">7+ Countries</span>
             </div>
           </div>
