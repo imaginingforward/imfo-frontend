@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TypeformQuestion from "./TypeformQuestion";
+import MatchingFormQuestion from "./MatchingFormQuestion";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import type { FormData, CompanyData, ProjectData } from "@/types/form";
 
@@ -198,7 +198,7 @@ const questions = [
   }
 ];
 
-const TypeformContainer: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
+const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     company: {
@@ -313,7 +313,7 @@ const TypeformContainer: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
   const currentQuestion = questions[currentStep];
 
   return (
-    <TypeformQuestion
+    <MatchingFormQuestion
       question={currentQuestion.question}
       type={currentQuestion.type}
       value={getNestedValue(currentQuestion.id)}
@@ -331,4 +331,4 @@ const TypeformContainer: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
   );
 };
 
-export default TypeformContainer;
+export default GovernmentMatchingForm;
