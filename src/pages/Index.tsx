@@ -156,7 +156,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
-      {/* SEO Meta Tags would be handled by helmet or similar */}
+      
       {/* Hero Section */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16 pb-16 sm:pb-24">
         <div className="text-center mb-8 sm:mb-12">
@@ -168,6 +168,28 @@ const Index = () => {
             Discovery to Deals, Source Qualified Leads Fast
           </p>
         </div>
+
+        {/* Trust Indicators */}
+        <div className="mt-16 sm:mt-24 text-center">
+          <p className="text-sm text-muted-foreground mb-6 sm:mb-8">
+            Trusted by space tech leaders worldwide
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-60">
+            <div className="flex items-center space-x-2">
+              <Building className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium">1000+ Companies</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium">10K+ Professionals</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-xs sm:text-sm font-medium">7+ Countries</span>
+            </div>
+          </div>
+        </div>
+        
         {/* Search Interface */}
         <div className="mb-12 sm:mb-16">
           <form onSubmit={handleSubmit} className="relative mb-6 sm:mb-8">
@@ -197,6 +219,7 @@ const Index = () => {
               </Button>
             </div>
           </form>
+          
           {/* Suggested Prompts */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {suggestedPrompts.map((prompt, index) => (
@@ -223,6 +246,7 @@ const Index = () => {
             ))}
           </div>
         </div>
+        
         {/* Search Results Placeholder */}
         {isSearching && (
           <div className="space-y-6">
@@ -256,26 +280,6 @@ const Index = () => {
             />
           </div>
         )}
-        {/* Trust Indicators */}
-        <div className="mt-16 sm:mt-24 text-center">
-          <p className="text-sm text-muted-foreground mb-6 sm:mb-8">
-            Trusted by deep tech leaders worldwide
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 opacity-60">
-            <div className="flex items-center space-x-2">
-              <Building className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">1500+ Companies</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">10K+ Professionals</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="text-xs sm:text-sm font-medium">7+ Countries</span>
-            </div>
-          </div>
-        </div>
       </main>
     </div>
   );
