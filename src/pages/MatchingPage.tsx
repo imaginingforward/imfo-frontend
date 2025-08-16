@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import debugEnvironmentVariables from "@/debug-env";
 import { useToast } from "@/hooks/use-toast";
-import TypeformContainer from "@/components/TypeformContainer";
+import GovernmentMatchingForm from "@/components/GovernmentMatchingForm";
 import type { FormData, MatchResult } from "@/types/form";
 import { Button } from "@/components/ui/button";
 import RFPMatchList from "@/components/RFPMatchList";
@@ -24,7 +24,7 @@ const AIMatchingPage = () => {
     debugEnvironmentVariables();
   }, []);
 
-  // This function will be called by the TypeformContainer when form is submitted
+  // This function will be called by the GovernmentMatchingForm when form is submitted
   const handleFormSubmission = async (formData: FormData) => {
     setMatchingError(null);
     setSubmittedCompanyName(formData.company.name);
@@ -110,9 +110,9 @@ const AIMatchingPage = () => {
     setSubmittedCompanyName("");
   };
 
-  // If showing the Typeform, render TypeformContainer
+  // If showing the Typeform, render GovernmentMatchingForm
   if (showForm) {
-    return <TypeformContainer onSubmit={handleFormSubmission} />;
+    return <GovernmentMatchingForm onSubmit={handleFormSubmission} />;
   }
 
   // If showing results, render results page
