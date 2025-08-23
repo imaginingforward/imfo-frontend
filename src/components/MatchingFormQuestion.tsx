@@ -70,7 +70,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             onChange={(e) => onChange(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
+            className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-base sm:text-lg md:text-xl p-3 sm:p-4 h-12 sm:h-14 transition-colors"
             autoFocus
           />
         );
@@ -83,7 +83,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             onChange={(e) => onChange(Number(e.target.value))}
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
+            className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-base sm:text-lg md:text-xl p-3 sm:p-4 h-12 sm:h-14 transition-colors"
             autoFocus
           />
         );
@@ -94,7 +94,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             type="date"
             value={value || ""}
             onChange={(e) => onChange(e.target.value)}
-            className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
+            className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-base sm:text-lg md:text-xl p-3 sm:p-4 h-12 sm:h-14 transition-colors"
             autoFocus
           />
         );
@@ -105,25 +105,25 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             value={value || ""}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-gray text-lg p-4 min-h-32"
+            className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-base sm:text-lg p-3 sm:p-4 min-h-24 sm:min-h-32 transition-colors"
             autoFocus
           />
         );
 
       case "select":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {options.map((option) => (
               <div
                 key={option}
                 onClick={() => onChange(option)}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                className={`p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[44px] flex items-center ${
                   value === option
                     ? "border-primary bg-primary/10"
-                    : "border-white/20 bg-white/5 hover:border-white/40"
+                    : "border-white/20 bg-white/5 hover:border-white/40 active:bg-white/10"
                 }`}
               >
-                <span className="text-gray text-lg">{option}</span>
+                <span className="text-gray text-base sm:text-lg">{option}</span>
               </div>
             ))}
           </div>
@@ -131,11 +131,11 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
 
       case "checkboxes":
         return (
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {options.map((option) => (
               <div
                 key={option}
-                className="flex items-center space-x-3 p-3 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 transition-all"
+                className="flex items-center space-x-3 p-3 sm:p-4 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 active:bg-white/15 transition-all min-h-[44px]"
               >
                 <Checkbox
                   id={option}
@@ -148,7 +148,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
                     }
                   }}
                 />
-                <Label htmlFor={option} className="text-gray text-lg cursor-pointer flex-1">
+                <Label htmlFor={option} className="text-gray text-base sm:text-lg cursor-pointer flex-1">
                   {option}
                 </Label>
               </div>
@@ -159,24 +159,25 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
       case "tags":
         return (
           <TagInput
-            value={Array.isArray(value) ? value : []}
-            onChange={onChange}
-            placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-gray text-lg p-4"
-          />
+            value={Array.isArray(value) ? value.join(", ") : ""}
+            onChange={(e) => onChange(e.target.value.split(",").map(tag => tag.trim()).filter(tag => tag))}
+            placeholder={placeholder || "Enter tags separated by commas"}
+            className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-primary/20 text-gray text-base sm:text-lg p-3 sm:p-4 h-12 sm:h-14 transition-colors"
+            onKeyPress={handleKeyPress}
+            />
         );
 
       case "budget":
         return (
-          <div className="space-y-4">
+          <div className="space-y-4 sm:space-y-6">
             <div>
-              <Label className="text-gray text-lg mb-2 block">Minimum Budget ($)</Label>
+              <Label className="text-gray text-base sm:text-lg mb-2 block">Minimum Budget ($)</Label>
               <Input
                 type="number"
                 value={value?.min || ""}
                 onChange={(e) => onChange({ ...(value || {}), min: Number(e.target.value) })}
                 placeholder="e.g., 100000"
-                className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
+                className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-xl p-4 h-14 transition-colors"
               />
             </div>
             <div>
@@ -186,7 +187,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
                 value={value?.max || ""}
                 onChange={(e) => onChange({ ...(value || {}), max: Number(e.target.value) })}
                 placeholder="e.g., 500000"
-                className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
+                className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-xl p-4 h-14 transition-colors"
               />
             </div>
           </div>
@@ -208,30 +209,31 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
       </div>
 
       {/* Question Content */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8">
         <div className="max-w-2xl w-full">
-          <div className="mb-8">
-            <div className="text-sm text-gray-600 mb-2">
-              {currentStep} → {totalSteps}
+          <div className="mb-6 sm:mb-8">
+            <div className="text-xs sm:text-sm text-gray-600 mb-2">
+              <span className="sm:hidden">{currentStep}/{totalSteps}</span>
+              <span className="hidden sm:inline">{currentStep} → {totalSteps}</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight text-gray-900">
+            <h1 className="text-2x1 sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight text-gray-900">
               {question}
               {required && <span className="text-red-400 ml-1">*</span>}
             </h1>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             {renderInput()}
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {showBack && (
               <Button
                 type="button"
                 onClick={onBack}
                 variant="outline"
-                className="px-8 py-3"
+                className="px-6 sm:px-8 py-3 h-12 sm:h-auto order-2 sm:order-1"
               >
                 Back
               </Button>
@@ -239,14 +241,14 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             <Button
               onClick={onNext}
               disabled={!canProceed()}
-              className="px-8 py-3 bg-primary hover:bg-primary/90 flex-1"
+              className="px-6 sm:px-8 py-3 h-12 sm:h-auto bg-primary hover:bg-primary/90 flex-1 order-1 sm:order-2"
             >
               {isLast ? "Submit" : "Next"}
             </Button>
           </div>
 
           {type !== "checkboxes" && type !== "select" && (
-            <div className="mt-4 text-sm text-gray-500">
+            <div className="mt-4 text-xs sm:text-sm text-gray-500 hidden sm:block">
               Press Enter to continue
             </div>
           )}
