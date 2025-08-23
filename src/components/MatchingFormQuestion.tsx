@@ -211,7 +211,6 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="max-w-2xl w-full">
           <div className="mb-8">
-            {/* <div className="text-sm text-muted-foreground mb-2"> */}
             <div className="text-sm text-gray-600 mb-2">
               {currentStep} → {totalSteps}
             </div>
@@ -247,7 +246,6 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
           </div>
 
           {type !== "checkboxes" && type !== "select" && (
-            {/* <div className="mt-4 text-sm text-muted-foreground"> */}
             <div className="mt-4 text-sm text-gray-500">
               Press Enter to continue
             </div>
