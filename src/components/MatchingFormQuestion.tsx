@@ -70,7 +70,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             onChange={(e) => onChange(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-white text-xl p-4 h-14"
+            className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
             autoFocus
           />
         );
@@ -83,7 +83,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             onChange={(e) => onChange(Number(e.target.value))}
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-white text-xl p-4 h-14"
+            className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
             autoFocus
           />
         );
@@ -94,7 +94,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             type="date"
             value={value || ""}
             onChange={(e) => onChange(e.target.value)}
-            className="bg-white/5 border-white/20 text-white text-xl p-4 h-14"
+            className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
             autoFocus
           />
         );
@@ -105,7 +105,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             value={value || ""}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-white text-lg p-4 min-h-32"
+            className="bg-white/5 border-white/20 text-gray text-lg p-4 min-h-32"
             autoFocus
           />
         );
@@ -123,7 +123,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
                     : "border-white/20 bg-white/5 hover:border-white/40"
                 }`}
               >
-                <span className="text-white text-lg">{option}</span>
+                <span className="text-gray text-lg">{option}</span>
               </div>
             ))}
           </div>
@@ -148,7 +148,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
                     }
                   }}
                 />
-                <Label htmlFor={option} className="text-white text-lg cursor-pointer flex-1">
+                <Label htmlFor={option} className="text-gray text-lg cursor-pointer flex-1">
                   {option}
                 </Label>
               </div>
@@ -162,7 +162,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
             value={Array.isArray(value) ? value : []}
             onChange={onChange}
             placeholder={placeholder}
-            className="bg-white/5 border-white/20 text-white text-lg p-4"
+            className="bg-white/5 border-white/20 text-gray text-lg p-4"
           />
         );
 
@@ -170,23 +170,23 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
         return (
           <div className="space-y-4">
             <div>
-              <Label className="text-white text-lg mb-2 block">Minimum Budget ($)</Label>
+              <Label className="text-gray text-lg mb-2 block">Minimum Budget ($)</Label>
               <Input
                 type="number"
                 value={value?.min || ""}
                 onChange={(e) => onChange({ ...(value || {}), min: Number(e.target.value) })}
                 placeholder="e.g., 100000"
-                className="bg-white/5 border-white/20 text-white text-xl p-4 h-14"
+                className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
               />
             </div>
             <div>
-              <Label className="text-white text-lg mb-2 block">Maximum Budget ($)</Label>
+              <Label className="text-gray text-lg mb-2 block">Maximum Budget ($)</Label>
               <Input
                 type="number"
                 value={value?.max || ""}
                 onChange={(e) => onChange({ ...(value || {}), max: Number(e.target.value) })}
                 placeholder="e.g., 500000"
-                className="bg-white/5 border-white/20 text-white text-xl p-4 h-14"
+                className="bg-white/5 border-white/20 text-gray text-xl p-4 h-14"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-primary-dark text-white flex flex-col">
+    <div className="min-h-screen bg-primary-dark text-gray flex flex-col">
       {/* Progress Bar */}
       <div className="w-full bg-gray-700 h-1">
         <div
@@ -211,10 +211,11 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="max-w-2xl w-full">
           <div className="mb-8">
-            <div className="text-sm text-muted-foreground mb-2">
+            /* <div className="text-sm text-muted-foreground mb-2"> */
+            <div className="text-sm text-gray-600 mb-2">
               {currentStep} → {totalSteps}
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight text-gray-900">
               {question}
               {required && <span className="text-red-400 ml-1">*</span>}
             </h1>
@@ -246,7 +247,8 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
           </div>
 
           {type !== "checkboxes" && type !== "select" && (
-            <div className="mt-4 text-sm text-muted-foreground">
+            /* <div className="mt-4 text-sm text-muted-foreground"> */
+            <div className="mt-4 text-sm text-gray-500">
               Press Enter to continue
             </div>
           )}
