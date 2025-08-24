@@ -1,10 +1,14 @@
-import React from "react";
+import React { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TagInput } from "@/components/ui/tag-input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 interface TypeformQuestionProps {
   question: string;
@@ -37,6 +41,10 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
   currentStep,
   totalSteps
 }) => {
+  const [tagInput, setTagInput] = useState();
+
+  // Use dropdown for long option lists
+  const shouldUseDropdown = options.length > 6;
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && type !== "textarea" && canProceed()) {
       onNext();
@@ -111,31 +119,81 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
         );
 
       case "select":
-        return (
-          <div className="space-y-2 sm:space-y-3">
-            {options.map((option) => (
-              <div
-                key={option}
-                onClick={() => onChange(option)}
-                className={`p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[44px] flex items-center ${
-                  value === option
-                    ? "border-primary bg-primary/10"
-                    : "border-white/20 bg-white/5 hover:border-white/40 active:bg-white/10"
-                }`}
-              >
-                <span className="text-gray text-base sm:text-lg">{option}</span>
-              </div>
-            ))}
-          </div>
+        return shouldUseDropdown ? (
+          <Select value={value || ""} onValueChange={onChange}>
+            <SelectTrigger className =w-full bg-white/5 border-gray-300 focus:border-gray-700 text-gray text-sm sm:text-base p-3 h-12 sm:h-14">
+              <SelectValue placeholder="Select an option" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border-gray-300 max-h-60">
+              <ScrollArea className="h-full">
+                {options.map((option) =>(
+                  <SelectItem
+                    key={option}
+                    value={option}
+                    className="text-sm sm:text-base cursor-pointer hover:bg-gray-100"
+                  >
+                  </SelectItem>
+                ))}
+              </ScrollArea>
+            </SelectContent>
+          </Select>
+        ) : (
+          <ScrollArea className="h-60 sm:h-72">
+            <div className="space-y-2 pr-4">
+              {options.map((option) => (
+                <div
+                  key={option}
+                  onClick={() => onChange(option)}
+                  className={`p-2 sm:p-3 rounded-lg border cursor-pointer transition-all min-h-[40px] flex items-center text-sm sm:text-base ${
+                    value === option
+                      ? "border-primary bg-primary/10"
+                      : "border-white/20 bg-white/5 hover:border-white/40 active:bg-white/10"
+                  }`}
+                >
+                  <span className="text-gray">{option}</span>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
         );
 
       case "checkboxes":
-        return (
-          <div className="space-y-2 sm:space-y-3">
+        return shouldUseDropDown ? (
+          <div className="space-y-3">
+            <div className="text-sm text-gray-600 mb-2">Selected: {Array.isArray(value) ? value.length : 0}</div>
+            <ScrollArea className="h-48 border border-white/20 rounded-lg bg-white/5 p-2">
+              <div className="space-y-1">
+                {options.map((option) => (
+                  <div
+                    key={option}
+                    className="flex items-center space-x-2 p-2 rounded hover:bg-white/10 min-h-[36px]"
+                  >
+                    <Checkbox
+                      id={option}
+                      checked={Array.isArray(value) && value.includes(option)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          onChange([...(Array.isArray(value) ? value : []), option]);
+                        } else {
+                          onChange((Array.isArray(value) ? value : []).filter((item) => item !== option));
+                        }
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor={option} className="text-gray text-sm cursor-pointer flex-1 leading-tight">
+                      {option}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        ) : (
+          <div className="space-y-2">
             {options.map((option) => (
               <div
                 key={option}
-                className="flex items-center space-x-3 p-3 sm:p-4 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 active:bg-white/15 transition-all min-h-[44px]"
+                className="flex items-center space-x-3 p-2 sm:p-3 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 transition-all min-h-[40px]"
               >
                 <Checkbox
                   id={option}
@@ -144,11 +202,12 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
                     if (checked) {
                       onChange([...(Array.isArray(value) ? value : []), option]);
                     } else {
-                      onChange((Array.isArray(value) ? value : []).filter((item) => item !== option));
+                      onChange((Array.isArray(value) ? value : []).filter((item) => item !== option))
                     }
                   }}
+                  className="w-4 h-4"
                 />
-                <Label htmlFor={option} className="text-gray text-base sm:text-lg cursor-pointer flex-1">
+                <Label htmlFor={option} className="text-gray text-sm sm:text-base cursor-pointer flex-1">
                   {option}
                 </Label>
               </div>
@@ -157,14 +216,50 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
         );
 
       case "tags":
+        const handleTagKeyPress = e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === "Enter" && tagInput.trim()) {
+            e.preventDefault();
+            const newTag = tagInput.trim();
+            const currentTags = Array.isArray(value) ? value : [];
+            if (!currentTags.includes(newTag)) {
+              onChange([...currentTags, newTag]);
+            }
+            setTagInput("");
+          }
+        };
+
+        const removeTag = (tagtoRemove: string) => {
+          const currentTags = Array.isArray(value) ? value : [];
+          onChange(currentTags.filter(tag => tag !== tagToRemove));
+        };
+        
         return (
-          <TagInput
-            value={Array.isArray(value) ? value.join(", ") : ""}
-            onChange={(e) => onChange(e.target.value.split(",").map(tag => tag.trim()).filter(tag => tag))}
-            placeholder={placeholder || "Enter tags separated by commas"}
-            className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-primary/20 text-gray text-base sm:text-lg p-3 sm:p-4 h-12 sm:h-14 transition-colors"
-            onKeyPress={handleKeyPress}
+          <div className="space-y-3">
+            {Array.isArray(value) && value.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {value.map((tag.index) => (
+                  <Badge key={index} variant="secondary" className="text-xs px-2 py-1 bg-primary/20 text-gray">
+                    {tag}
+                    <button
+                      onClick={() => removeTag(tag)}
+                      className="ml-1 hover:bg-red-500/20 rounded-full p-0.5"
+                      type="button"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+            <Input
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyPress={handleTagKeyPress}
+              placeholder={placeholder || "Type a keyword and press Enter"}
+              className="bg-white/5 border-gray-300 focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray text-sm sm:text-base p-3 h-10 sm:h-12 transition-colors"
+              autoFocus
             />
+          </div>
         );
 
       case "budget":
@@ -216,7 +311,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
               <span className="sm:hidden">{currentStep}/{totalSteps}</span>
               <span className="hidden sm:inline">{currentStep} → {totalSteps}</span>
             </div>
-            <h1 className="text-2x1 sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 leading-tight text-gray-900">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 leading-tight text-gray-900">
               {question}
               {required && <span className="text-red-400 ml-1">*</span>}
             </h1>
