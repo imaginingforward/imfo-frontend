@@ -216,7 +216,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
         );
 
       case "tags":
-        const handleTagKeyPress = e: React.KeyboardEvent<HTMLInputElement>) => {
+        const handleTagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === "Enter" && tagInput.trim()) {
             e.preventDefault();
             const newTag = tagInput.trim();
