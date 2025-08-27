@@ -264,14 +264,14 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   href="https://calendly.com/imaginingforward/techweek-discovery?" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-green-600 hover:text-green-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                  className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
                   title="Request Intro"
                   onClick={(e) => {
                       e.stopPropagation();
                       trackClick(company.company_name, 'calendly', searchQuery);
                   }}
                 >
-                  <img src="/calendly_logo.png" alt="Calendly" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  Request Intro
                 </a>
               </div>
             </CardContent>
