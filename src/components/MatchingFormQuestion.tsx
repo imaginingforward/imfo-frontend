@@ -121,7 +121,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
       case "select":
         return shouldUseDropdown ? (
           <Select value={value || ""} onValueChange={onChange}>
-            <SelectTrigger className =w-full bg-white/5 border-gray-300 focus:border-gray-700 text-gray text-sm sm:text-base p-3 h-12 sm:h-14">
+            <SelectTrigger className ="w-full bg-white/5 border-gray-300 focus:border-gray-700 text-gray text-sm sm:text-base p-3 h-12 sm:h-14">
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent className="bg-white border-gray-300 max-h-60">
