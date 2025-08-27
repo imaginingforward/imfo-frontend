@@ -237,7 +237,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
           <div className="space-y-3">
             {Array.isArray(value) && value.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {value.map((tag.index) => (
+                {value.map((tag, index) => (
                   <Badge key={index} variant="secondary" className="text-xs px-2 py-1 bg-primary/20 text-gray">
                     {tag}
                     <button
