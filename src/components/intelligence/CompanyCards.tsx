@@ -261,12 +261,12 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 )}
               </div>
 
-              <div className="mt-auto">
+              <div className="mt-auto -mb-6 -mx-6">
                 <a 
                   href="https://calendly.com/imaginingforward/techweek-discovery?" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                  className="block w-full px-3 py-3 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 text-center border-t border-primary/20"
                   title="Request Intro"
                   onClick={(e) => {
                     e.stopPropagation();
