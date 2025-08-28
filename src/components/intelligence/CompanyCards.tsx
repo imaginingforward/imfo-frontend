@@ -261,12 +261,13 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 )}
               </div>
 
+              {/* Request Intro Button Company List */}
               <div className="mt-auto -mb-6 -mx-6">
                 <a 
                   href="https://calendly.com/imaginingforward/techweek-discovery?" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="flex items-center justify-center px-3 py-3 text-xs font-medium bg-primary/10 text-primary rounded-md hover:bg-primary/20 hover:shadow-md transition-colors active:scale-95 text-center border-t border-primary/10"
+                  className="flex items-center justify-center px-3 py-3 text-xs font-medium bg-primary/20 text-primary rounded-md hover:bg-primary/40 hover:shadow-md transition-colors active:scale-95 text-center border-t border-primary/20"
                   title="Request Intro"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -296,12 +297,13 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               <span className="line-clamp-2">{selectedCompany?.company_name}</span>
             </DialogTitle>
           
+            {/* Request Intro Button Company Card Modal */}
             <div className="pt-3 sm:pt-4">
               <a 
                 href="https://calendly.com/imaginingforward/techweek-discovery?" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                className="inline-flex items-center justify-center px-3 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
                 title="Request Intro"
                 onClick={(e) => {
                   e.stopPropagation();
