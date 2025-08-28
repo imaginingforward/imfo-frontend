@@ -159,22 +159,6 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </p>
                 )}
 
-                <div className="mb-3 sm:mb-4">
-                  <a 
-                    href="https://calendly.com/imaginingforward/techweek-discovery?" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
-                    title="Request Intro"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      trackClick(company.company_name, 'calendly', searchQuery);
-                    }}
-                  >
-                    Request Intro
-                  </a>
-                </div>
-
                 {/* Keywords and Tags */}
                 {company.business_activity && (
                   <div className="mb-3 sm:mb-4 text-left">
@@ -275,6 +259,22 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
                 )}
+              </div>
+
+              <div className="mt-auto">
+                <a 
+                  href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center justify-center w-full px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                  title="Request Intro"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    trackClick(company.company_name, 'calendly', searchQuery);
+                  }}
+                >
+                  Request Intro
+                </a>
               </div>
             </CardContent>
           </Card>
