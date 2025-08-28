@@ -159,6 +159,22 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </p>
                 )}
 
+                <div className="mb-3 sm:mb-4">
+                  <a 
+                    href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                    title="Request Intro"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(company.company_name, 'calendly', searchQuery);
+                    }}
+                  >
+                    Request Intro
+                  </a>
+                </div>
+
                 {/* Keywords and Tags */}
                 {company.business_activity && (
                   <div className="mb-3 sm:mb-4 text-left">
@@ -259,20 +275,6 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                     <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </a>
                 )}
-                
-                <a 
-                  href="https://calendly.com/imaginingforward/techweek-discovery?" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration 200 active:scale-95 whitespace-nowrap"
-                  title="Request Intro"
-                  onClick={(e) => {
-                      e.stopPropagation();
-                      trackClick(company.company_name, 'calendly', searchQuery);
-                  }}
-                >
-                  Request Intro
-                </a>
               </div>
             </CardContent>
           </Card>
@@ -293,6 +295,22 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               <Building className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
               <span className="line-clamp-2">{selectedCompany?.company_name}</span>
             </DialogTitle>
+          
+            <div className="pt-3 sm:pt-4">
+              <a 
+                href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
+                title="Request Intro"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  trackClick(selectedCompany?.company_name, 'calendly_modal', searchQuery);
+                }}
+              >
+                Request Intro
+              </a>
+            </div>
           </DialogHeader>
           
           <div className="flex-1 overflow-y-auto p-4 sm:p-6">
