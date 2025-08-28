@@ -264,7 +264,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   href="https://calendly.com/imaginingforward/techweek-discovery?" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                  className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration 200 active:scale-95 whitespace-nowrap"
                   title="Request Intro"
                   onClick={(e) => {
                       e.stopPropagation();
