@@ -324,26 +324,26 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
     const features = [
       {
         icon: <Target className="h-5 w-5" />,
-        title: "AI-Powered Matching",
-        description: "Advanced algorithms match your capabilities with relevant opportunities"
+        title: "Stop losing contracts",
+        description: "Match your capabilities to opportunities with advanced algorithms"
       },
       {
         icon: <Zap className="h-5 w-5" />,
-        title: "Faster Qualification",
-        description: "Skip the manual search and get directly to qualified contracts"
+        title: "Qualifify quicker",
+        description: "Skip 10+ hours of manual search and qualify for contracts in minutes"
       },
       {
         icon: <Building className="h-5 w-5" />,
-        title: "Multi-Agency Access",
-        description: "Connect with NASA, DOD, DARPA, and other key government agencies"
+        title: "Omni-agency access",
+        description: "Connect with NASA, DOD, DARPA, and local agencies"
       }
     ];
 
     const benefits = [
-      "Personalized contract recommendations",
-      "Real-time opportunity alerts",
-      "Streamlined application process",
-      "Agency preference matching"
+      "Get custom contract recommendations",
+      "Win early opportunity alerts",
+      "Drive traction in public domain",
+      "Access early policy intelligence"
     ];
 
     return (
@@ -353,11 +353,11 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
               <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
-                ImFo Match
+                Contract Match for Space Tech
               </span>
             </h1>
             <p className="text-xl sm:text-2xl md:text-4xl text-muted-foreground mx-auto leading-relaxed font-medium">
-              Land Public Contracts Faster with AI Match
+              Land Public RFPs 70% Faster with AI Match
             </p>
           </div>
 
@@ -376,6 +376,20 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
             </div>
           </div>
 
+          {/* CTA Section */}
+          <div className="text-center">
+            <Button 
+              onClick={handleStartMatching}
+              className="px-8 py-6 text-lg bg-gradient-to-r from-space-blue to-space-purple hover:from-space-purple hover:to-space-blue transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Rocket className="h-5 w-5 mr-2" />
+              Start
+            </Button>
+            <p className="text-sm text-muted-foreground mt-4">
+              Enter company details in 4 minutes • Get qualified and matched instantly
+            </p>
+          </div>
+          
           {/* Benefits Section */}
           <div className="mb-8 sm:mb-12 bg-card/50 border border-border rounded-lg p-6">
             <h3 className="text-xl font-semibold mb-6 text-center">What You'll Get</h3>
@@ -392,36 +406,22 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
           {/* Trust Indicators */}
           <div className="mb-8 sm:mb-12 text-center px-4">
             <p className="text-sm text-muted-foreground mb-3 sm:mb-6">
-              Trusted by innovative companies nationwide
+              Trusted by space companies nationwide
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 opacity-60">
               <div className="flex items-center space-x-2">
                 <Building className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                <span className="text-xs sm:text-sm font-medium">500+ Companies</span>
+                <span className="text-xs sm:text-sm font-medium">1500+ Companies</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                <span className="text-xs sm:text-sm font-medium">$2B+ in Contracts</span>
+                <span className="text-xs sm:text-sm font-medium">$12B+ in Contracts</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Rocket className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                 <span className="text-xs sm:text-sm font-medium">15+ Agencies</span>
               </div>
             </div>
-          </div>
-
-          {/* CTA Section */}
-          <div className="text-center">
-            <Button 
-              onClick={handleStartMatching}
-              className="px-8 py-6 text-lg bg-gradient-to-r from-space-blue to-space-purple hover:from-space-purple hover:to-space-blue transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              <Rocket className="h-5 w-5 mr-2" />
-              Start Now
-            </Button>
-            <p className="text-sm text-muted-foreground mt-4">
-              Takes 5-10 minutes • Get matched instantly
-            </p>
           </div>
         </main>
       </div>
