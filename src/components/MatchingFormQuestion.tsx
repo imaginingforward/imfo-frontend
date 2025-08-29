@@ -41,10 +41,11 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
   currentStep,
   totalSteps
 }) => {
-  const [tagInput, setTagInput] = useState();
+  const [tagInput, setTagInput] = useState<string>("");
 
   // Use dropdown for long option lists
   const shouldUseDropdown = options.length > 6;
+  
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && type !== "textarea" && canProceed()) {
       onNext();
@@ -121,17 +122,18 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
       case "select":
         return shouldUseDropdown ? (
           <Select value={value || ""} onValueChange={onChange}>
-            <SelectTrigger className ="w-full bg-white/5 border-gray-300 focus:border-gray-700 text-gray text-sm sm:text-base p-3 h-12 sm:h-14">
+            <SelectTrigger className="w-full bg-white/5 border-gray-300 focus:border-gray-700 text-gray text-sm sm:text-base p-3 h-12 sm:h-14">
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent className="bg-white border-gray-300 max-h-60">
               <ScrollArea className="h-full">
-                {options.map((option) =>(
+                {options.map((option) => (
                   <SelectItem
                     key={option}
                     value={option}
                     className="text-sm sm:text-base cursor-pointer hover:bg-gray-100"
                   >
+                    {option}
                   </SelectItem>
                 ))}
               </ScrollArea>
@@ -158,7 +160,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
         );
 
       case "checkboxes":
-        return shouldUseDropDown ? (
+        return shouldUseDropdown ? (
           <div className="space-y-3">
             <div className="text-sm text-gray-600 mb-2">Selected: {Array.isArray(value) ? value.length : 0}</div>
             <ScrollArea className="h-48 border border-white/20 rounded-lg bg-white/5 p-2">
@@ -202,7 +204,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
                     if (checked) {
                       onChange([...(Array.isArray(value) ? value : []), option]);
                     } else {
-                      onChange((Array.isArray(value) ? value : []).filter((item) => item !== option))
+                      onChange((Array.isArray(value) ? value : []).filter((item) => item !== option));
                     }
                   }}
                   className="w-4 h-4"
@@ -228,7 +230,7 @@ const MatchingFormQuestion: React.FC<TypeformQuestionProps> = ({
           }
         };
 
-        const removeTag = (tagtoRemove: string) => {
+        const removeTag = (tagToRemove: string) => {
           const currentTags = Array.isArray(value) ? value : [];
           onChange(currentTags.filter(tag => tag !== tagToRemove));
         };
