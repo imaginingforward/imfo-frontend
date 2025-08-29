@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import MatchingFormQuestion from "./MatchingFormQuestion";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import type { FormData, CompanyData, ProjectData } from "@/types/form";
+import { Rocket, Target, Building, Users, Zap, CheckCircle } from "lucide-react";
 
 interface TypeformContainerProps {
   onSubmit: (formData: FormData) => Promise<void>;
 }
 
-// Question definitions
+// Question definitions (unchanged from original)
 const questions = [
   // Company Questions
   {
@@ -199,21 +201,22 @@ const questions = [
 ];
 
 const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) => {
+  const [showLanding, setShowLanding] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     company: {
       name: "",
       description: "",
       techCategory: [],
-      eligibleAgencyCodes: [], // Updated to match backend
-      preferredDepartments: [], // New field
+      eligibleAgencyCodes: [],
+      preferredDepartments: [],
       stage: "",
       teamSize: "",
       foundedYear: "",
       website: "",
       patents: "",
       email: "",
-      location: { // Updated structure
+      location: {
         city: "",
         state: "",
       },
@@ -222,12 +225,12 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
       title: "",
       description: "",
       techSpecs: "",
-      budget: "", // Updated to match backend expectation
+      budget: "",
       timeline: "",
-      interests: [], // New field
-      deadline: "", // Optional deadline
+      interests: [],
+      deadline: "",
     },
-    keywords: [], // Moved to root level to match backend
+    keywords: [],
   });
 
   const { isSubmitting, handleSubmit } = useFormSubmission();
@@ -310,8 +313,122 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
     }
   };
 
+  const handleStartMatching = () => {
+    setShowLanding(false);
+  };
+
   const currentQuestion = questions[currentStep];
 
+  // Landing page
+  if (showLanding) {
+    const features = [
+      {
+        icon: <Target className="h-5 w-5" />,
+        title: "AI-Powered Matching",
+        description: "Advanced algorithms match your capabilities with relevant opportunities"
+      },
+      {
+        icon: <Zap className="h-5 w-5" />,
+        title: "Faster Qualification",
+        description: "Skip the manual search and get directly to qualified contracts"
+      },
+      {
+        icon: <Building className="h-5 w-5" />,
+        title: "Multi-Agency Access",
+        description: "Connect with NASA, DOD, DARPA, and other key government agencies"
+      }
+    ];
+
+    const benefits = [
+      "Personalized contract recommendations",
+      "Real-time opportunity alerts",
+      "Streamlined application process",
+      "Agency preference matching"
+    ];
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16 pb-16 sm:pb-24">
+          {/* Hero Section */}
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
+              <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
+                ImFo Match
+              </span>
+            </h1>
+            <p className="text-xl sm:text-2xl md:text-4xl text-muted-foreground mx-auto leading-relaxed font-medium">
+              Land Public Contracts Faster with AI Match
+            </p>
+          </div>
+
+          {/* Features Section */}
+          <div className="mb-8 sm:mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {features.map((feature, index) => (
+                <div key={index} className="p-6 bg-card border border-border rounded-lg hover:shadow-md transition-shadow">
+                  <div className="p-2 bg-primary/10 text-primary rounded-md w-fit mb-4">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground text-sm">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Benefits Section */}
+          <div className="mb-8 sm:mb-12 bg-card/50 border border-border rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-6 text-center">What You'll Get</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {benefits.map((benefit, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <span className="text-sm">{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mb-8 sm:mb-12 text-center px-4">
+            <p className="text-sm text-muted-foreground mb-3 sm:mb-6">
+              Trusted by innovative companies nationwide
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 opacity-60">
+              <div className="flex items-center space-x-2">
+                <Building className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                <span className="text-xs sm:text-sm font-medium">500+ Companies</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                <span className="text-xs sm:text-sm font-medium">$2B+ in Contracts</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Rocket className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                <span className="text-xs sm:text-sm font-medium">15+ Agencies</span>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="text-center">
+            <Button 
+              onClick={handleStartMatching}
+              className="px-8 py-6 text-lg bg-gradient-to-r from-space-blue to-space-purple hover:from-space-purple hover:to-space-blue transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Rocket className="h-5 w-5 mr-2" />
+              Start Now
+            </Button>
+            <p className="text-sm text-muted-foreground mt-4">
+              Takes 5-10 minutes • Get matched instantly
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Form questions (unchanged from original)
   return (
     <MatchingFormQuestion
       question={currentQuestion.question}
