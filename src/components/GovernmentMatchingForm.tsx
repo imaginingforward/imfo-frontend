@@ -361,11 +361,11 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3 sm:mb-4">
               <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
-                Stop Losing Government Contracts
+                Land Public Contracts Faster
               </span>
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mx-auto leading-relaxed font-medium mb-4 sm:mb-6 max-w-3xl">
-              ImFo Match uses AI to find and qualify you for $50B+ in government contracts automatically
+              Find and match $10B+ in government contracts with AI
             </p>
             
             {/* Primary CTA - Above the fold */}
@@ -379,7 +379,7 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
               <p className="text-xs text-muted-foreground mt-3">
-                🚀 <strong>Takes 4 minutes</strong> • Get matched in 60 seconds • <strong>No credit card</strong>
+                🚀 <strong>Takes 4 minutes</strong> • Get matched in 60 seconds • <strong>No login</strong>
               </p>
             </div>
           </div>
@@ -393,7 +393,7 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
               </div>
               <div className="flex items-center space-x-2">
                 <DollarSign className="h-5 w-5 text-green-600" />
-                <span className="text-sm font-semibold">$2.3B+ Contracts Won</span>
+                <span className="text-sm font-semibold">$12B+ in Contracts</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Shield className="h-5 w-5 text-green-600" />
@@ -401,7 +401,7 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              "Finally found contracts we could actually win" - CTO, Aerospace Startup
+              "Easily found contracts we were eligible for" - CTO, Aerospace Startup
             </p>
           </div>
 
@@ -440,35 +440,6 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
             <p className="text-sm text-amber-700 mb-4">
               <strong>$847M in new opportunities</strong> posted this month. Companies using ImFo are 5x more likely to win.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-amber-600">
-              {proofPoints.map((point, index) => (
-                <div key={index} className="flex items-center justify-center">
-                  <CheckCircle className="h-3 w-3 mr-1 flex-shrink-0" />
-                  <span>{point}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Risk Reversal */}
-          <div className="mb-8 sm:mb-10 text-center">
-            <div className="bg-card/50 border border-border rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-3">Zero Risk. Maximum Reward.</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                <div className="flex items-center justify-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>No credit card required</span>
-                </div>
-                <div className="flex items-center justify-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Instant results</span>
-                </div>
-                <div className="flex items-center justify-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Used by Fortune 500</span>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Final CTA */}
@@ -478,11 +449,11 @@ const GovernmentMatchingForm: React.FC<TypeformContainerProps> = ({ onSubmit }) 
               className="w-full sm:w-auto px-12 py-6 text-lg font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 border-2 border-green-500"
             >
               <Target className="h-6 w-6 mr-2" />
-              Start Finding My Contracts
+              Start Finding Contracts
               <ArrowRight className="h-6 w-6 ml-2" />
             </Button>
             <p className="text-sm text-muted-foreground mt-4 max-w-md mx-auto">
-              Join 847 companies already winning more government contracts with ImFo Match
+              Join 847 companies winning public contracts with ImFo Match
             </p>
           </div>
         </main>
