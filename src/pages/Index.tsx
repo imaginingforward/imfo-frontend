@@ -274,12 +274,12 @@ const Index = () => {
 
         {/* Value Proposition Section */}
         <div className="mb-12 sm:mb-16 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-16 sm:mb-20">
             <span className="inline-block transition-all duration-500 ease-in-out transform">
               {roles[currentRoleIndex]}
             </span> expend 10+ hours a week on prospecting
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground mb-8 sm:mb-12">
+          <p className="text-2xl sm:text-3xl text-muted-foreground mb-16 sm:mb-20">
             We collapse discovery to deal from weeks to minutes
           </p>
           
@@ -309,7 +309,7 @@ const Index = () => {
                 <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-blue to-space-purple rounded-lg flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-blue transition-colors">On demand competitor landscape analysis</h3>
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-blue transition-colors">On demand competitor analysis</h3>
               </div>
             </div>
           </div>
