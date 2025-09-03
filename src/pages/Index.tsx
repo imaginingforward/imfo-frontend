@@ -45,28 +45,38 @@ const Index = () => {
     },
     {
       icon: <Cpu className="h-4 w-4" />,
-      text: "Cables in California",
+      text: "Avionics in California",
       category: "Suppliers"
     },
     {
       icon: <Satellite className="h-4 w-4" />,
-      text: "Cameras for space",
-      category: "Components"
+      text: "Earth Observation Data",
+      category: "Service"
     },
     {
       icon: <Users className="h-4 w-4" />,
-      text: "Startups with SBIR contracts",
+      text: "Startups with SBIR Contracts",
       category: "Government"
     },
     {
       icon: <Building className="h-4 w-4" />,
-      text: "Engineering companies",
+      text: "Engineering Companies",
       category: "Manufacturing"
     },
     {
       icon: <DollarSign className="h-4 w-4" />,
-      text: "Companies raised Series A",
+      text: "Companies Raised Series A",
       category: "Investment"
+    },
+    {
+      icon: <Building className="h-4 w-4" />,
+      text: "Energy security solutions",
+      category: "Technology"
+    },
+    {
+      icon: <Building className="h-4 w-4" />,
+      text: "Satellite manufacturers",
+      category: "Hardware"
     }
   ];
     
@@ -162,34 +172,13 @@ const Index = () => {
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
             <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
-              Search Engine for Space Tech</span>
+              Win Space Deals Faster</span>
           </h1>
           <p className="text-xl sm:text-2xl md:text-4xl text-muted-foreground mx-auto leading-relaxed font-medium">
-            Discovery to Deals, Source Qualified Leads Fast
+            Power deals with early signals, direct access, and real-time intelligence
           </p>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="mt-6 sm:mt-12 mb-6 sm:mb-12 text-center px-4">
-          <p className="text-sm text-muted-foreground mb-3 sm:mb-6">
-            Trusted by space tech leaders worldwide
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 opacity-60">
-            <div className="flex items-center space-x-2">
-              <Building className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-              <span className="text-xs sm:text-sm font-medium">1000+ Companies</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-              <span className="text-xs sm:text-sm font-medium">10K+ Professionals</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-              <span className="text-xs sm:text-sm font-medium">7+ Countries</span>
-            </div>
-          </div>
-        </div>
-        
         {/* Search Interface */}
         <div className="mb-12 sm:mb-16">
           <form onSubmit={handleSubmit} className="relative mb-6 sm:mb-8">
@@ -221,32 +210,58 @@ const Index = () => {
           </form>
           
           {/* Suggested Prompts */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {suggestedPrompts.map((prompt, index) => (
-              <button
-                key={index}
-                onClick={() => handleSuggestedPromptClick(prompt.text, prompt.category)}
-                className="group p-3 sm:p-4 bg-card hover:bg-accent/50 border border-border hover:border-primary/50 rounded-lg transition-all duration-200 text-left hover:shadow-md active:scale-95"
-                disabled={isSearching}
-              >
-                <div className="flex items-start space-x-2 sm:space-x-3">
-                  <div className="p-1.5 sm:p-2 bg-primary/10 text-primary rounded-md group-hover:bg-primary/20 transition-colors shrink-0">
-                    {prompt.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">
-                      {prompt.category}
-                    </div>
-                    <div className="text-sm font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
+          <div className="relative">
+            <div className="flex items-center mb-4">
+              <h3 className="text-sm font-medium text-muted-foreground">Try these searches</h3>
+            </div>
+            <div className="relative overflow-hidden">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 scroll-smooth">
+                {suggestedPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSuggestedPromptClick(prompt.text, prompt.category)}
+                    className="group flex items-center gap-2 px-3 py-2 bg-prompt hover:bg-prompt-hover border border-prompt-border hover:border-space-blue/30 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-sm active:scale-95 shrink-0"
+                    disabled={isSearching}
+                  >
+                    <span className="text-base group-hover:scale-110 transition-transform duration-200">
+                      {prompt.emoji}
+                    </span>
+                    <span className="text-sm font-medium text-foreground group-hover:text-space-blue transition-colors">
                       {prompt.text}
-                    </div>
-                  </div>
-                </div>
-              </button>
-            ))}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              
+              {/* Scroll gradient overlay */}
+              <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none" />
+            </div>
           </div>
         </div>
-        
+
+        {/* Trust Indicators */}
+        <div className="mb-16 sm:mb-20 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+            <div className="space-y-1">
+              <div className="text-4xl md:text-5xl font-light text-foreground">1800+</div>
+              <div className="text-sm text-muted-foreground font-medium tracking-wide">space companies</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-4xl md:text-5xl font-light text-foreground">500+</div>
+              <div className="text-sm text-muted-foreground font-medium tracking-wide">deep tech funds</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-4xl md:text-5xl font-light text-foreground">80+</div>
+              <div className="text-sm text-muted-foreground font-medium tracking-wide">GOs</div>
+            </div>
+            <div className="space-y-1">
+              <div className="text-4xl md:text-5xl font-light text-foreground">$2.3B</div>
+              <div className="text-sm text-muted-foreground font-medium tracking-wide">in quarterly deal flow</div>
+            </div>
+          </div>
+        </div>
+
+  
         {/* Search Results Placeholder */}
         {isSearching && (
           <div className="space-y-6">
