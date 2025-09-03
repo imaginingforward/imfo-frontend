@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CompanyCards } from "@/components/intelligence/CompanyCards";
-import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, MapPin } from "lucide-react";
+import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, MapPin, Sparkles, Zap, Target } from "lucide-react";
 import mixpanel from "mixpanel-browser";
 
 // Initialize Mixpanel outside component
@@ -21,6 +21,17 @@ const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+
+  const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
+
+  // Rotate roles every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Initialize Mixpanel on component mount
   useEffect(() => {
@@ -168,8 +179,8 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       
       {/* Hero Section */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-16 pb-16 sm:pb-24">
-        <div className="text-center mb-8 sm:mb-12">
+      <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 sm:pt-24 pb-16 sm:pb-24">
+        <div className="text-center mb-12 sm:mb-16 mt-8 sm:mt-12">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
             <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
               Win Space Deals Faster</span>
@@ -224,7 +235,7 @@ const Index = () => {
                     disabled={isSearching}
                   >
                     <span className="text-base group-hover:scale-110 transition-transform duration-200">
-                      {prompt.emoji}
+                      {prompt.icon}
                     </span>
                     <span className="text-sm font-medium text-foreground group-hover:text-space-blue transition-colors">
                       {prompt.text}
@@ -261,6 +272,56 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Value Proposition Section */}
+        <div className="mb-12 sm:mb-16 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
+            <span className="inline-block transition-all duration-500 ease-in-out transform">
+              {roles[currentRoleIndex]}
+            </span> expend 10+ hours a week on prospecting
+          </h2>
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 sm:mb-12">
+            We collapse discovery to deal from weeks to minutes
+          </p>
+          
+          {/* Feature Boxes */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 sm:mb-12">
+            <div className="group relative p-6 bg-gradient-to-br from-space-blue/5 via-card to-space-purple/5 border border-space-blue/20 rounded-xl hover:shadow-2xl hover:shadow-space-blue/10 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-br from-space-blue/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-blue to-space-purple rounded-lg flex items-center justify-center">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-blue transition-colors">Direct access to decision makers</h3>
+              </div>
+            </div>
+            <div className="group relative p-6 bg-gradient-to-br from-space-purple/5 via-card to-space-blue/5 border border-space-purple/20 rounded-xl hover:shadow-2xl hover:shadow-space-purple/10 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-br from-space-purple/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-purple to-space-blue rounded-lg flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-purple transition-colors">Early buy/sell alerts</h3>
+              </div>
+            </div>
+            <div className="group relative p-6 bg-gradient-to-br from-space-blue/5 via-card to-space-purple/5 border border-space-blue/20 rounded-xl hover:shadow-2xl hover:shadow-space-blue/10 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-br from-space-blue/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-blue to-space-purple rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-blue transition-colors">On demand competitor landscape analysis</h3>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="flex justify-center">
+            <div className="bg-gradient-to-r from-space-blue to-space-purple px-8 sm:px-12 py-4 rounded-lg">
+              <span className="text-white text-lg font-medium">Search Deals</span>
+            </div>
+          </div>
+        </div>
+        
   
         {/* Search Results Placeholder */}
         {isSearching && (
