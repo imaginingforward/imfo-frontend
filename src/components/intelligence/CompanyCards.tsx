@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,9 +8,9 @@ import mixpanel from "mixpanel-browser";
 interface FrontendCompany {
   id: string;
   company_name: string;
+  sector: string;
   business_activity: string;
   business_area: string;
-  sector: string;
   subsector_tags?: string;
   stage?: string;
   description: string;
@@ -30,8 +29,24 @@ interface FrontendCompany {
   linkedin_url: string;
   crunchbase_url: string;
   twitter_url: string;
+  public_ticker?: string;
   year_founded?: string;
   hiring?: string;
+  products_services?: string;
+  capabilities?: string;
+  buyer_types?: string;
+  market_ticker?: string | null;
+  name?: string; // Duplicate company_name
+  business_activity_new?: string;  // Duplicate business_activity
+  products_services?: string;
+  capabilities?: string;
+  buyer_types?: string;
+  capital_partners?: string; // Duplicate capital_partners
+  market_ticker?: string; // Duplicate public_ticker
+  certifications_trl?: string;
+  notable_contracts?: string;
+  signals?: string;
+  location?: string;
 }
 
 interface CompanyCardsProps {
@@ -142,28 +157,29 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
           >
             <CardContent className="p-4 sm:p-6 flex flex-col h-full">
               <div className="flex-1">
+                
                 {/* Company Name */}
                 <div className="mb-3">
                   <h3 className="font-bold text-base sm:text-lg text-foreground text-left hover:text-primary transition-colors line-clamp-2">
-                    {company.company_name}
+                    {company.company_name || company.name}
                   </h3>
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
-                    {company.sector}
+                    {company.sector || company.sector_new}
                   </Badge>
                 </div>
 
                 {/* Description */}
-                {company.description && (
+                {(company.description || company.description_new) && (
                   <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 text-left line-clamp-3 leading-relaxed">
-                    {company.description}
+                    {company.description || company.description_new}
                   </p>
                 )}
 
-                {/* Keywords and Tags */}
-                {company.business_activity && (
+                {/* Business Activity Tag */}
+                {(company.business_activity || company.business_activity_new) && (
                   <div className="mb-3 sm:mb-4 text-left">
                     <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
-                      {parseBusinessActivities(company.business_activity).slice(0, 4).map((keyword, idx) => (
+                      {parseBusinessActivities(company.business_activity || company.business_activity_new).slice(0, 4).map((keyword, idx) => (
                         <button
                           key={idx}
                           onClick={(e) => handleKeywordClick(keyword, e)}
@@ -178,10 +194,10 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               </div>
               
               {/* Location */}
-               {company.hq_location && (
+               {(company.hq_location || company.location) && (
                  <div className="mb-3 text-left">
                    <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
-                     {company.hq_location}
+                     {company.hq_location || company.location}
                   </span>
                  </div>
                )}
@@ -288,139 +304,178 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
         </div>
       )}
 
-      {/* Company Details Modal */}
+      {/* Company Details Modal - CB Insights Style */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] h-[95vh] overflow-hidden bg-background text-foreground border border-border p-0 m-0 flex flex-col">
-          <DialogHeader className="p-4 sm:p-6 border-b flex-shrink-0">
-            <DialogTitle className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 sm:gap-3 pr-8">
-              <Building className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
-              <span className="line-clamp-2">{selectedCompany?.company_name}</span>
-            </DialogTitle>
-          
-            {/* Request Intro Button Company Card Modal */}
-            <div className="pt-3 sm:pt-4">
-              <a 
-                href="https://calendly.com/imaginingforward/techweek-discovery?" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-flex items-center justify-center px-3 py-3 text-sm font-medium bg-primary text-primary-foreground rounded-full hover:bg-primary/90 hover:shadow-md transition-all duration-200 active:scale-95 whitespace-nowrap"
-                title="Request Intro"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  trackClick(selectedCompany?.company_name, 'calendly_modal', searchQuery);
-                }}
-              >
-                Request Intro
-              </a>
+        <DialogContent className="max-w-6xl w-[95vw] h-[95vh] overflow-hidden bg-background text-foreground border border-border p-0 m-0 flex flex-col">
+          <DialogHeader className="p-6 border-b flex-shrink-0 bg-muted/30">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-2xl sm:text-3xl font-bold text-foreground mb-3 line-clamp-2">
+                  {selectedCompany?.company_name || selectedCompany?.name}
+                </DialogTitle>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Badge className="bg-primary text-primary-foreground text-sm px-3 py-1">
+                    {selectedCompany?.sector || selectedCompany?.sector_new}
+                  </Badge>
+                  {selectedCompany?.stage && (
+                    <Badge variant="outline" className="text-sm px-3 py-1">
+                      {selectedCompany.stage}
+                    </Badge>
+                  )}
+                  {selectedCompany?.subsector_tags && (
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      {selectedCompany.subsector_tags}
+                    </Badge>
+                  )}
+                  {selectedCompany?.market_ticker && (
+                    <Badge variant="outline" className="text-sm px-3 py-1 font-mono">
+                      {selectedCompany.market_ticker || selectedCompany?.public_ticker}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              
+              <div className="ml-4">
+                <a 
+                  href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 hover:shadow-lg transition-all duration-200 active:scale-95 whitespace-nowrap"
+                  title="Request Intro"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    trackClick(selectedCompany?.company_name || '', 'calendly_modal', searchQuery);
+                  }}
+                >
+                  Request Intro
+                </a>
+              </div>
             </div>
           </DialogHeader>
           
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <div className="flex-1 overflow-y-auto">
             {selectedCompany && (
-              <div className="space-y-4 sm:space-y-6">
-                {/* Header Section */}
-                <div className="border-b pb-3 sm:pb-4">
-                  <div className="flex flex-wrap gap-2 mb-2 sm:mb-3">
-                    <Badge className="bg-primary/10 text-primary border-primary/20 text-xs sm:text-sm">
-                      {selectedCompany.sector}
-                    </Badge>
-                    {selectedCompany.stage && (
-                      <Badge variant="outline" className="border-border text-xs sm:text-sm">
-                        {selectedCompany.stage}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{selectedCompany.description}</p>
+              <div className="p-6 space-y-8">
+                {/* Company Overview */}
+                <div className="bg-card border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Building className="h-5 w-5" />
+                    Company Overview
+                  </h3>
+                  <p className="text-base text-muted-foreground leading-relaxed mb-4">
+                    {selectedCompany.description}
+                  </p>
+                  {selectedCompany.business_area && (
+                    <div className="mt-4">
+                      <span className="text-sm font-medium text-foreground">Business Area: </span>
+                      <span className="text-sm text-muted-foreground">{selectedCompany.business_area}</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Key Information Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                  {/* Left Column */}
-                  <div className="space-y-3 sm:space-y-4">
-                    {/* Location */}
-                    {selectedCompany.hq_location && (
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-sm sm:text-base text-foreground">Location</h4>
-                          <p className="text-sm text-muted-foreground break-words">{selectedCompany.hq_location}</p>
-                        </div>
+                {/* Key Metrics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {selectedCompany.year_founded && (
+                    <div className="bg-card border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Calendar className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-medium text-muted-foreground">Founded</span>
                       </div>
-                    )}
-
-                    {/* Leadership */}
-                    {selectedCompany.leadership && (
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-sm sm:text-base text-foreground">Leadership</h4>
-                          <p className="text-sm text-muted-foreground break-words">{selectedCompany.leadership}</p>
-                        </div>
+                      <p className="text-xl font-bold text-foreground">{selectedCompany.year_founded}</p>
+                    </div>
+                  )}
+                  
+                  {selectedCompany.latest_funding_stage && (
+                    <div className="bg-card border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Award className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-medium text-muted-foreground">Funding Stage</span>
                       </div>
-                    )}
-
-                    {/* Founded */}
-                    {selectedCompany.year_founded && (
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-sm sm:text-base text-foreground">Founded</h4>
-                          <p className="text-sm text-muted-foreground">{selectedCompany.year_founded}</p>
-                        </div>
+                      <p className="text-lg font-semibold text-foreground">{selectedCompany.latest_funding_stage}</p>
+                    </div>
+                  )}
+                  
+                  {selectedCompany.total_funding_raised && (
+                    <div className="bg-card border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <DollarSign className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-medium text-muted-foreground">Total Funding</span>
                       </div>
-                    )}
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-3 sm:space-y-4">
-                    {/* Funding Stage */}
-                    {selectedCompany.latest_funding_stage && (
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <Award className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-sm sm:text-base text-foreground">Funding Stage</h4>
-                          <p className="text-sm text-muted-foreground break-words">{selectedCompany.latest_funding_stage}</p>
-                        </div>
+                      <p className="text-lg font-semibold text-foreground">{selectedCompany.total_funding_raised}</p>
+                    </div>
+                  )}
+                  
+                  {selectedCompany.annual_revenue && (
+                    <div className="bg-card border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Target className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-medium text-muted-foreground">Annual Revenue</span>
                       </div>
-                    )}
-
-                    {/* Total Funding */}
-                    {selectedCompany.total_funding_raised && (
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-sm sm:text-base text-foreground">Total Funding</h4>
-                          <p className="text-sm text-muted-foreground break-words">{selectedCompany.total_funding_raised}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Revenue */}
-                    {selectedCompany.annual_revenue && (
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <Target className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-sm sm:text-base text-foreground">Annual Revenue</h4>
-                          <p className="text-sm text-muted-foreground break-words">{selectedCompany.annual_revenue}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                      <p className="text-lg font-semibold text-foreground">{selectedCompany.annual_revenue}</p>
+                    </div>
+                  )}
                 </div>
 
-                {/* Business Activity */}
+                {/* Latest Funding Details */}
+                {selectedCompany.latest_funding_raised && (
+                  <div className="bg-card border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <DollarSign className="h-5 w-5" />
+                      Latest Funding Round
+                    </h3>
+                    <p className="text-base text-muted-foreground">
+                      <span className="font-medium text-foreground">{selectedCompany.latest_funding_raised}</span>
+                      {selectedCompany.latest_funding_stage && (
+                        <span> in {selectedCompany.latest_funding_stage} round</span>
+                      )}
+                    </p>
+                  </div>
+                )}
+
+                {/* Location & Leadership */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {selectedCompany.hq_location && (
+                    <div className="bg-card border rounded-lg p-6">
+                      <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                        <MapPin className="h-5 w-5" />
+                        Location
+                      </h3>
+                      <div className="space-y-2">
+                        <p className="text-base text-foreground">{selectedCompany.hq_location}</p>
+                        {(selectedCompany.hq_city || selectedCompany.hq_state || selectedCompany.hq_country) && (
+                          <div className="text-sm text-muted-foreground">
+                            {[selectedCompany.hq_city, selectedCompany.hq_state, selectedCompany.hq_country]
+                              .filter(Boolean).join(', ')}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedCompany.leadership && (
+                    <div className="bg-card border rounded-lg p-6">
+                      <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                        <Users className="h-5 w-5" />
+                        Leadership
+                      </h3>
+                      <p className="text-base text-muted-foreground">{selectedCompany.leadership}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Business Activities & Keywords */}
                 {selectedCompany.business_activity && (
-                  <div className="space-y-2 sm:space-y-3">
-                    <h4 className="font-semibold text-sm sm:text-base text-foreground flex items-center gap-2">
-                      <Building className="h-4 w-4 shrink-0" />
+                  <div className="bg-card border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Target className="h-5 w-5" />
                       Business Activities
-                    </h4>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
                       {parseBusinessActivities(selectedCompany.business_activity).map((activity, idx) => (
                         <Badge 
                           key={idx} 
                           variant="outline" 
-                          className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 cursor-pointer text-xs sm:text-sm active:scale-95 transition-transform"
+                          className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 cursor-pointer transition-all active:scale-95"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleKeywordClick(activity, e);
@@ -433,68 +488,168 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </div>
                 )}
 
-                {/* Partners */}
-                {(selectedCompany.capital_partners || selectedCompany.notable_partners) && (
-                  <div className="space-y-2 sm:space-y-3">
-                    <h4 className="font-semibold text-sm sm:text-base text-foreground">Partners & Investors</h4>
-                    <div className="space-y-2">
-                      {selectedCompany.capital_partners && (
+                {/* Products & Services */}
+                {(selectedCompany.products_services || selectedCompany.capabilities) && (
+                  <div className="bg-card border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Briefcase className="h-5 w-5" />
+                      Products & Capabilities
+                    </h3>
+                    <div className="space-y-4">
+                      {selectedCompany.products_services && (
                         <div>
-                          <span className="text-xs sm:text-sm font-medium text-muted-foreground">Capital Partners: </span>
-                          <span className="text-xs sm:text-sm text-foreground break-words">{selectedCompany.capital_partners}</span>
+                          <h4 className="font-medium text-foreground mb-2">Products & Services</h4>
+                          <p className="text-muted-foreground">{selectedCompany.products_services}</p>
                         </div>
                       )}
-                      {selectedCompany.notable_partners && (
+                      {selectedCompany.capabilities && (
                         <div>
-                          <span className="text-xs sm:text-sm font-medium text-muted-foreground">Notable Partners: </span>
-                          <span className="text-xs sm:text-sm text-foreground break-words">{selectedCompany.notable_partners}</span>
+                          <h4 className="font-medium text-foreground mb-2">Capabilities</h4>
+                          <p className="text-muted-foreground">{selectedCompany.capabilities}</p>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
 
-                {/* Social Links */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-3 sm:pt-4 border-t">
-                  {isValidUrl(selectedCompany.website_url) && (
-                    <a 
-                      href={selectedCompany.website_url.trim().startsWith('http') 
-                        ? selectedCompany.website_url.trim() 
-                        : `https://${selectedCompany.website_url.trim()}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="flex items-center justify-center sm:justify-start gap-2 px-3 sm:px-4 py-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors active:scale-95"
-                    >
-                      <Globe className="h-4 w-4 shrink-0" />
-                      <span className="text-sm">Website</span>
-                    </a>
-                  )}
-                  {isValidUrl(selectedCompany.linkedin_url) && (
-                    <a 
-                      href={selectedCompany.linkedin_url.trim().startsWith('http') 
-                        ? selectedCompany.linkedin_url.trim()
-                        : `https://${selectedCompany.linkedin_url.trim()}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="flex items-center justify-center sm:justify-start gap-2 px-3 sm:px-4 py-2 bg-blue-500/10 text-blue-600 rounded-md hover:bg-blue-500/20 transition-colors active:scale-95"
-                    >
-                      <ExternalLink className="h-4 w-4 shrink-0" />
-                      <span className="text-sm">LinkedIn</span>
-                    </a>
-                  )}
-                  {isValidUrl(selectedCompany.crunchbase_url) && (
-                    <a 
-                      href={selectedCompany.crunchbase_url.trim().startsWith('http') 
-                        ? selectedCompany.crunchbase_url.trim()
-                        : `https://${selectedCompany.crunchbase_url.trim()}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="flex items-center justify-center sm:justify-start gap-2 px-3 sm:px-4 py-2 bg-orange-500/10 text-orange-600 rounded-md hover:bg-orange-500/20 transition-colors active:scale-95"
-                    >
-                      <ExternalLink className="h-4 w-4 shrink-0" />
-                      <span className="text-sm">Crunchbase</span>
-                    </a>
-                  )}
+                {/* Market & Customers */}
+                {(selectedCompany.buyer_types || selectedCompany.notable_contracts) && (
+                  <div className="bg-card border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      Market & Customers
+                    </h3>
+                    <div className="space-y-4">
+                      {selectedCompany.buyer_types && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Target Customers</h4>
+                          <p className="text-muted-foreground">{selectedCompany.buyer_types}</p>
+                        </div>
+                      )}
+                      {selectedCompany.notable_contracts && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Notable Contracts</h4>
+                          <p className="text-muted-foreground">{selectedCompany.notable_contracts}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Partners & Investors */}
+                {(selectedCompany.capital_partners || selectedCompany.notable_partners) && (
+                  <div className="bg-card border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Users className="h-5 w-5" />
+                      Partners & Investors
+                    </h3>
+                    <div className="space-y-4">
+                      {selectedCompany.capital_partners && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Capital Partners</h4>
+                          <p className="text-muted-foreground">{selectedCompany.capital_partners}</p>
+                        </div>
+                      )}
+                      {selectedCompany.notable_partners && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Notable Partners</h4>
+                          <p className="text-muted-foreground">{selectedCompany.notable_partners}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Additional Information */}
+                {(selectedCompany.hiring || selectedCompany.certifications_trl || selectedCompany.signals) && (
+                  <div className="bg-card border rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Bell className="h-5 w-5" />
+                      Additional Information
+                    </h3>
+                    <div className="space-y-4">
+                      {selectedCompany.hiring && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Hiring Status</h4>
+                          <p className="text-muted-foreground">{selectedCompany.hiring}</p>
+                        </div>
+                      )}
+                      {selectedCompany.certifications_trl && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Certifications & TRL</h4>
+                          <p className="text-muted-foreground">{selectedCompany.certifications_trl}</p>
+                        </div>
+                      )}
+                      {selectedCompany.signals && (
+                        <div>
+                          <h4 className="font-medium text-foreground mb-2">Market Signals</h4>
+                          <p className="text-muted-foreground">{selectedCompany.signals}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* External Links */}
+                <div className="bg-card border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Globe className="h-5 w-5" />
+                    External Links
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {isValidUrl(selectedCompany.website_url) && (
+                      <a 
+                        href={selectedCompany.website_url.trim().startsWith('http') 
+                          ? selectedCompany.website_url.trim() 
+                          : `https://${selectedCompany.website_url.trim()}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors active:scale-95"
+                      >
+                        <Globe className="h-4 w-4" />
+                        <span className="font-medium">Website</span>
+                      </a>
+                    )}
+                    {isValidUrl(selectedCompany.linkedin_url) && (
+                      <a 
+                        href={selectedCompany.linkedin_url.trim().startsWith('http') 
+                          ? selectedCompany.linkedin_url.trim()
+                          : `https://${selectedCompany.linkedin_url.trim()}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500/10 text-blue-600 rounded-lg hover:bg-blue-500/20 transition-colors active:scale-95"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span className="font-medium">LinkedIn</span>
+                      </a>
+                    )}
+                    {isValidUrl(selectedCompany.crunchbase_url) && (
+                      <a 
+                        href={selectedCompany.crunchbase_url.trim().startsWith('http') 
+                          ? selectedCompany.crunchbase_url.trim()
+                          : `https://${selectedCompany.crunchbase_url.trim()}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-orange-500/10 text-orange-600 rounded-lg hover:bg-orange-500/20 transition-colors active:scale-95"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span className="font-medium">Crunchbase</span>
+                      </a>
+                    )}
+                    {isValidUrl(selectedCompany.twitter_url) && (
+                      <a 
+                        href={selectedCompany.twitter_url.trim().startsWith('http') 
+                          ? selectedCompany.twitter_url.trim()
+                          : `https://${selectedCompany.twitter_url.trim()}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-500/10 text-gray-600 rounded-lg hover:bg-gray-500/20 transition-colors active:scale-95"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span className="font-medium">Twitter</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
