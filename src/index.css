@@ -22,7 +22,14 @@
     --space-blue: 240 100% 27%;
     --space-purple: 270 95% 75%;
     --space-deep: 222.2 84% 4.9%;
+    --space-gradient: linear-gradient(135deg, hsl(var(--space-blue)), hsl(var(--space-purple)));
 
+    /* Prompt pill styles */
+    --prompt-bg: 0 0% 98%;
+    --prompt-hover: 220 14% 96%;
+    --prompt-border: 220 13% 91%;
+    --prompt-active: 224 100% 97%;
+    
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
@@ -87,6 +94,10 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    --prompt-bg: 217.2 32.6% 17.5%;
+    --prompt-hover: 217.2 32.6% 20%;
+    --prompt-border: 217.2 32.6% 25%;
+    --prompt-active: 224 100% 15%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
