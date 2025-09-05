@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ExternalLink, Globe, MapPin, Building, Users, Calendar, DollarSign, Award, Target } from 'lucide-react';
+import { ExternalLink, Globe, MapPin, Building, Users, Calendar, DollarSign, Award, Target, Briefcase, TrendingUp, Shield, Bell, X, Expand, ArrowRight } from 'lucide-react';
 import mixpanel from "mixpanel-browser";
 
 interface FrontendCompany {
@@ -60,6 +60,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
   
   const [selectedCompany, setSelectedCompany] = useState<FrontendCompany | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   
   // Debug: Log company data to see URLs  
   useEffect(() => {
@@ -71,6 +72,16 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
 
   const openCompanyDetails = (company: FrontendCompany) => {
     setSelectedCompany(company);
+    setIsModalOpen(true);
+  };
+
+  const openSidePanel = (company: FrontendCompany) => {
+    setSelectedCompany(company);
+    setIsSidePanelOpen(true);
+  };
+
+  const expandToFullModal = () => {
+    setIsSidePanelOpen(false);
     setIsModalOpen(true);
   };
 
@@ -304,6 +315,248 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
         </div>
       )}
 
+      {/* Modern Side Panel */}
+      <div className={`fixed inset-y-0 right-0 z-50 w-[500px] transform transition-transform duration-300 ease-in-out ${isSidePanelOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-muted/90 backdrop-blur-xl border-l border-border/50 shadow-2xl">
+          {selectedCompany && (
+            <div className="h-full flex flex-col">
+              {/* Header */}
+              <div className="p-6 border-b border-border/30 bg-gradient-to-r from-primary/5 to-accent/5">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-2xl font-bold text-foreground mb-2 line-clamp-2">{selectedCompany.company_name}</h2>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge className="bg-primary/20 text-primary border-primary/30 backdrop-blur-sm">
+                        {selectedCompany.sector}
+                      </Badge>
+                      {selectedCompany.stage && (
+                        <Badge variant="outline" className="bg-muted/50 border-muted-foreground/20">
+                          {selectedCompany.stage}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Header Actions */}
+                  <div className="flex items-center gap-2 ml-4">
+                    <button
+                      onClick={expandToFullModal}
+                      className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors active:scale-95"
+                      title="Expand to full view"
+                    >
+                      <Expand className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => setIsSidePanelOpen(false)}
+                      className="p-2 rounded-lg bg-muted/50 text-muted-foreground hover:bg-muted/70 transition-colors active:scale-95"
+                      title="Close panel"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="flex gap-3">
+                  <a 
+                    href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all active:scale-95 font-medium"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackClick(selectedCompany.company_name, 'calendly_panel', searchQuery);
+                    }}
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                    Request Intro
+                  </a>
+                  
+                  {/* Social Links */}
+                  <div className="flex gap-2">
+                    {isValidUrl(selectedCompany.website_url) && (
+                      <a 
+                        href={selectedCompany.website_url.trim().startsWith('http') 
+                          ? selectedCompany.website_url.trim() 
+                          : `https://${selectedCompany.website_url.trim()}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="p-2 rounded-lg bg-muted/50 text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors active:scale-95"
+                        title="Website"
+                      >
+                        <Globe className="h-4 w-4" />
+                      </a>
+                    )}
+                    {isValidUrl(selectedCompany.linkedin_url) && (
+                      <a 
+                        href={selectedCompany.linkedin_url.trim().startsWith('http') 
+                          ? selectedCompany.linkedin_url.trim()
+                          : `https://${selectedCompany.linkedin_url.trim()}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="p-2 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors active:scale-95"
+                        title="LinkedIn"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Description */}
+                <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
+                  <p className="text-muted-foreground leading-relaxed">{selectedCompany.description}</p>
+                </div>
+
+                {/* Key Metrics */}
+                <div className="grid grid-cols-2 gap-4">
+                  {selectedCompany.year_founded && (
+                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 backdrop-blur-sm border border-primary/20 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Calendar className="h-4 w-4 text-primary" />
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Founded</span>
+                      </div>
+                      <p className="text-lg font-bold text-foreground">{selectedCompany.year_founded}</p>
+                    </div>
+                  )}
+                  
+                  {selectedCompany.hq_location && (
+                    <div className="bg-gradient-to-br from-secondary/5 to-muted/5 backdrop-blur-sm border border-secondary/20 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MapPin className="h-4 w-4 text-secondary" />
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Location</span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground line-clamp-2">{selectedCompany.hq_location}</p>
+                    </div>
+                  )}
+                  
+                  {selectedCompany.total_funding_raised && (
+                    <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 backdrop-blur-sm border border-green-500/20 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <DollarSign className="h-4 w-4 text-green-600" />
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Funding</span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground">{selectedCompany.total_funding_raised}</p>
+                    </div>
+                  )}
+                  
+                  {selectedCompany.latest_funding_stage && (
+                    <div className="bg-gradient-to-br from-orange-500/5 to-amber-500/5 backdrop-blur-sm border border-orange-500/20 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Award className="h-4 w-4 text-orange-600" />
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Stage</span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground">{selectedCompany.latest_funding_stage}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Leadership */}
+                {selectedCompany.leadership && (
+                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Users className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-foreground">Leadership</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{selectedCompany.leadership}</p>
+                  </div>
+                )}
+
+                {/* Business Activities */}
+                {selectedCompany.business_activity && (
+                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Target className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-foreground">Business Activities</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {parseBusinessActivities(selectedCompany.business_activity).slice(0, 6).map((activity, idx) => (
+                        <button
+                          key={idx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleKeywordClick(activity, e);
+                          }}
+                          className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 transition-all duration-200 cursor-pointer active:scale-95"
+                        >
+                          {activity}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Products & Services */}
+                {(selectedCompany.products_services || selectedCompany.capabilities) && (
+                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Briefcase className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-foreground">Products & Capabilities</h3>
+                    </div>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      {selectedCompany.products_services && (
+                        <div>
+                          <span className="font-medium text-foreground">Services:</span> {selectedCompany.products_services}
+                        </div>
+                      )}
+                      {selectedCompany.capabilities && (
+                        <div>
+                          <span className="font-medium text-foreground">Capabilities:</span> {selectedCompany.capabilities}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Funding Partners */}
+                {(selectedCompany.capital_partners || selectedCompany.notable_partners) && (
+                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Users className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-foreground">Partners</h3>
+                    </div>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      {selectedCompany.capital_partners && (
+                        <div>
+                          <span className="font-medium text-foreground">Investors:</span> {selectedCompany.capital_partners}
+                        </div>
+                      )}
+                      {selectedCompany.notable_partners && (
+                        <div>
+                          <span className="font-medium text-foreground">Partners:</span> {selectedCompany.notable_partners}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* View More */}
+                <div className="text-center pt-4">
+                  <button
+                    onClick={expandToFullModal}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20 rounded-xl hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/20 transition-all active:scale-95 font-medium"
+                  >
+                    <Expand className="h-4 w-4" />
+                    View Full Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Overlay */}
+      {isSidePanelOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          onClick={() => setIsSidePanelOpen(false)}
+        />
+      )}
+      
       {/* Company Details Modal - CB Insights Style */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-6xl w-[95vw] h-[95vh] overflow-hidden bg-background text-foreground border border-border p-0 m-0 flex flex-col">
