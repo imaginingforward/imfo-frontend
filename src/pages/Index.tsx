@@ -6,8 +6,8 @@ import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, Target, Za
 import mixpanel from "mixpanel-browser";
 
 // Import your new components
-import CompanyCards from "@/components/CompanyCards";
-import CompanyModals from "@/components/CompanyModals";
+import CompanyCards from "@/components/intelligence/CompanyCards";
+import CompanyModals from "@/components/intelligence/CompanyModals";
 
 const Index = () => {
   const [query, setQuery] = useState("");
