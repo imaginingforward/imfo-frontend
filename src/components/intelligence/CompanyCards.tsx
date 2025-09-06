@@ -321,3 +321,4 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
           No companies found matching your criteria
         </div>
       )}
+    </div>
