@@ -2,10 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { CompanyCards } from "@/components/intelligence/CompanyCards";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, MapPin, Sparkles, Zap, Target, ExternalLink, Globe, Calendar, Award, Briefcase, TrendingUp, Bell, X, Expand, ArrowRight } from "lucide-react";
-import mixpanel from "mixpanel-browser";
 
 // Sample company data for tiles
 const sampleCompanies = [
@@ -75,18 +72,6 @@ const sampleCompanies = [
   }
 ];
 
-// Initialize Mixpanel outside component
-const initializeMixpanel = () => {
-  try {
-    mixpanel.init("85be2acaaa02972b55b436a76e63cf0c", {
-      track_pageview: true,
-      persistence: "localStorage",
-    });
-  } catch (error) {
-    console.error("Failed to initialize Mixpanel:", error);
-  }
-};
-
 const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -94,9 +79,13 @@ const Index = () => {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [isSlideUpOpen, setIsSlideUpOpen] = useState(false);
+  const [error, setError] = useState(null);
   const searchSectionRef = useRef(null);
 
   const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
+
+  // Fixed: Add proper placeholder text
+  const placeholderText = `Search for ${roles[currentRoleIndex]} in space technology...`;
 
   // Rotate roles every 3 seconds
   useEffect(() => {
@@ -104,21 +93,6 @@ const Index = () => {
       setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Initialize Mixpanel on component mount
-  useEffect(() => {
-    initializeMixpanel();
-
-    // Track page view
-    try {
-      mixpanel.track("Page Viewed", {
-        page: "Search Landing",
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Failed to track page view:", error);
-    }
   }, []);
 
   const suggestedPrompts = [
@@ -164,22 +138,13 @@ const Index = () => {
     }
   ];
     
-  // Search API call with Mixpanel tracking
-  const handleSearch = async (searchQuery: string, source: "manual" | "suggested" = "manual") => {
+  // Search API call with better error handling
+  const handleSearch = async (searchQuery, source = "manual") => {
     if (!searchQuery.trim()) return;
+    
     setIsSearching(true);
     setQuery(searchQuery);
-
-    // Track search start
-    try {
-      mixpanel.track("Search Started", {
-        query: searchQuery,
-        source: source,
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Failed to track search start:", error);
-    }
+    setError(null);
 
     try {
       const response = await fetch("https://imfo-nlp-api-da20e5390e7c.herokuapp.com/parse", {
@@ -189,94 +154,48 @@ const Index = () => {
         },
         body: JSON.stringify({ query: searchQuery })
       });
-      const result = await response.json();
 
-      // Save the companies array from the result
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
       const companies = result.companies || [];
       setResults(companies);
 
-      // Track successful search
-      try {
-        mixpanel.track("Search Completed", {
-          query: searchQuery,
-          source: source,
-          results_count: companies.length,
-          success: true,
-          timestamp: new Date().toISOString()
-        });
-      } catch (error) {
-        console.error("Failed to track search completion:", error);
-      }
+      console.log("Search results:", companies.length, "companies found");
     } catch (err) {
       console.error("Search failed", err);
-      
-      // Track failed search
-      try {
-        mixpanel.track("Search Failed", {
-          query: searchQuery,
-          source: source,
-          error: err instanceof Error ? err.message : "Unknown error",
-          timestamp: new Date().toISOString()
-        });
-      } catch (error) {
-        console.error("Failed to track search failure:", error);
-      }
-      
-      alert("Sorry, search failed. Try again.");
+      setError(err.message);
+      setResults([]);
     } finally {
       setIsSearching(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     handleSearch(query, "manual");
   };
 
-  const handleSuggestedPromptClick = (promptText: string, category: string) => {
-    // Track suggested prompt click
-    try {
-      mixpanel.track("Suggested Prompt Clicked", {
-        prompt: promptText,
-        category: category,
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Failed to track prompt click:", error);
-    }
-    
+  const handleSuggestedPromptClick = (promptText, category) => {
     handleSearch(promptText, "suggested");
   };
 
   // Handle Search Deals button click
   const handleSearchDealsClick = () => {
-    // Scroll to search section and focus search bar
     if (searchSectionRef.current) {
       searchSectionRef.current.scrollIntoView({ 
         behavior: 'smooth',
         block: 'center'
       });
       
-      // Add focus effect to search input
       const searchInput = searchSectionRef.current.querySelector('input');
       if (searchInput) {
         setTimeout(() => {
           searchInput.focus();
-          searchInput.classList.add('search-highlight');
-          setTimeout(() => {
-            searchInput.classList.remove('search-highlight');
-          }, 2000);
         }, 500);
       }
-    }
-    
-    // Track button click
-    try {
-      mixpanel.track("Search Deals Button Clicked", {
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Failed to track search deals click:", error);
     }
   };
 
@@ -284,17 +203,6 @@ const Index = () => {
   const handleSampleCompanyClick = (company) => {
     setSelectedCompany(company);
     setIsSlideUpOpen(true);
-    
-    // Track sample company click
-    try {
-      mixpanel.track("Sample Company Clicked", {
-        company_name: company.company_name,
-        engagement_type: company.engagement_type,
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Failed to track sample company click:", error);
-    }
   };
 
   // Get engagement style
@@ -307,7 +215,7 @@ const Index = () => {
     return styles[type] || "bg-gray-500 text-white";
   };
 
-  // Helper functions from CompanyCards
+  // Helper functions
   const isValidUrl = (url) => {
     return !!url && typeof url === "string" && url.trim().length > 5;
   };
@@ -321,16 +229,34 @@ const Index = () => {
       .slice(0, 6);
   };
 
+  // Add error boundary and loading states
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Hero Section */}
       <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 sm:pt-24 pb-16 sm:pb-24">
         <div className="text-center mb-12 sm:mb-16 mt-8 sm:mt-12">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
-            <span className="bg-gradient-to-r from-space-blue via-space-purple to-space-blue bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
               Win Space Deals Faster</span>
           </h1>
-          <p className="text-xl sm:text-2xl md:text-4xl text-muted-foreground mx-auto leading-relaxed font-medium">
+          <p className="text-xl sm:text-2xl md:text-4xl text-gray-600 mx-auto leading-relaxed font-medium">
             Power deals with early signals, direct access, and real-time intelligence
           </p>
         </div>
@@ -339,19 +265,19 @@ const Index = () => {
         <div className="mb-12 sm:mb-16" ref={searchSectionRef}>
           <form onSubmit={handleSubmit} className="relative mb-6 sm:mb-8">
             <div className="relative">
-              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
               <Input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={placeholderText}
-                className="w-full pl-10 sm:pl-12 pr-20 sm:pr-24 py-4 sm:py-6 text-base sm:text-lg border-2 border-muted focus:border-primary rounded-xl shadow-lg focus:shadow-xl transition-all duration-200 focus:ring-2 focus:ring-space-blue/20"
+                className="w-full pl-10 sm:pl-12 pr-20 sm:pr-24 py-4 sm:py-6 text-base sm:text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl shadow-lg focus:shadow-xl transition-all duration-200 focus:ring-2 focus:ring-blue-200"
                 disabled={isSearching}
               />
               <Button
                 type="submit"
                 disabled={isSearching || !query.trim()}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 sm:px-6 py-2 text-sm sm:text-base bg-gradient-to-r from-space-blue to-space-purple hover:from-space-purple hover:to-space-blue transition-all duration-200"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 sm:px-6 py-2 text-sm sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 transition-all duration-200"
               >
                 {isSearching ? (
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
@@ -368,21 +294,21 @@ const Index = () => {
           {/* Suggested Prompts */}
           <div className="relative">
             <div className="flex items-center mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground">Try these searches</h3>
+              <h3 className="text-sm font-medium text-gray-600">Try these searches</h3>
             </div>
             <div className="relative overflow-hidden">
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 scroll-smooth">
+              <div className="flex gap-2 overflow-x-auto pb-2 scroll-smooth">
                 {suggestedPrompts.map((prompt, index) => (
                   <button
                     key={index}
                     onClick={() => handleSuggestedPromptClick(prompt.text, prompt.category)}
-                    className="group flex items-center gap-2 px-3 py-2 bg-prompt hover:bg-prompt-hover border border-prompt-border hover:border-space-blue/30 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-sm active:scale-95 shrink-0"
+                    className="group flex items-center gap-2 px-3 py-2 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-sm active:scale-95 shrink-0"
                     disabled={isSearching}
                   >
                     <span className="text-base group-hover:scale-110 transition-transform duration-200">
                       {prompt.icon}
                     </span>
-                    <span className="text-sm font-medium text-foreground group-hover:text-space-blue transition-colors">
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
                       {prompt.text}
                     </span>
                   </button>
@@ -390,7 +316,7 @@ const Index = () => {
               </div>
               
               {/* Scroll gradient overlay */}
-              <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none" />
             </div>
           </div>
         </div>
@@ -399,62 +325,62 @@ const Index = () => {
         <div className="mb-16 sm:mb-20 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             <div className="space-y-1">
-              <div className="text-4xl md:text-5xl font-light text-foreground">1800+</div>
-              <div className="text-sm text-muted-foreground font-medium tracking-wide">space companies</div>
+              <div className="text-4xl md:text-5xl font-light text-gray-900">1800+</div>
+              <div className="text-sm text-gray-600 font-medium tracking-wide">space companies</div>
             </div>
             <div className="space-y-1">
-              <div className="text-4xl md:text-5xl font-light text-foreground">500+</div>
-              <div className="text-sm text-muted-foreground font-medium tracking-wide">deep tech funds</div>
+              <div className="text-4xl md:text-5xl font-light text-gray-900">500+</div>
+              <div className="text-sm text-gray-600 font-medium tracking-wide">deep tech funds</div>
             </div>
             <div className="space-y-1">
-              <div className="text-4xl md:text-5xl font-light text-foreground">80+</div>
-              <div className="text-sm text-muted-foreground font-medium tracking-wide">GOs</div>
+              <div className="text-4xl md:text-5xl font-light text-gray-900">80+</div>
+              <div className="text-sm text-gray-600 font-medium tracking-wide">GOs</div>
             </div>
             <div className="space-y-1">
-              <div className="text-4xl md:text-5xl font-light text-foreground">$2.3B</div>
-              <div className="text-sm text-muted-foreground font-medium tracking-wide">in quarterly deal flow</div>
+              <div className="text-4xl md:text-5xl font-light text-gray-900">$2.3B</div>
+              <div className="text-sm text-gray-600 font-medium tracking-wide">in quarterly deal flow</div>
             </div>
           </div>
         </div>
 
         {/* Value Proposition Section */}
         <div className="mb-12 sm:mb-16 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-16 sm:mb-20">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-16 sm:mb-20">
             <span className="inline-block transition-all duration-500 ease-in-out transform">
               {roles[currentRoleIndex]}
             </span> expend 10+ hours a week on prospecting
           </h2>
-          <p className="text-2xl sm:text-3xl text-muted-foreground mb-16 sm:mb-20">
+          <p className="text-2xl sm:text-3xl text-gray-600 mb-16 sm:mb-20">
             We collapse discovery to deal from weeks to minutes
           </p>
           
           {/* Feature Boxes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 sm:mb-12">
-            <div className="group relative p-6 bg-gradient-to-br from-space-blue/5 via-card to-space-purple/5 border border-space-blue/20 rounded-xl hover:shadow-2xl hover:shadow-space-blue/10 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm">
-              <div className="absolute inset-0 bg-gradient-to-br from-space-blue/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+            <div className="group relative p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 border border-blue-200 rounded-xl hover:shadow-2xl hover:shadow-blue-100 transition-all duration-300 hover:-translate-y-2">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
               <div className="relative z-10">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-blue to-space-purple rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Target className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-blue transition-colors">Direct access to decision makers</h3>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Direct access to decision makers</h3>
               </div>
             </div>
-            <div className="group relative p-6 bg-gradient-to-br from-space-purple/5 via-card to-space-blue/5 border border-space-purple/20 rounded-xl hover:shadow-2xl hover:shadow-space-purple/10 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm">
-              <div className="absolute inset-0 bg-gradient-to-br from-space-purple/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+            <div className="group relative p-6 bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-purple-200 rounded-xl hover:shadow-2xl hover:shadow-purple-100 transition-all duration-300 hover:-translate-y-2">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
               <div className="relative z-10">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-purple to-space-blue rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
                   <Zap className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-purple transition-colors">Early buy/sell alerts</h3>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">Early buy/sell alerts</h3>
               </div>
             </div>
-            <div className="group relative p-6 bg-gradient-to-br from-space-blue/5 via-card to-space-purple/5 border border-space-blue/20 rounded-xl hover:shadow-2xl hover:shadow-space-blue/10 transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm">
-              <div className="absolute inset-0 bg-gradient-to-br from-space-blue/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+            <div className="group relative p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 border border-blue-200 rounded-xl hover:shadow-2xl hover:shadow-blue-100 transition-all duration-300 hover:-translate-y-2">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
               <div className="relative z-10">
-                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-space-blue to-space-purple rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground group-hover:text-space-blue transition-colors">On demand competitor analysis</h3>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">On demand competitor analysis</h3>
               </div>
             </div>
           </div>
@@ -463,7 +389,7 @@ const Index = () => {
           <div className="flex justify-center">
             <button 
               onClick={handleSearchDealsClick}
-              className="bg-gradient-to-r from-space-blue to-space-purple px-8 sm:px-12 py-4 rounded-lg hover:shadow-xl transition-all duration-300 active:scale-95"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 sm:px-12 py-4 rounded-lg hover:shadow-xl transition-all duration-300 active:scale-95"
             >
               <span className="text-white text-lg font-medium">Search Deals</span>
             </button>
@@ -473,8 +399,8 @@ const Index = () => {
         {/* Sample Company Cards Section */}
         <div className="mb-16 sm:mb-20">
           <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-foreground mb-2">Featured Companies</h3>
-            <p className="text-muted-foreground">Discover trending space technology companies</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Featured Companies</h3>
+            <p className="text-gray-600">Discover trending space technology companies</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -482,9 +408,9 @@ const Index = () => {
               <div 
                 key={company.id}
                 onClick={() => handleSampleCompanyClick(company)}
-                className="relative group bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl rounded-xl p-6 cursor-pointer active:scale-98"
+                className="relative group bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl rounded-xl p-6 cursor-pointer active:scale-98"
               >
-                {/* Engagement Indicator - Always Visible */}
+                {/* Engagement Indicator */}
                 <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${getEngagementStyle(company.engagement_type)} shadow-lg`}>
                   {company.engagement_label}
                 </div>
@@ -493,15 +419,15 @@ const Index = () => {
                 <div className="flex flex-col h-full">
                   <div className="flex-1">
                     <div className="mb-3 pr-20">
-                      <h3 className="font-bold text-lg text-foreground hover:text-primary transition-colors line-clamp-2">
+                      <h3 className="font-bold text-lg text-gray-900 hover:text-blue-600 transition-colors line-clamp-2">
                         {company.company_name}
                       </h3>
-                      <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 text-xs mt-1">
                         {company.sector}
                       </Badge>
                     </div>
 
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-3 leading-relaxed">
                       {company.description}
                     </p>
 
@@ -512,7 +438,7 @@ const Index = () => {
                           {parseBusinessActivities(company.business_activity).slice(0, 3).map((keyword, idx) => (
                             <span
                               key={idx}
-                              className="px-2 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full"
+                              className="px-2 py-1 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-full"
                             >
                               {keyword}
                             </span>
@@ -525,14 +451,14 @@ const Index = () => {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       {company.year_founded && (
                         <div className="text-xs">
-                          <span className="text-muted-foreground">Founded:</span>
-                          <span className="ml-1 font-semibold text-foreground">{company.year_founded}</span>
+                          <span className="text-gray-500">Founded:</span>
+                          <span className="ml-1 font-semibold text-gray-900">{company.year_founded}</span>
                         </div>
                       )}
                       {company.total_funding_raised && (
                         <div className="text-xs">
-                          <span className="text-muted-foreground">Funding:</span>
-                          <span className="ml-1 font-semibold text-foreground">{company.total_funding_raised}</span>
+                          <span className="text-gray-500">Funding:</span>
+                          <span className="ml-1 font-semibold text-gray-900">{company.total_funding_raised}</span>
                         </div>
                       )}
                     </div>
@@ -540,7 +466,7 @@ const Index = () => {
                     {/* Location */}
                     {company.hq_location && (
                       <div className="mb-3">
-                        <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
+                        <span className="px-3 py-1 text-xs bg-gray-100 text-gray-600 border border-gray-200 rounded-md">
                           {company.hq_location}
                         </span>
                       </div>
@@ -554,7 +480,7 @@ const Index = () => {
                         href={company.linkedin_url}
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-accent rounded active:scale-95"
+                        className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
                         title="LinkedIn"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -567,7 +493,7 @@ const Index = () => {
                         href={company.website_url}
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="text-primary hover:text-primary/80 transition-colors p-2 hover:bg-accent rounded active:scale-95"
+                        className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
                         title="Website"
                         onClick={(e) => e.stopPropagation()}
                       >
@@ -585,219 +511,198 @@ const Index = () => {
         {isSearching && (
           <div className="space-y-6">
             <div className="text-center">
-              <div className="inline-flex items-center space-x-2 text-muted-foreground">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" />
+              <div className="inline-flex items-center space-x-2 text-gray-600">
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent" />
                 <span>Searching the space technology ecosystem...</span>
               </div>
             </div>
           </div>
         )}
+        
         {results.length > 0 && (
           <div className="mt-12">
-            <CompanyCards 
-              companies={results.map((company, index) => ({
-                id: company.id || `company-${index}`,
-                ...company
-              }))}
-              onKeywordClick={(keyword) => {
-                try {
-                  mixpanel.track("Keyword Clicked", {
-                    keyword: keyword,
-                    timestamp: new Date().toISOString()
-                  });
-                } catch (error) {
-                  console.error("Failed to track keyword click:", error);
-                }
-                handleSearch(keyword, "suggested");
-              }}
-            />
+            <h3 className="text-2xl font-bold mb-6">Search Results ({results.length} companies)</h3>
+            <div className="grid gap-6">
+              {results.map((company, index) => (
+                <div key={company.id || `company-${index}`} className="bg-white border rounded-lg p-6 shadow-sm">
+                  <h4 className="text-lg font-bold mb-2">{company.company_name || "Unknown Company"}</h4>
+                  <p className="text-gray-600 mb-4">{company.description || "No description available"}</p>
+                  {company.sector && (
+                    <Badge className="bg-blue-100 text-blue-800">{company.sector}</Badge>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </main>
 
       {/* Slide Up Panel for Sample Company Details */}
-      <div className={`fixed inset-x-0 bottom-0 z-50 transform transition-transform duration-300 ease-in-out ${isSlideUpOpen ? 'translate-y-0' : 'translate-y-full'}`}>
-        <div className="bg-gradient-to-br from-background via-background/95 to-muted/90 backdrop-blur-xl border-t border-border/50 shadow-2xl max-h-[80vh] overflow-hidden">
-          {selectedCompany && (
-            <div className="flex flex-col h-full max-h-[80vh]">
-              {/* Header */}
-              <div className="p-6 border-b border-border/30 bg-gradient-to-r from-primary/5 to-accent/5">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1 min-w-0">
-                    <h2 className="text-2xl font-bold text-foreground mb-2 line-clamp-2">{selectedCompany.company_name}</h2>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30 backdrop-blur-sm">
-                        {selectedCompany.sector}
-                      </Badge>
-                      {selectedCompany.engagement_label && (
-                        <Badge className={`${getEngagementStyle(selectedCompany.engagement_type)} border-0`}>
-                          {selectedCompany.engagement_label}
+      {isSlideUpOpen && selectedCompany && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsSlideUpOpen(false)}
+          />
+          <div className={`fixed inset-x-0 bottom-0 z-50 transform transition-transform duration-300 ease-in-out ${isSlideUpOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+            <div className="bg-white border-t shadow-2xl max-h-[80vh] overflow-hidden">
+              <div className="flex flex-col h-full max-h-[80vh]">
+                {/* Header */}
+                <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-purple-50">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedCompany.company_name}</h2>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className="bg-blue-100 text-blue-800">
+                          {selectedCompany.sector}
                         </Badge>
-                      )}
+                        {selectedCompany.engagement_label && (
+                          <Badge className={`${getEngagementStyle(selectedCompany.engagement_type)} border-0`}>
+                            {selectedCompany.engagement_label}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  
-                  {/* Header Actions */}
-                  <div className="flex items-center gap-2 ml-4">
+                    
                     <button
                       onClick={() => setIsSlideUpOpen(false)}
-                      className="p-2 rounded-lg bg-muted/50 text-muted-foreground hover:bg-muted/70 transition-colors active:scale-95"
+                      className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                       title="Close panel"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
-                </div>
 
-                {/* Quick Actions */}
-                <div className="flex gap-3">
-                  <a 
-                    href="https://calendly.com/imaginingforward/techweek-discovery?" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all active:scale-95 font-medium"
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                    Request Intro
-                  </a>
-                  
-                  {/* Social Links */}
-                  <div className="flex gap-2">
-                    {isValidUrl(selectedCompany.website_url) && (
-                      <a 
-                        href={selectedCompany.website_url.trim().startsWith('http') 
-                          ? selectedCompany.website_url.trim() 
-                          : `https://${selectedCompany.website_url.trim()}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="p-2 rounded-lg bg-muted/50 text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors active:scale-95"
-                        title="Website"
-                      >
-                        <Globe className="h-4 w-4" />
-                      </a>
-                    )}
-                    {isValidUrl(selectedCompany.linkedin_url) && (
-                      <a 
-                        href={selectedCompany.linkedin_url.trim().startsWith('http') 
-                          ? selectedCompany.linkedin_url.trim()
-                          : `https://${selectedCompany.linkedin_url.trim()}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="p-2 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors active:scale-95"
-                        title="LinkedIn"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                {/* Description */}
-                <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
-                  <p className="text-muted-foreground leading-relaxed">{selectedCompany.description}</p>
-                </div>
-
-                {/* Key Metrics */}
-                <div className="grid grid-cols-2 gap-4">
-                  {selectedCompany.year_founded && (
-                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 backdrop-blur-sm border border-primary/20 rounded-lg p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="h-4 w-4 text-primary" />
-                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Founded</span>
-                      </div>
-                      <p className="text-lg font-bold text-foreground">{selectedCompany.year_founded}</p>
-                    </div>
-                  )}
-                  
-                  {selectedCompany.hq_location && (
-                    <div className="bg-gradient-to-br from-secondary/5 to-muted/5 backdrop-blur-sm border border-secondary/20 rounded-lg p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <MapPin className="h-4 w-4 text-secondary" />
-                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Location</span>
-                      </div>
-                      <p className="text-sm font-semibold text-foreground line-clamp-2">{selectedCompany.hq_location}</p>
-                    </div>
-                  )}
-                  
-                  {selectedCompany.total_funding_raised && (
-                    <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 backdrop-blur-sm border border-green-500/20 rounded-lg p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <DollarSign className="h-4 w-4 text-green-600" />
-                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Funding</span>
-                      </div>
-                      <p className="text-sm font-semibold text-foreground">{selectedCompany.total_funding_raised}</p>
-                    </div>
-                  )}
-                  
-                  {selectedCompany.latest_funding_stage && (
-                    <div className="bg-gradient-to-br from-orange-500/5 to-amber-500/5 backdrop-blur-sm border border-orange-500/20 rounded-lg p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Award className="h-4 w-4 text-orange-600" />
-                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Stage</span>
-                      </div>
-                      <p className="text-sm font-semibold text-foreground">{selectedCompany.latest_funding_stage}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Leadership */}
-                {selectedCompany.leadership && (
-                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Users className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-foreground">Leadership</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{selectedCompany.leadership}</p>
-                  </div>
-                )}
-
-                {/* Business Activities */}
-                {selectedCompany.business_activity && (
-                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Target className="h-4 w-4 text-primary" />
-                      <h3 className="font-semibold text-foreground">Business Activities</h3>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {parseBusinessActivities(selectedCompany.business_activity).slice(0, 6).map((activity, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full"
+                  {/* Quick Actions */}
+                  <div className="flex gap-3">
+                    <a 
+                      href="https://calendly.com/imaginingforward/techweek-discovery?" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all active:scale-95 font-medium"
+                    >
+                      <ArrowRight className="h-4 w-4" />
+                      Request Intro
+                    </a>
+                    
+                    {/* Social Links */}
+                    <div className="flex gap-2">
+                      {isValidUrl(selectedCompany.website_url) && (
+                        <a 
+                          href={selectedCompany.website_url.trim().startsWith('http') 
+                            ? selectedCompany.website_url.trim() 
+                            : `https://${selectedCompany.website_url.trim()}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
+                          title="Website"
                         >
-                          {activity}
-                        </span>
-                      ))}
+                          <Globe className="h-4 w-4" />
+                        </a>
+                      )}
+                      {isValidUrl(selectedCompany.linkedin_url) && (
+                        <a 
+                          href={selectedCompany.linkedin_url.trim().startsWith('http') 
+                            ? selectedCompany.linkedin_url.trim()
+                            : `https://${selectedCompany.linkedin_url.trim()}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+                          title="LinkedIn"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      )}
                     </div>
                   </div>
-                )}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                  {/* Description */}
+                  <div className="bg-gray-50 border rounded-xl p-4">
+                    <p className="text-gray-700 leading-relaxed">{selectedCompany.description}</p>
+                  </div>
+
+                  {/* Key Metrics */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {selectedCompany.year_founded && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Calendar className="h-4 w-4 text-blue-600" />
+                          <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Founded</span>
+                        </div>
+                        <p className="text-lg font-bold text-gray-900">{selectedCompany.year_founded}</p>
+                      </div>
+                    )}
+                    
+                    {selectedCompany.hq_location && (
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <MapPin className="h-4 w-4 text-gray-600" />
+                          <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Location</span>
+                        </div>
+                        <p className="text-sm font-semibold text-gray-900">{selectedCompany.hq_location}</p>
+                      </div>
+                    )}
+                    
+                    {selectedCompany.total_funding_raised && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <DollarSign className="h-4 w-4 text-green-600" />
+                          <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Funding</span>
+                        </div>
+                        <p className="text-sm font-semibold text-gray-900">{selectedCompany.total_funding_raised}</p>
+                      </div>
+                    )}
+                    
+                    {selectedCompany.latest_funding_stage && (
+                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Award className="h-4 w-4 text-orange-600" />
+                          <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Stage</span>
+                        </div>
+                        <p className="text-sm font-semibold text-gray-900">{selectedCompany.latest_funding_stage}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Leadership */}
+                  {selectedCompany.leadership && (
+                    <div className="bg-gray-50 border rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Users className="h-4 w-4 text-blue-600" />
+                        <h3 className="font-semibold text-gray-900">Leadership</h3>
+                      </div>
+                      <p className="text-sm text-gray-700">{selectedCompany.leadership}</p>
+                    </div>
+                  )}
+
+                  {/* Business Activities */}
+                  {selectedCompany.business_activity && (
+                    <div className="bg-gray-50 border rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Target className="h-4 w-4 text-blue-600" />
+                        <h3 className="font-semibold text-gray-900">Business Activities</h3>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {parseBusinessActivities(selectedCompany.business_activity).slice(0, 6).map((activity, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 text-xs bg-blue-100 text-blue-700 border border-blue-200 rounded-full"
+                          >
+                            {activity}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Overlay for Slide Up Panel */}
-      {isSlideUpOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-          onClick={() => setIsSlideUpOpen(false)}
-        />
+          </div>
+        </>
       )}
-
-      {/* CSS for search highlight effect */}
-      <style jsx>{`
-        .search-highlight {
-          border-color: rgb(79 70 229) !important;
-          border-width: 2px !important;
-          box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2) !important;
-          background: linear-gradient(135deg, 
-            rgba(79, 70, 229, 0.05), 
-            rgba(168, 85, 247, 0.05)) !important;
-        }
-      `}</style>
     </div>
   );
 };
