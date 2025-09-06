@@ -81,6 +81,17 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     setIsModalOpen(true);
   };
 
+  const openCompanyDetailsResponsive = (company: FrontendCompany) => {
+    const isMobile = window.innerWidth < 640; // tailwind 'sm' breakpoint
+    setSelectedCompany(company);
+
+    if (isMobile) {
+      setIsModalOpen(true); // Slide-up modal for mobile
+    } else {
+      setIsSidePanelOpen(true); // Side panel for desktop
+    }
+  };
+  
   // Helper function to validate URLs
   const isValidUrl = (url?: string): boolean => {
     return !!url && typeof url === "string" && url.trim().length > 5;
@@ -159,7 +170,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
             onClick={() => {
               console.log('Card clicked for:', company.company_name);
               trackCompanyCardClick(company.company_name, searchQuery);
-              openSidePanel(company);
+              openCompanyDetailsResponsive(company);
             }}
           >
             <CardContent className="p-4 sm:p-6 flex flex-col h-full">
