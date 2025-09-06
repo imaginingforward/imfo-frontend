@@ -15,7 +15,6 @@ const ImFoIntelligencePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
   const { toast } = useToast();
 
   useEffect(() => {
