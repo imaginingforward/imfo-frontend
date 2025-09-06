@@ -35,12 +35,8 @@ interface FrontendCompany {
   products_services?: string;
   capabilities?: string;
   buyer_types?: string;
-  market_ticker?: string | null;
   name?: string; // Duplicate company_name
   business_activity_new?: string;  // Duplicate business_activity
-  products_services?: string;
-  capabilities?: string;
-  buyer_types?: string;
   capital_partners?: string; // Duplicate capital_partners
   market_ticker?: string; // Duplicate public_ticker
   certifications_trl?: string;
