@@ -163,7 +163,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
             onClick={() => {
               console.log('Card clicked for:', company.company_name);
               trackCompanyCardClick(company.company_name, searchQuery);
-              openCompanyDetails(company);
+              openSidePanel(company);
             }}
           >
             <CardContent className="p-4 sm:p-6 flex flex-col h-full">
