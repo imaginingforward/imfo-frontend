@@ -255,3 +255,5 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
     </>
   );
 };
+
+export default CompanyModals;
