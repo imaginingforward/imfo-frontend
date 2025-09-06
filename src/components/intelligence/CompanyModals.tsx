@@ -5,7 +5,7 @@ import {
   ExternalLink, Globe, MapPin, Building, Calendar, DollarSign, Award, Target, X, Expand 
 } from 'lucide-react';
 import { FrontendCompany } from './types';
-import { isValidUrl, parseBusinessActivities } from './utils';
+import { isValidUrl, parseBusinessActivities } from './lib/utils';
 
 interface CompanyModalsProps {
   companies: FrontendCompany[];
