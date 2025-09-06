@@ -533,6 +533,48 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </div>
                 )}
 
+                {/* Financial Overview */}
+                {(selectedCompany.total_funding_raised ||
+                  selectedCompany.latest_funding_raised ||
+                  selectedCompany.annual_revenue ||
+                  selectedCompany.market_ticker) && (
+                  <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4 mt-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <DollarSign className="h-4 w-4 text-primary" />
+                      <h3 className="font-semibold text-foreground">Financial Overview</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                      {selectedCompany.total_funding_raised && (
+                        <div>
+                          <span className="font-medium text-foreground">Total Funding:</span><br />
+                          {selectedCompany.total_funding_raised}
+                        </div>
+                      )}
+                      {selectedCompany.latest_funding_raised && (
+                        <div>
+                          <span className="font-medium text-foreground">Latest Round:</span><br />
+                          {selectedCompany.latest_funding_raised}{" "}
+                          {selectedCompany.latest_funding_stage && (
+                            <span>({selectedCompany.latest_funding_stage})</span>
+                          )}
+                        </div>
+                      )}
+                      {selectedCompany.annual_revenue && (
+                        <div>
+                          <span className="font-medium text-foreground">Annual Revenue:</span><br />
+                          {selectedCompany.annual_revenue}
+                        </div>
+                      )}
+                      {selectedCompany.market_ticker && (
+                        <div>
+                          <span className="font-medium text-foreground">Ticker:</span><br />
+                          <span className="font-mono">{selectedCompany.market_ticker}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* View More */}
                 <div className="text-center pt-4">
                   <button
@@ -912,3 +954,70 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     </div>
   );
 };
+
+{/* Responsive Company Panel */}
+<div
+  className={`
+    fixed z-50 transform transition-transform duration-300 ease-in-out
+    ${isSidePanelOpen ? 'translate-x-0 translate-y-0' : 'translate-x-full md:translate-x-full translate-y-full md:translate-y-0'}
+    md:inset-y-0 md:right-0 md:w-[500px] w-full h-[85vh] md:h-auto bottom-0 md:bottom-auto
+  `}
+>
+  <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-muted/90 backdrop-blur-xl border-t md:border-t-0 md:border-l border-border/50 shadow-2xl rounded-t-2xl md:rounded-none">
+    {selectedCompany && (
+      <div className="h-full flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-border/30 bg-gradient-to-r from-primary/5 to-accent/5 rounded-t-2xl md:rounded-none">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2 line-clamp-2">
+                {selectedCompany.company_name}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                <Badge className="bg-primary/20 text-primary border-primary/30 backdrop-blur-sm">
+                  {selectedCompany.sector}
+                </Badge>
+                {selectedCompany.stage && (
+                  <Badge variant="outline" className="bg-muted/50 border-muted-foreground/20">
+                    {selectedCompany.stage}
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Header Actions */}
+            <div className="flex items-center gap-2 ml-4">
+              <button
+                onClick={expandToFullModal}
+                className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors active:scale-95"
+                title="Expand to full view"
+              >
+                <Expand className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setIsSidePanelOpen(false)}
+                className="p-2 rounded-lg bg-muted/50 text-muted-foreground hover:bg-muted/70 transition-colors active:scale-95"
+                title="Close panel"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Content (scrollable on mobile) */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Keep your existing content here (financials, description, partners, etc.) */}
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+{/* Overlay */}
+{isSidePanelOpen && (
+  <div
+    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+    onClick={() => setIsSidePanelOpen(false)}
+  />
+)}
