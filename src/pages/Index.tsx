@@ -344,7 +344,7 @@ const Index = () => {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Ask anything..."
+                placeholder={placeholderText}
                 className="w-full pl-10 sm:pl-12 pr-20 sm:pr-24 py-4 sm:py-6 text-base sm:text-lg border-2 border-muted focus:border-primary rounded-xl shadow-lg focus:shadow-xl transition-all duration-200 focus:ring-2 focus:ring-space-blue/20"
                 disabled={isSearching}
               />
