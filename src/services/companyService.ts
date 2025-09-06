@@ -5,7 +5,6 @@ export interface Company {
   business_activity: string;
   business_area: string;
   sector: string;
-  subsector_tags?: string;
   stage?: string;
   description: string;
   hq_city: string;
@@ -14,16 +13,16 @@ export interface Company {
   hq_location: string;
   leadership: string;
   latest_funding_stage: string;
-  latest_funding_raised: string;
-  total_funding_raised: string;
-  annual_revenue?: string;
+  latest_funding_raised: number;
+  total_funding_raised: number;
+  annual_revenue?: number;
   capital_partners: string;
   notable_partners: string;
   website_url: string;
   linkedin_url: string;
   crunchbase_url: string;
   twitter_url: string;
-  year_founded?: string;
+  year_founded?: number;
   hiring?: string;
 }
 
@@ -67,8 +66,8 @@ export const searchCompanies = async (query: string = ''): Promise<CompanyRespon
 // Transform function to add IDs if needed
 export const transformCompany = (backendCompany: Omit<Company, 'id'>, index: number): Company => {
   return {
+    ...backendCompany,
     id: `company-${index}`,
     business_area: backendCompany.business_area || '',
-    ...backendCompany
   };
 };
