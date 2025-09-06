@@ -1,9 +1,8 @@
-// CompanyModals.tsx
 import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
-  ExternalLink, Globe, MapPin, Building, Calendar, DollarSign, Award, Target, X, Expand, ArrowRight 
+  ExternalLink, Globe, MapPin, Building, Calendar, DollarSign, Award, Target, X, Expand 
 } from 'lucide-react';
 import { FrontendCompany } from './types';
 import { isValidUrl, parseBusinessActivities } from './utils';
@@ -31,13 +30,16 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
   };
 
   const getEngagementStyle = (type?: string) => {
-    const styles = {
+    const styles: Record<string, string> = {
       trending: "bg-gradient-to-r from-red-500 to-pink-500 text-white",
       most_searched: "bg-gradient-to-r from-blue-500 to-purple-500 text-white",
-      breaking_news: "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
+      breaking_news: "bg-gradient-to-r from-green-500 to-emerald-500 text-white",
     };
     return (type && styles[type]) || "bg-gray-500 text-white";
   };
+
+  const formatCurrency = (value?: number) =>
+    value !== undefined ? value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) : '';
 
   return (
     <>
@@ -95,10 +97,13 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                         <span className="ml-1 font-semibold text-gray-900">{company.year_founded}</span>
                       </div>
                     )}
-                    {company.total_funding_raised && (
+                    {(company.total_funding_raised || company.latest_funding_raised) && (
                       <div className="text-xs">
                         <span className="text-gray-500">Funding:</span>
-                        <span className="ml-1 font-semibold text-gray-900">{company.total_funding_raised}</span>
+                        <span className="ml-1 font-semibold text-gray-900">
+                          {company.total_funding_raised ? formatCurrency(company.total_funding_raised) : ''}
+                          {company.latest_funding_raised ? ` (${formatCurrency(company.latest_funding_raised)} latest)` : ''}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -164,20 +169,29 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                 <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
                   <p className="text-muted-foreground leading-relaxed">{selectedCompany.description}</p>
                 </div>
+
                 {/* Metrics & Activities */}
                 <div className="grid grid-cols-2 gap-4">
                   {selectedCompany.year_founded && <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 rounded-lg p-4"><Calendar className="h-4 w-4 text-primary" /><p>{selectedCompany.year_founded}</p></div>}
                   {selectedCompany.hq_location && <div className="bg-gradient-to-br from-secondary/5 to-muted/5 border border-secondary/20 rounded-lg p-4"><MapPin className="h-4 w-4 text-secondary" /><p>{selectedCompany.hq_location}</p></div>}
-                  {selectedCompany.total_funding_raised && <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 border border-green-500/20 rounded-lg p-4"><DollarSign className="h-4 w-4 text-green-600" /><p>{selectedCompany.total_funding_raised}</p></div>}
+                  {selectedCompany.total_funding_raised && <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 border border-green-500/20 rounded-lg p-4"><DollarSign className="h-4 w-4 text-green-600" /><p>{formatCurrency(selectedCompany.total_funding_raised)}</p></div>}
+                  {selectedCompany.latest_funding_raised && <div className="bg-gradient-to-br from-green-300/5 to-green-500/10 border border-green-400/20 rounded-lg p-4"><DollarSign className="h-4 w-4 text-green-700" /><p>{formatCurrency(selectedCompany.latest_funding_raised)}</p></div>}
                   {selectedCompany.latest_funding_stage && <div className="bg-gradient-to-br from-orange-500/5 to-amber-500/5 border border-orange-500/20 rounded-lg p-4"><Award className="h-4 w-4 text-orange-600" /><p>{selectedCompany.latest_funding_stage}</p></div>}
                 </div>
 
+                {/* Business Activities */}
                 {selectedCompany.business_activity && (
                   <div className="bg-gradient-to-br from-card/50 to-muted/30 border border-border/30 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3"><Target className="h-4 w-4 text-primary" /><h3 className="font-semibold">Business Activities</h3></div>
                     <div className="flex flex-wrap gap-2">
                       {parseBusinessActivities(selectedCompany.business_activity).slice(0, 6).map((activity, idx) => (
-                        <button key={idx} onClick={(e) => { e.stopPropagation(); onKeywordClick(activity, e); }} className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 active:scale-95">{activity}</button>
+                        <button
+                          key={idx}
+                          onClick={(e) => { e.stopPropagation(); onKeywordClick(activity, e); }}
+                          className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 active:scale-95"
+                        >
+                          {activity}
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -208,7 +222,15 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                 </div>
               </div>
               <div className="ml-4">
-                <a href="https://calendly.com/imaginingforward/techweek-discovery?" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 active:scale-95" onClick={(e) => { e.stopPropagation(); onLinkClick(selectedCompany.company_name, 'calendly_modal', searchQuery); }}>Request Intro</a>
+                <a
+                  href="https://calendly.com/imaginingforward/techweek-discovery?"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 active:scale-95"
+                  onClick={(e) => { e.stopPropagation(); onLinkClick(selectedCompany.company_name, 'calendly_modal', searchQuery); }}
+                >
+                  Request Intro
+                </a>
               </div>
             </DialogHeader>
 
@@ -223,7 +245,8 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {selectedCompany.year_founded && <div className="bg-card border rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><Calendar className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">Founded</span></div><p className="text-xl font-bold">{selectedCompany.year_founded}</p></div>}
                 {selectedCompany.latest_funding_stage && <div className="bg-card border rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><Award className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">Funding Stage</span></div><p className="text-lg font-semibold">{selectedCompany.latest_funding_stage}</p></div>}
-                {selectedCompany.total_funding_raised && <div className="bg-card border rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><DollarSign className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">Total Funding</span></div><p className="text-lg font-semibold">{selectedCompany.total_funding_raised}</p></div>}
+                {selectedCompany.total_funding_raised && <div className="bg-card border rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><DollarSign className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">Total Funding</span></div><p className="text-lg font-semibold">{formatCurrency(selectedCompany.total_funding_raised)}</p></div>}
+                {selectedCompany.latest_funding_raised && <div className="bg-card border rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><DollarSign className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">Latest Funding</span></div><p className="text-lg font-semibold">{formatCurrency(selectedCompany.latest_funding_raised)}</p></div>}
               </div>
             </div>
           </DialogContent>
