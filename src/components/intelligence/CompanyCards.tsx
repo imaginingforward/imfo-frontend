@@ -324,3 +324,5 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     </div>
   );
 };
+
+export default CompanyCards;
