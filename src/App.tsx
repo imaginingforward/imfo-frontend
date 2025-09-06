@@ -8,7 +8,6 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SubmissionResultPage from "./pages/SubmissionResultPage";
 import MatchingPage from "./pages/MatchingPage";
-import ImFoIntelligencePage from "./pages/ImFoIntelligencePage";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +20,6 @@ const App = () => (
         <Routes>
           {/* Search Engine Routes */}
           <Route path="/" element={<Index />} />
-          <Route path="/intelligence" element={<ImFoIntelligencePage />} />
           
           {/* RFP Match Tool Routes */}
           <Route path="/match" element={<MatchingPage />} />
