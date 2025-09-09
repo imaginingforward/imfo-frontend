@@ -20,19 +20,16 @@ const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const searchSectionRef = useRef(null);
 
-  const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
-  const placeholderText = `Search for ${roles[currentRoleIndex]} in space technology...`;
-
-  // Rotate roles every 3 seconds
+  // Rotate suggestedPrompts every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+      setCurrentPromptIndex((prev) => (prev + 1) % suggestedPrompts.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
