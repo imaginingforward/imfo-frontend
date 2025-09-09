@@ -2,29 +2,131 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import CompanyCards from "@/components/intelligence/CompanyCards";
+import CompanyModals from "@/components/intelligence/CompanyModals";
 import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, Target, Zap, Sparkles } from "lucide-react";
 import mixpanel from "mixpanel-browser";
 
 // Initialize Mixpanel
-mixpanel.init("85be2acaaa02972b55b436a76e63cf0c", {
-  debug: true,
-  track_pageview: true,
-  persistence: "localStorage"
-});
-
-// Import your new components
-import CompanyCards from "@/components/intelligence/CompanyCards";
-import CompanyModals from "@/components/intelligence/CompanyModals";
+const initializeMixpanel = () => {
+  try {
+    mixpanel.init("85be2acaaa02972b55b436a76e63cf0c", {
+      track_pageview: true,
+      persistence: "localStorage",
+    });
+  } catch (error) {
+    console.error("Failed to initialize Mixpanel:", error);
+  }
+};
 
 const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [placeholderText, setPlaceholderText] = useState("Ask anything...");
+  const [isTyping, setIsTyping] = useState(false);
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [error, setError] = useState(null);
-  const searchSectionRef = useRef(null);
+  const [highlightSearchBar, setHighlightSearchBar] = useState(false);
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+
+  const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
+
+  const typingPrompts = [
+    "Companies in PNT",
+    "Avionics in California", 
+    "Earth Observation Data",
+    "Startups with SBIR Contracts",
+    "Energy security solutions",
+    "Satellite manufacturers"
+  ];
+
+  // Rotate roles every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Typing animation effect
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
+    const startTypingAnimation = () => {
+      if (query.length === 0) { // Only animate when search bar is empty
+        setIsTyping(true);
+        const currentPrompt = typingPrompts[currentPromptIndex];
+        let currentText = "";
+        let charIndex = 0;
+
+        const typeNextChar = () => {
+          if (charIndex < currentPrompt.length) {
+            currentText += currentPrompt[charIndex];
+            setPlaceholderText(currentText + "|");
+            charIndex++;
+            timeout = setTimeout(typeNextChar, 100);
+          } else {
+            // Show completed text for 1 second
+            setPlaceholderText(currentText);
+            timeout = setTimeout(() => {
+              // Clear text with backspace effect
+              let backspaceIndex = currentText.length;
+              const backspace = () => {
+                if (backspaceIndex > 0) {
+                  currentText = currentText.slice(0, -1);
+                  setPlaceholderText(currentText + "|");
+                  backspaceIndex--;
+                  timeout = setTimeout(backspace, 50);
+                } else {
+                  setPlaceholderText("Ask anything...");
+                  setCurrentPromptIndex((prev) => (prev + 1) % typingPrompts.length);
+                  setIsTyping(false);
+                  // Wait 2 seconds before next prompt
+                  timeout = setTimeout(startTypingAnimation, 2000);
+                }
+              };
+              backspace();
+            }, 1000);
+          }
+        };
+
+        typeNextChar();
+      }
+    };
+
+    // Start first animation after 3 seconds
+    timeout = setTimeout(startTypingAnimation, 3000);
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [currentPromptIndex, query]);
+
+  // Reset placeholder when user types
+  useEffect(() => {
+    if (query.length > 0) {
+      setPlaceholderText("Ask anything...");
+      setIsTyping(false);
+    }
+  }, [query]);
+
+  // Initialize Mixpanel on component mount
+  useEffect(() => {
+    initializeMixpanel();
+
+    // Track page view
+    try {
+      mixpanel.track("Page Viewed", {
+        page: "Search Landing",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Failed to track page view:", error);
+    }
+  }, []);
+
 
   // Rotate suggestedPrompts every 3 seconds
   useEffect(() => {
@@ -36,7 +138,7 @@ const Index = () => {
 
   const suggestedPrompts = [
     { icon: <Rocket className="h-4 w-4" />, text: "Companies in PNT" },
-    { icon: <Cpu className="h-4 w-4" />, text: "Avionics in California" },
+    { icon: <Cpu className="h-4 w-4" />, text: "Satellites startups in SoCal" },
     { icon: <Satellite className="h-4 w-4" />, text: "Earth Observation Data" },
     { icon: <Users className="h-4 w-4" />, text: "Startups with SBIR Contracts" },
     { icon: <Building className="h-4 w-4" />, text: "Engineering Companies" },
@@ -63,6 +165,8 @@ const Index = () => {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const result = await response.json();
+
+      // Save the companies array from the result
       const companies = result.companies || [];
       setResults(companies);
 
@@ -76,36 +180,93 @@ const Index = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  // Track successful search
+      try {
+        mixpanel.track("Search Completed", {
+          query: searchQuery,
+          source: source,
+          results_count: companies.length,
+          success: true,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error("Failed to track search completion:", error);
+      }
+    } catch (err) {
+      console.error("Search failed", err);
+      
+      // Track failed search
+      try {
+        mixpanel.track("Search Failed", {
+          query: searchQuery,
+          source: source,
+          error: err instanceof Error ? err.message : "Unknown error",
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error("Failed to track search failure:", error);
+      }
+      
+      alert("Sorry, search failed. Try again.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSearch(query);
+    handleSearch(query, "manual");
   };
 
-  const handleSuggestedPromptClick = (promptText) => {
-    handleSearch(promptText);
+  const handleSuggestedPromptClick = (promptText: string, category: string) => {
+    // Track suggested prompt click
+    try {
+      mixpanel.track("Suggested Prompt Clicked", {
+        prompt: promptText,
+        category: category,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Failed to track prompt click:", error);
+    }
+    
+    handleSearch(promptText, "suggested");
   };
 
-  const handleCompanyClick = (company) => {
-    setSelectedCompany(company);
-    setIsModalOpen(true);
-    mixpanel.track("Company Clicked", { company_name: company.company_name, timestamp: new Date().toISOString() });
+  const handleSearchDeals = () => {
+    // Scroll to top
+    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Highlight search bar
+    setHighlightSearchBar(true);
+    setTimeout(() => setHighlightSearchBar(false), 2000);
+
+    // Focus search bar
+    setTimeout(() => {
+      const searchInput = document.querySelector('input[placeholder*="Ask"]') as HTMLInputElement;
+      searchInput?.focus();
+    }, 500);
   };
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>Reload Page</Button>
-        </div>
-      </div>
-    );
-  }
+  const getEngagementBadge = (engagement: string) => {
+    const badges = {
+      "trending": { icon: <TrendingUp className="h-3 w-3" />, color: "bg-orange-500/20 text-orange-200 border-orange-400/30" },
+      "most searched": { icon: <Eye className="h-3 w-3" />, color: "bg-blue-500/20 text-blue-200 border-blue-400/30" },
+      "breaking news": { icon: <Flame className="h-3 w-3" />, color: "bg-red-500/20 text-red-200 border-red-400/30" }
+    };
+    
+    const badge = badges[engagement as keyof typeof badges];
+    return badge ? (
+      <Badge className={`${badge.color} text-xs px-2 py-1 animate-pulse`}>
+        {badge.icon}
+        <span className="ml-1 uppercase font-semibold tracking-wide">{engagement}</span>
+      </Badge>
+    ) : null;
+  }; 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <main className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 sm:pt-24 pb-16 sm:pb-24">
+      <main className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 pt-16 sm:pt-24 pb-16 sm:pb-24">
         {/* Hero Section */}
         <div className="text-center mb-12 sm:mb-16 mt-8 sm:mt-12">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
@@ -118,32 +279,73 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Search Section */}
-        <div className="mb-12 sm:mb-16" ref={searchSectionRef}>
+        {/* Search Interface */}
+        <div className="mb-12 sm:mb-16">
           <form onSubmit={handleSubmit} className="relative mb-6 sm:mb-8">
-            <Input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={placeholderText}
-              className="w-full pl-10 pr-20 py-4 sm:py-6 border-2 border-gray-200 focus:border-blue-500 rounded-xl shadow-lg focus:ring-2 focus:ring-blue-200"
-            />
-            <Button type="submit" disabled={isSearching || !query.trim()} className="absolute right-2 top-1/2 transform -translate-y-1/2">
-              {isSearching ? <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" /> : "Search"}
-            </Button>
-          </form>
-
-          <div className="flex gap-2 overflow-x-auto">
-            {suggestedPrompts.map((prompt, index) => (
-              <Button key={index} onClick={() => handleSuggestedPromptClick(prompt.text)} className="shrink-0">
-                {prompt.icon} {prompt.text}
+            <div 
+              ref={searchBarRef}
+              className={`relative transition-all duration-300 ${
+                highlightSearchBar ? 'ring-4 ring-primary/50 ring-offset-2 ring-offset-background' : ''
+              }`}
+            >
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+              <Input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={placeholderText}
+                className="w-full pl-10 sm:pl-12 pr-20 sm:pr-24 py-4 sm:py-6 text-base sm:text-lg border-2 border-muted focus:border-primary rounded-xl shadow-lg focus:shadow-xl transition-all duration-200"
+                disabled={isSearching}
+              />
+              <Button
+                type="submit"
+                disabled={isSearching || !query.trim()}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 sm:px-6 py-2 text-sm sm:text-base bg-gradient-to-r from-space-blue to-space-purple hover:from-space-purple hover:to-space-blue transition-all duration-200"
+              >
+                {isSearching ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                ) : (
+                  <>
+                    <span className="hidden sm:inline">Search</span>
+                    <Search className="h-4 w-4 sm:hidden" />
+                  </>
+                )}
               </Button>
-            ))}
+            </div>
+          </form>
+          
+          {/* Suggested Prompts */}
+          <div className="relative">
+            <div className="flex items-center mb-4">
+              <h3 className="text-sm font-medium text-muted-foreground">Try these searches</h3>
+            </div>
+            <div className="relative overflow-hidden">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 scroll-smooth">
+                {suggestedPrompts.map((prompt, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSuggestedPromptClick(prompt.text, prompt.category)}
+                    className="group flex items-center gap-2 px-3 py-2 bg-prompt hover:bg-prompt-hover border border-prompt-border hover:border-space-blue/30 rounded-full whitespace-nowrap transition-all duration-200 hover:shadow-sm active:scale-95 shrink-0"
+                    disabled={isSearching}
+                  >
+                    <span className="text-base group-hover:scale-110 transition-transform duration-200">
+                      {prompt.icon}
+                    </span>
+                    <span className="text-sm font-medium text-foreground group-hover:text-space-blue transition-colors">
+                      {prompt.text}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              
+              {/* Scroll gradient overlay */}
+              <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none" />
+            </div>
           </div>
         </div>
 
         {/* Trust Indicators */}
-        <div className="mb-16 sm:mb-20 text-center">
+        <div className="mb-32 sm:mb-40 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             <div className="space-y-1">
               <div className="text-4xl md:text-5xl font-light text-gray-900">1800+</div>
@@ -207,7 +409,7 @@ const Index = () => {
           {/* CTA Button */}
           <div className="flex justify-center">
             <button 
-              onClick={() => searchSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+              onClick={handleSearchDeals}
               className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 sm:px-12 py-4 rounded-lg hover:shadow-xl transition-all duration-300 active:scale-95"
             >
               <span className="text-white text-lg font-medium">Search Deals</span>
