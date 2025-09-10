@@ -213,6 +213,12 @@ const Index = () => {
     }
   };
 
+  const onKeywordClick = (keyword: string, e: React.MouseEvent) => {
+  e.stopPropagation();
+  setQuery(keyword);
+  handleSearch(keyword); // or handleSearch(keyword, "keywordClicked") if you want to track event type
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch(query, "manual");
@@ -420,7 +426,10 @@ const Index = () => {
         {/* Search Results */}
         {results.length > 0 && (
           <div className="mt-12">
-            <CompanyCards companies={results} onCompanyClick={handleCompanyClick} />
+            <CompanyCards companies={results}
+              onCompanyClick={handleCompanyClick}
+              onKeywordClick={onKeywordClick}
+            />
           </div>
         )}
 
@@ -430,6 +439,7 @@ const Index = () => {
             company={selectedCompany}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
+            onKeywordClick={onKeywordClick}
           />
         )}
       </main>
