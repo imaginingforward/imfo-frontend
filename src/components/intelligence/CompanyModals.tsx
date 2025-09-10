@@ -123,7 +123,21 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                     <a href={company.linkedin_link} target="_blank" rel="noopener noreferrer"
                        className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
                        title="LinkedIn" onClick={(e) => e.stopPropagation()}>
-                      <ExternalLink className="h-4 w-4" />
+                      <img src="/linkedin_logo.png" alt="LinkedIn" className="h-4 w-4" />
+                    </a>
+                  )}
+                  {isValidUrl(company.twitter_link) && (
+                    <a href={company.twitter_link} target="_blank" rel="noopener noreferrer"
+                       className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
+                       title="X" onClick={(e) => e.stopPropagation()}>
+                      <img src="/X_logo.jpeg" alt="Twitter" className="h-4 w-4" />
+                    </a>
+                  )}
+                  {isValidUrl(company.crunchbase_link) && (
+                    <a href={company.crunchbase_link} target="_blank" rel="noopener noreferrer"
+                       className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
+                       title="Crunchbase" onClick={(e) => e.stopPropagation()}>
+                      <img src="/cb_logo.png" alt="Crunchbase" className="h-4 w-4" />
                     </a>
                   )}
                   {isValidUrl(company.website_link) && (
