@@ -23,6 +23,8 @@ const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<FrontendCompany | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [placeholderText, setPlaceholderText] = useState("Ask anything...");
   const [isTyping, setIsTyping] = useState(false);
