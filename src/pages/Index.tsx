@@ -179,21 +179,6 @@ const Index = () => {
       setIsSearching(false);
     }
   };
-
-  // Track successful search
-      try {
-        mixpanel.track("Search Completed", {
-          query: searchQuery,
-          source: source,
-          results_count: companies.length,
-          success: true,
-          timestamp: new Date().toISOString()
-        });
-      } catch (error) {
-        console.error("Failed to track search completion:", error);
-      }
-    } catch (err) {
-      console.error("Search failed", err);
       
       // Track failed search
       try {
