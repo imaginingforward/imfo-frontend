@@ -119,15 +119,15 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
 
                 {/* Social Links */}
                 <div className="flex gap-3 items-center">
-                  {isValidUrl(company.linkedin_url) && (
-                    <a href={company.linkedin_url} target="_blank" rel="noopener noreferrer"
+                  {isValidUrl(company.linkedin_link) && (
+                    <a href={company.linkedin_link} target="_blank" rel="noopener noreferrer"
                        className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
                        title="LinkedIn" onClick={(e) => e.stopPropagation()}>
                       <ExternalLink className="h-4 w-4" />
                     </a>
                   )}
-                  {isValidUrl(company.website_url) && (
-                    <a href={company.website_url} target="_blank" rel="noopener noreferrer"
+                  {isValidUrl(company.website_link) && (
+                    <a href={company.website_link} target="_blank" rel="noopener noreferrer"
                        className="text-blue-600 hover:text-blue-500 transition-colors p-2 hover:bg-blue-50 rounded active:scale-95"
                        title="Website" onClick={(e) => e.stopPropagation()}>
                       <Globe className="h-4 w-4" />
