@@ -174,12 +174,7 @@ const Index = () => {
     } catch (err) {
       console.error("Search failed", err);
       setError(err.message);
-      setResults([]);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-      
+      setResults([]);  
       // Track failed search
       try {
         mixpanel.track("Search Failed", {
@@ -191,7 +186,6 @@ const Index = () => {
       } catch (error) {
         console.error("Failed to track search failure:", error);
       }
-      
       alert("Sorry, search failed. Try again.");
     } finally {
       setIsSearching(false);
