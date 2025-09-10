@@ -16,11 +16,11 @@ interface CompanyModalsProps {
 
 export const CompanyModals: React.FC<CompanyModalsProps> = ({
   companies,
+  company,
   searchQuery,
   onKeywordClick,
   onLinkClick
 }) => {
-  const [selectedCompany, setSelectedCompany] = useState<FrontendCompany | null>(null);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
