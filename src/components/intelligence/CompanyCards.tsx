@@ -9,40 +9,43 @@ interface FrontendCompany {
   id: string;
   company_name: string;
   sector: string;
-  business_activity: string;
   business_area: string;
-  subsector_tags?: string;
-  stage?: string;
   description: string;
+  business_activity: string;
+  latest_funding_stage: string;
+  latest_funding_raised: number;
+  total_funding_raised: number;
+  capital_partners: string;
+  annual_revenue?: number;
   hq_city: string;
   hq_state: string;
   hq_country: string;
   hq_location: string;
   leadership: string;
-  latest_funding_stage: string;
-  latest_funding_raised: string;
-  total_funding_raised: string;
-  annual_revenue?: string;
-  capital_partners: string;
-  notable_partners: string;
-  website_url: string;
-  linkedin_url: string;
-  crunchbase_url: string;
-  twitter_url: string;
-  public_ticker?: string;
-  year_founded?: string;
+  year_founded?: number;
   hiring?: string;
+  notable_contracts?: string;
+  website_link: string;
+  linkedin_link: string;
+  crunchbase_link: string;
+  twitter_link: string;
+  revenue_arr: number;
+  ebitda?: string;
+  free_cash_flow?: string;
+  debt_current?: string;
+  debt_net?: string;
+  consumer_base_size?: string;
+  concentration?: string;
+  segment_local_vs_international?: string;
+  revenue_forecast?: string;
+  key_press_links: string[];
+  job_board_links: string[];
+  patent_highlights?: string;
+  government_announcements?: string;
+  public_ticker?: string;
   products_services?: string;
   capabilities?: string;
   buyer_types?: string;
-  name?: string; // Duplicate company_name
-  business_activity_new?: string;  // Duplicate business_activity
-  capital_partners?: string; // Duplicate capital_partners
-  market_ticker?: string; // Duplicate public_ticker
-  certifications_trl?: string;
-  notable_contracts?: string;
-  signals?: string;
-  location?: string;
 }
 
 interface CompanyCardsProps {
@@ -222,11 +225,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
 
               {/* Social Icons using /public */}
               <div className="flex gap-2 sm:gap-3 items-center">
-                {isValidUrl(company.linkedin_url) && (
+                {isValidUrl(company.linkedin_link) && (
                   <a 
-                    href={company.linkedin_url.trim().startsWith('http') 
-                      ? company.linkedin_url.trim()
-                      : `https://${company.linkedin_url.trim()}`} 
+                    href={company.linkedin_link.trim().startsWith('http') 
+                      ? company.linkedin_link.trim()
+                      : `https://${company.linkedin_link.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
@@ -240,11 +243,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </a>
                 )}
                 
-                {isValidUrl(company.twitter_url) && (
+                {isValidUrl(company.twitter_link) && (
                   <a 
-                    href={company.twitter_url.trim().startsWith('http') 
-                      ? company.twitter_url.trim()
-                      : `https://${company.twitter_url.trim()}`} 
+                    href={company.twitter_link.trim().startsWith('http') 
+                      ? company.twitter_link.trim()
+                      : `https://${company.twitter_link.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
@@ -258,11 +261,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </a>
                 )}
                 
-                {isValidUrl(company.crunchbase_url) && (
+                {isValidUrl(company.crunchbase_link) && (
                   <a 
-                    href={company.crunchbase_url.trim().startsWith('http') 
-                      ? company.crunchbase_url.trim()
-                      : `https://${company.crunchbase_url.trim()}`} 
+                    href={company.crunchbase_link.trim().startsWith('http') 
+                      ? company.crunchbase_link.trim()
+                      : `https://${company.crunchbase_link.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-orange-600 hover:text-orange-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
@@ -276,11 +279,11 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </a>
                 )}
                 
-                {isValidUrl(company.website_url) && (
+                {isValidUrl(company.website_link) && (
                   <a 
-                    href={company.website_url.trim().startsWith('http') 
-                      ? company.website_url.trim() 
-                      : `https://${company.website_url.trim()}`} 
+                    href={company.website_link.trim().startsWith('http') 
+                      ? company.website_link.trim() 
+                      : `https://${company.website_link.trim()}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
