@@ -32,10 +32,11 @@ const Index = () => {
   const [highlightSearchBar, setHighlightSearchBar] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
 
-  const typingPrompts = [
+  const suggestedPrompts = [
     "Companies in PNT",
     "Avionics in California", 
     "Earth Observation Data",
@@ -59,7 +60,7 @@ const Index = () => {
     const startTypingAnimation = () => {
       if (query.length === 0) { // Only animate when search bar is empty
         setIsTyping(true);
-        const currentPrompt = typingPrompts[currentPromptIndex];
+        const currentPrompt = suggestedPrompts[currentPromptIndex];
         let currentText = "";
         let charIndex = 0;
 
@@ -83,7 +84,7 @@ const Index = () => {
                   timeout = setTimeout(backspace, 50);
                 } else {
                   setPlaceholderText("Ask anything...");
-                  setCurrentPromptIndex((prev) => (prev + 1) % typingPrompts.length);
+                  setCurrentPromptIndex((prev) => (prev + 1) % suggestedPrompts.length);
                   setIsTyping(false);
                   // Wait 2 seconds before next prompt
                   timeout = setTimeout(startTypingAnimation, 2000);
@@ -300,6 +301,12 @@ const Index = () => {
               </Button>
             </div>
           </form>
+          
+          {error && (
+            <div className="text-red-600 text-center mt-2">
+              {error}
+            </div>
+          )}
           
           {/* Suggested Prompts */}
           <div className="relative">
