@@ -8,22 +8,28 @@ import { FrontendCompany } from './types';
 import { isValidUrl, parseBusinessActivities } from '../../lib/utils';
 
 interface CompanyModalsProps {
-  companies: FrontendCompany[];
+  Companies: FrontendCompany[];
+  isModalOpen: boolean;
+  isSidePanelOpen: boolean;
+  onModalClose: () => void;
+  onSidePanelClose: () => void;
+  onExpandToModal: () => void;
   searchQuery?: string;
   onKeywordClick: (keyword: string, e: React.MouseEvent) => void;
   onLinkClick: (company: string, linkType: string, searchQuery?: string) => void;
 }
 
 export const CompanyModals: React.FC<CompanyModalsProps> = ({
-  companies,
-  company,
+  Companies,
+  isModalOpen,
+  isSidePanelOpen,
+  onModalClose,
+  onSidePanelClose,
+  onExpandToModal,
   searchQuery,
   onKeywordClick,
   onLinkClick
 }) => {
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleCardClick = (company: FrontendCompany) => {
     setSelectedCompany(company);
     setIsSidePanelOpen(true);
@@ -169,10 +175,10 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
-                  <button onClick={() => setIsModalOpen(true)} className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 active:scale-95" title="Expand to full view">
+                  <button onClick={onExpandToModal} className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 active:scale-95" title="Expand to full view">
                     <Expand className="h-4 w-4" />
                   </button>
-                  <button onClick={() => setIsSidePanelOpen(false)} className="p-2 rounded-lg bg-muted/50 hover:bg-muted/70 active:scale-95" title="Close panel">
+                  <button onClick={onSidePanelClose} className="p-2 rounded-lg bg-muted/50 hover:bg-muted/70 active:scale-95" title="Close panel">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -219,7 +225,7 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
               </div>
             </div>
           </div>
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={() => setIsSidePanelOpen(false)} />
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={onSidePanelClose} />
         </>
       )}
 
