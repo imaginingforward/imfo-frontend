@@ -36,7 +36,7 @@ const Index = () => {
 
   const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
 
-  const suggestedPrompts = [
+  const typingPrompts = [
     "Companies in PNT",
     "Avionics in California", 
     "Earth Observation Data",
@@ -60,7 +60,7 @@ const Index = () => {
     const startTypingAnimation = () => {
       if (query.length === 0) { // Only animate when search bar is empty
         setIsTyping(true);
-        const currentPrompt = suggestedPrompts[currentPromptIndex];
+        const currentPrompt = typingPrompts[currentPromptIndex];
         let currentText = "";
         let charIndex = 0;
 
@@ -84,7 +84,7 @@ const Index = () => {
                   timeout = setTimeout(backspace, 50);
                 } else {
                   setPlaceholderText("Ask anything...");
-                  setCurrentPromptIndex((prev) => (prev + 1) % suggestedPrompts.length);
+                  setCurrentPromptIndex((prev) => (prev + 1) % typingPrompts.length);
                   setIsTyping(false);
                   // Wait 2 seconds before next prompt
                   timeout = setTimeout(startTypingAnimation, 2000);
@@ -134,7 +134,7 @@ const Index = () => {
   // Rotate suggestedPrompts every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPromptIndex((prev) => (prev + 1) % suggestedPrompts.length);
+      setCurrentPromptIndex((prev) => (prev + 1) % typingPrompts.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
