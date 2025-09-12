@@ -201,6 +201,11 @@ const Index = () => {
   handleSearch(keyword); // or handleSearch(keyword, "keywordClicked") if you want to track event type
   };
 
+  const handleCompanyClick = (company: FrontendCompany) => {
+    setSelectedCompany(company);
+    setIsModalOpen(true);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch(query, "manual");
@@ -414,7 +419,8 @@ const Index = () => {
         {/* Search Results */}
         {results.length > 0 && (
           <div className="mt-12">
-            <CompanyCards companies={results}
+            <CompanyCards
+              companies={results}
               onCompanyClick={handleCompanyClick}
               onKeywordClick={onKeywordClick}
             />
