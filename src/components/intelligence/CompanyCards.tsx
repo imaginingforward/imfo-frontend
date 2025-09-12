@@ -136,6 +136,12 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     }
   };
 
+  // Handle company card click
+  const handleCompanyClick = (company: FrontendCompany) => {
+    setSelectedCompany(company);
+    setIsModalOpen(true);
+  };
+
   // Mixpanel
   const trackClick = (company: string, linkType: string, searchTerm?: string) => {
     mixpanel.track("Result Clicked", {
