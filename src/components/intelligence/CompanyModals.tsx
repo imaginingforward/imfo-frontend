@@ -231,7 +231,7 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
 
       {/* Full Modal */}
       {selectedCompany && (
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <Dialog open={isModalOpen} onOpenChange={onModalClose}>
           <DialogContent className="max-w-6xl w-[95vw] h-[95vh] overflow-hidden bg-background text-foreground border border-border p-0 flex flex-col">
             <DialogHeader className="p-6 border-b flex-shrink-0 bg-muted/30 flex items-start justify-between">
               <div className="flex-1 min-w-0">
