@@ -8,6 +8,7 @@ import { FrontendCompany } from './types';
 import { isValidUrl, parseBusinessActivities } from '../../lib/utils';
 
 interface CompanyModalsProps {
+  companies: FrontendCompany[];
   selectedCompany: FrontendCompany | null;
   isModalOpen: boolean;
   isSidePanelOpen: boolean;
@@ -17,9 +18,11 @@ interface CompanyModalsProps {
   searchQuery?: string;
   onKeywordClick: (keyword: string, e: React.MouseEvent) => void;
   onLinkClick: (company: string, linkType: string, searchQuery?: string) => void;
+  handleCardClick: (company: FrontendCompany) => void;
 }
 
 export const CompanyModals: React.FC<CompanyModalsProps> = ({
+  companies,
   selectedCompany,
   isModalOpen,
   isSidePanelOpen,
@@ -28,7 +31,8 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
   onExpandToModal,
   searchQuery,
   onKeywordClick,
-  onLinkClick
+  onLinkClick,
+  handleCardClick
 }) => {
 
   const getEngagementStyle = (type?: string) => {
@@ -43,6 +47,7 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
   const formatCurrency = (value?: number) =>
     value !== undefined ? value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) : '';
 
+  const featuredCompanies = [
   return (
     <>
       {/* Landing Page Company Cards */}
