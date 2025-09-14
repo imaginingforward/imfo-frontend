@@ -2,28 +2,46 @@
 export interface Company {
   id: string;
   company_name: string;
-  business_activity: string;
-  business_area: string;
   sector: string;
-  stage?: string;
+  business_area: string;
   description: string;
+  business_activity: string;
+  latest_funding_stage: string;
+  latest_funding_raised: string;
+  total_funding_raised: string;
+  capital_partners: string;
+  notable_partners?: string;
+  public_ticker?:string;
+  stage?: string;
+  annual_revenue?: string;
   hq_city: string;
   hq_state: string;
   hq_country: string;
   hq_location: string;
   leadership: string;
-  latest_funding_stage: string;
-  latest_funding_raised: number;
-  total_funding_raised: number;
-  annual_revenue?: number;
-  capital_partners: string;
-  notable_partners: string;
-  website_url: string;
-  linkedin_url: string;
-  crunchbase_url: string;
-  twitter_url: string;
   year_founded?: number;
   hiring?: string;
+  notable_contracts?: string;
+  website_link: string;
+  linkedin_link: string;
+  crunchbase_link: string;
+  twitter_link: string;
+  revenue_arr: string;
+  ebitda?: string;
+  free_cash_flow?: string;
+  debt_current?: string;
+  debt_net?: string;
+  consumer_base_size?: string;
+  concentration?: string;
+  segment_local_vs_international?: string;
+  revenue_forecast?: string;
+  key_press_links: string[];
+  job_board_links: string[];
+  patent_highlights?: string;
+  government_announcements?: string;
+  products_services?: string;
+  capabilities?: string;
+  buyer_types?: string;
 }
 
 export interface CompanyResponse {
@@ -68,6 +86,5 @@ export const transformCompany = (backendCompany: Omit<Company, 'id'>, index: num
   return {
     ...backendCompany,
     id: `company-${index}`,
-    business_area: backendCompany.business_area || '',
   };
 };
