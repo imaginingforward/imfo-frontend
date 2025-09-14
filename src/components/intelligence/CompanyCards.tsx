@@ -138,14 +138,6 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     }
   };
 
-  // Handle company card click
-  const handleCompanyClick = (company: FrontendCompany, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedCompany(company);
-    setIsModalOpen(true);
-  };
-
-  // Mixpanel
   const trackClick = (company: string, linkType: string, searchTerm?: string) => {
     mixpanel.track("Result Clicked", {
       result_type: linkType,           
@@ -155,7 +147,8 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
       click_position: 0,
     });
   };
-
+  
+  // Handle company card click
   const handleCardClick = (company: FrontendCompany, index: number) => {
     mixpanel.track("Result Clicked", {
       result_type: "company_card",
