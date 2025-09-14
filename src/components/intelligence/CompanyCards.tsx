@@ -138,7 +138,8 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
   };
 
   // Handle company card click
-  const handleCompanyClick = (company: FrontendCompany) => {
+  const handleCompanyClick = (company: FrontendCompany, e: React.MouseEvent) => {
+    e.stopPropagation();
     setSelectedCompany(company);
     setIsModalOpen(true);
   };
@@ -177,10 +178,14 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
           <Card 
             key={company.id} 
             className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 cursor-pointer"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log('Clicked event:', e);
               console.log('Card clicked for:', company.company_name);
+              console.log('Selected company:', company);
               trackCompanyCardClick(company.company_name, searchQuery);
               openCompanyDetailsResponsive(company);
+              console.log('Opening modal');
             }}
           >
             <CardContent className="p-4 sm:p-6 flex flex-col h-full">
