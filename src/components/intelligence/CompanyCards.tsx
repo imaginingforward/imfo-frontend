@@ -146,24 +146,25 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
   };
 
   // Mixpanel
-  const trackClick = (company: string, linkType: string, searchTerm?: string, companiesArray: FrontendCompany[]) => {
+  const trackClick = (company: string, linkType: string, searchTerm?: string) => {
     mixpanel.track("Result Clicked", {
       result_type: linkType,           
       result_id: company,
       search_term: searchTerm || 'unknown',
       timestamp: new Date().toISOString(),
-      click_position: companiesArray.findIndex(c => c.company_name === company) + 1
+      click_position: 0,
     });
   };
 
-  const trackCompanyCardClick = (company: string, searchTerm?: string, companiesArray: FrontendCompany[]) => {
+  const handleCardClick = (company: FrontendCompany, index: number) => {
     mixpanel.track("Result Clicked", {
       result_type: "company_card",
-      result_id: company,
-      search_term: searchTerm || 'unknown',
+      result_id: company.company_name,
+      search_term: searchQuery || 'unknown',
       timestamp: new Date().toISOString(),
-      click_position: companiesArray.findIndex(c => c.company_name === company) + 1
+      click_position: index + 1,
     });
+    openCompanyDetailsResponsive(company);
   };
 
   // Results in grid form  
@@ -184,8 +185,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               console.log('Clicked event:', e);
               console.log('Card clicked for:', company.company_name);
               console.log('Selected company:', company);
-              trackCompanyCardClick(company.company_name, searchQuery, companies);
-              openCompanyDetailsResponsive(company);
+              handleCardClick(company, index);
               console.log('Opening modal');
             }}
           >
