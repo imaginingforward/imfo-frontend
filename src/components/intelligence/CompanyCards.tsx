@@ -6,6 +6,7 @@ import { ExternalLink, Globe, MapPin, Building, Users, Calendar, DollarSign, Awa
 import mixpanel from "mixpanel-browser";
 
 interface FrontendCompany {
+  id?: string;
   company_name: string;
   sector: string;
   business_area: string;
@@ -145,13 +146,13 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
   };
 
   // Mixpanel
-  const trackClick = (company: string, linkType: string, searchTerm?: string) => {
+  const trackClick = (company: string, linkType: string, searchTerm?: string, companiesArray: FrontendCompany[]) => {
     mixpanel.track("Result Clicked", {
       result_type: linkType,           
       result_id: company,
       search_term: searchTerm || 'unknown',
       timestamp: new Date().toISOString(),
-      click_position: companies.findIndex(c => c.company_name === company) + 1
+      click_position: companiesArray.findIndex(c => c.company_name === company) + 1
     });
   };
 
