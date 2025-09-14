@@ -29,7 +29,7 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
   searchQuery,
   onKeywordClick,
   onLinkClick
-});
+}) => {
 
   const getEngagementStyle = (type?: string) => {
     const styles: Record<string, string> = {
