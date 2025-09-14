@@ -8,7 +8,7 @@ import { FrontendCompany } from './types';
 import { isValidUrl, parseBusinessActivities } from '../../lib/utils';
 
 interface CompanyModalsProps {
-  Companies: FrontendCompany[];
+  selectedCompany: FrontendCompany | null;
   isModalOpen: boolean;
   isSidePanelOpen: boolean;
   onModalClose: () => void;
@@ -20,7 +20,7 @@ interface CompanyModalsProps {
 }
 
 export const CompanyModals: React.FC<CompanyModalsProps> = ({
-  Companies,
+  selectedCompany,
   isModalOpen,
   isSidePanelOpen,
   onModalClose,
@@ -29,11 +29,7 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
   searchQuery,
   onKeywordClick,
   onLinkClick
-}) => {
-  const handleCardClick = (company: FrontendCompany) => {
-    setSelectedCompany(company);
-    setIsSidePanelOpen(true);
-  };
+});
 
   const getEngagementStyle = (type?: string) => {
     const styles: Record<string, string> = {
