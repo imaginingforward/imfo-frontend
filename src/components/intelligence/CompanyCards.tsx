@@ -51,14 +51,16 @@ interface CompanyCardsProps {
   companies: FrontendCompany[];
   onKeywordClick?: (keyword: string) => void;
   searchQuery?: string;
+  selectedCompany:FrontendCompany | null;
+  setSelectedCompany: (company: FrontendCompany | null) => void;
+  isModalOpen: boolean;
+  setIsModalOpen: (open: boolean) => void;
+  isSidePanelOpen: boolean;
+  setIsSidePanelOpen: (open: boolean) => void;
 }
 
 export const CompanyCards: React.FC<CompanyCardsProps> = 
-  ({ companies, onKeywordClick, searchQuery }) => {
-  
-  const [selectedCompany, setSelectedCompany] = useState<FrontendCompany | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  ({ companies, onKeywordClick, searchQuery, selectedCompany, setSelectedCompany, isModalOpen, setIsModalOpen, isSidePanelOpen, setIsSidePanelOpen }) => {
   
   // Debug: Log company data to see URLs  
   useEffect(() => {
