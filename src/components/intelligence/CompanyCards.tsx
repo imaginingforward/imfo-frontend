@@ -176,7 +176,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {companies.map((company, index) => (
           <Card 
-            key={company.id} 
+            key={index} 
             className="bg-card border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-98 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
