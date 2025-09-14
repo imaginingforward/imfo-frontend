@@ -47,7 +47,6 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
   const formatCurrency = (value?: number) =>
     value !== undefined ? value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) : '';
 
-  const featuredCompanies = [
   return (
     <>
       {/* Landing Page Company Cards */}
