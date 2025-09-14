@@ -6,17 +6,16 @@ import { ExternalLink, Globe, MapPin, Building, Users, Calendar, DollarSign, Awa
 import mixpanel from "mixpanel-browser";
 
 interface FrontendCompany {
-  id: string;
   company_name: string;
   sector: string;
   business_area: string;
   description: string;
   business_activity: string;
   latest_funding_stage: string;
-  latest_funding_raised: number;
-  total_funding_raised: number;
+  latest_funding_raised: string;
+  total_funding_raised: string;
   capital_partners: string;
-  annual_revenue?: number;
+  annual_revenue?: string;
   hq_city: string;
   hq_state: string;
   hq_country: string;
@@ -29,7 +28,7 @@ interface FrontendCompany {
   linkedin_link: string;
   crunchbase_link: string;
   twitter_link: string;
-  revenue_arr: number;
+  revenue_arr: string;
   ebitda?: string;
   free_cash_flow?: string;
   debt_current?: string;
@@ -188,25 +187,25 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                 {/* Company Name */}
                 <div className="mb-3">
                   <h3 className="font-bold text-base sm:text-lg text-foreground text-left hover:text-primary transition-colors line-clamp-2">
-                    {company.company_name || company.name}
+                    {company.company_name}
                   </h3>
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-xs mt-1">
-                    {company.sector || company.sector_new}
+                    {company.sector}
                   </Badge>
                 </div>
 
                 {/* Description */}
-                {(company.description || company.description_new) && (
+                {(company.description) && (
                   <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 text-left line-clamp-3 leading-relaxed">
-                    {company.description || company.description_new}
+                    {company.description}
                   </p>
                 )}
 
                 {/* Business Activity Tag */}
-                {(company.business_activity || company.business_activity_new) && (
+                {(company.business_activity) && (
                   <div className="mb-3 sm:mb-4 text-left">
                     <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2">
-                      {parseBusinessActivities(company.business_activity || company.business_activity_new).slice(0, 4).map((keyword, idx) => (
+                      {parseBusinessActivities(company.business_activity).slice(0, 4).map((keyword, idx) => (
                         <button
                           key={idx}
                           onClick={(e) => handleKeywordClick(keyword, e)}
@@ -221,14 +220,37 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               </div>
               
               {/* Location */}
-               {(company.hq_location || company.location) && (
+               {(company.hq_location) && (
                  <div className="mb-3 text-left">
                    <span className="px-3 py-1 text-xs bg-muted/50 text-muted-foreground border border-muted rounded-md">
-                     {company.hq_location || company.location}
+                     {company.hq_location}
                   </span>
                  </div>
                )}
 
+              {/* Financial Info */}
+              {(company.revenue_arr || company.annual_revenue || company.total_funding_raised) && (
+                <div className="mb-3 text-left">
+                  <div className="flex flex-wrap gap-1.5 text-xs">
+                    {company.revenue_arr && (
+                      <span className="px-2 py-1 bg-green-500/10 text-green-200 border border-green-400/30 rounded">
+                        ARR: {company.revenue_arr}
+                      </span>
+                    )}
+                    {company.annual_revenue && (
+                      <span className="px-2 py-1 bg-blue-500/10 text-blue-200 border border-blue-400/30 rounded">
+                        Revenue: {company.annual_revenue}
+                      </span>
+                    )}
+                    {company.total_funding_raised && (
+                      <span className="px-2 py-1 bg-purple-500/10 text-purple-200 border border-purple-400/30 rounded">
+                      Funding: {company.total_funding_raised}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              
               {/* Social Icons using /public */}
               <div className="flex gap-2 sm:gap-3 items-center">
                 {isValidUrl(company.linkedin_link) && (
