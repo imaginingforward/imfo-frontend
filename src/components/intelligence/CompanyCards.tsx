@@ -155,13 +155,13 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     });
   };
 
-  const trackCompanyCardClick = (company: string, searchTerm?: string) => {
+  const trackCompanyCardClick = (company: string, searchTerm?: string, companiesArray: FrontendCompany[]) => {
     mixpanel.track("Result Clicked", {
       result_type: "company_card",
       result_id: company,
       search_term: searchTerm || 'unknown',
       timestamp: new Date().toISOString(),
-      click_position: companies.findIndex(c => c.company_name === company) + 1
+      click_position: companiesArray.findIndex(c => c.company_name === company) + 1
     });
   };
 
@@ -183,7 +183,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
               console.log('Clicked event:', e);
               console.log('Card clicked for:', company.company_name);
               console.log('Selected company:', company);
-              trackCompanyCardClick(company.company_name, searchQuery);
+              trackCompanyCardClick(company.company_name, searchQuery, companies);
               openCompanyDetailsResponsive(company);
               console.log('Opening modal');
             }}
