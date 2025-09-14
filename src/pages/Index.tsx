@@ -202,11 +202,6 @@ const Index = () => {
   handleSearch(keyword); // or handleSearch(keyword, "keywordClicked") if you want to track event type
   };
 
-  const handleCompanyClick = (company: FrontendCompany) => {
-    setSelectedCompany(company);
-    setIsModalOpen(true);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSearch(query, "manual");
@@ -422,8 +417,14 @@ const Index = () => {
           <div className="mt-12">
             <CompanyCards
               companies={results}
-              onCompanyClick={handleCompanyClick}
               onKeywordClick={onKeywordClick}
+              searchQuery={query}
+              selectedCompany={selectedCompany}
+              setSelectedCompany={setSelectedCompany}
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+              isSidePanelOpen={isSidePanelOpen}
+              setIsSidePanelOpen={setIsSidePanelOpen}
             />
           </div>
         )}
@@ -431,10 +432,15 @@ const Index = () => {
         {/* Company Modal */}
         {selectedCompany && (
           <CompanyModals
-            company={selectedCompany}
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            selectedCompany={selectedCompany}
+            isModalOpen={isModalOpen}
+            isSidePanelOpen={isSidePanelOpen}
+            onModalClose={() => setIsModalOpen(false)}
+            onSidePanelClose={() => setIsSidePanelOpen(false)}
+            onExpandToModal={() => {setIsSidePanelOpen(false); setIsModalOpen(true);}}
+            searchQuery={query}
             onKeywordClick={onKeywordClick}
+            onLinkClick={(company, linkType, searchQuery) => {console.log(`Link clicked: ${company} - ${linkType}`);}}
           />
         )}
       </main>
