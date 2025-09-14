@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import CompanyCards from "@/components/intelligence/CompanyCards";
 import CompanyModals from "@/components/intelligence/CompanyModals";
+import { FrontendCompany } from "@/components/intelligence/types";
 import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, Target, Zap, Sparkles } from "lucide-react";
 import mixpanel from "mixpanel-browser";
 
@@ -253,6 +254,115 @@ const Index = () => {
     ) : null;
   }; 
 
+  const featuredCompanies: FrontendCompany[] = [
+    {
+      id: "spacex",
+      company_name: "SpaceX",
+      sector: "Space Tech",
+      business_area: "Launch Services",
+      description: "Space transportation company designing spacecraft for missions to Earth orbit and Mars.",
+      business_activity: "launch services, spacecraft manufacturing, satellite internet",
+      capital_partners: "Google, Fidelity, Baillie Gifford",
+      hq_location: "Hawthorne, California",
+      website_link: "https://spacex.com",
+      linkedin_link: "https://linkedin.com/company/spacex",
+      twitter_link: "https://twitter.com/spacex",
+      crunchbase_link: "https://crunchbase.com/organization/space-exploration-technologies",
+      engagement_label: "Most Trending",
+      engagement_type: "trending"
+    },
+    {
+      id: "archer-aviation",
+      company_name: "Archer Aviation",
+      sector: "Space Tech",
+      business_area: "Urban Air Mobility",
+      description: "Electric vertical takeoff and landing aircraft manufacturer for urban transportation.",
+      business_activity: "eVTOL aircraft, urban air mobility, electric aviation",
+      capital_partners: "United Airlines, Stellantis, Atlas Crest",
+      hq_location: "San Jose, California",
+      website_link: "https://archer.com",
+      linkedin_link: "https://linkedin.com/company/archeraviation",
+      twitter_link: "https://twitter.com/archerAviation",
+      crunchbase_link: "https://crunchbase.com/organization/archer-aviation",
+      engagement_label: "Most Searched",
+      engagement_type: "most_searched"
+    },
+    {
+      id: "planet-labs",
+      company_name: "Planet Labs",
+      sector: "Space Tech", 
+      business_area: "Earth Observation",
+      description: "Earth imaging company operating the largest constellation of Earth observation satellites.",
+      business_activity: "satellite imagery, earth observation, geospatial analytics",
+      capital_partners: "Google, Geodesic Capital, Data Collective",
+      hq_location: "San Francisco, California",
+      website_link: "https://planet.com",
+      linkedin_link: "https://linkedin.com/company/planet-labs",
+      twitter_link: "https://twitter.com/planetlabs",
+      crunchbase_link: "https://crunchbase.com/organization/planet-labs",
+      engagement_label: "Breaking News",
+      engagement_type: "breaking_news"
+    },
+    {
+      id: "portal-space-systems",
+      company_name: "Portal Space Systems",
+      sector: "Space Tech",
+      business_area: "Space Logistics",
+      description: "In-space transportation and logistics company developing orbital transfer vehicles.",
+      business_activity: "orbital transfer vehicles, space logistics, satellite deployment",
+      capital_partners: "Lockheed Martin Ventures, Toyota Ventures",
+      hq_location: "Los Angeles, California",
+      website_link: "https://portalspacesystems.com",
+      linkedin_link: "https://linkedin.com/company/portal-space-systems",
+      twitter_link: "https://twitter.com/portalspacesys",
+      crunchbase_link: "https://crunchbase.com/organization/portal-space-systems",
+      engagement_label: "Most Trending",
+      engagement_type: "trending"
+    },
+    {
+      id: "xanadu",
+      company_name: "Xanadu",
+      sector: "Quantum",
+      business_area: "Quantum Computing",
+      description: "Photonic quantum computing company building cloud-accessible quantum computers.",
+      business_activity: "quantum computing, photonic processors, quantum cloud services",
+      capital_partners: "Georgian Partners, BDC Capital, Bessemer Venture Partners",
+      hq_location: "Toronto, Ontario",
+      website_link: "https://xanadu.ai",
+      linkedin_link: "https://linkedin.com/company/xanaduai",
+      twitter_link: "https://twitter.com/xanaduai",
+      crunchbase_link: "https://crunchbase.com/organization/xanadu",
+      engagement_label: "Most Searched",
+      engagement_type: "most_searched"
+    },
+    {
+      id: "axiom-space",
+      company_name: "Axiom Space",
+      sector: "Space Tech",
+      business_area: "Commercial Space Stations",
+      description: "Commercial space infrastructure company building the world's first commercial space station.",
+      business_activity: "space stations, commercial spaceflight, space manufacturing",
+      capital_partners: "C5 Capital, Declaration Partners, Raine Capital",
+      hq_location: "Houston, Texas",
+      website_link: "https://axiomspace.com",
+      linkedin_link: "https://linkedin.com/company/axiom-space",
+      twitter_link: "https://twitter.com/axiomspace",
+      crunchbase_link: "https://crunchbase.com/organization/axiom-space",
+      engagement_label: "Breaking News",
+      engagement_type: "breaking_news"
+    }
+  ];
+
+  const handleFeaturedCardClick = (company: FrontendCompany) => {
+    setSelectedCompany(company);
+    const isMobile = window.innerWidth < 640;
+    if (isMobile) {
+      setIsModalOpen(true);
+    } else {
+      setIsSidePanelOpen(true);
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <main className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 pt-16 sm:pt-24 pb-16 sm:pb-24">
@@ -430,19 +540,19 @@ const Index = () => {
         )}
 
         {/* Company Modal */}
-        {selectedCompany && (
-          <CompanyModals
-            selectedCompany={selectedCompany}
-            isModalOpen={isModalOpen}
-            isSidePanelOpen={isSidePanelOpen}
-            onModalClose={() => setIsModalOpen(false)}
-            onSidePanelClose={() => setIsSidePanelOpen(false)}
-            onExpandToModal={() => {setIsSidePanelOpen(false); setIsModalOpen(true);}}
-            searchQuery={query}
-            onKeywordClick={onKeywordClick}
-            onLinkClick={(company, linkType, searchQuery) => {console.log(`Link clicked: ${company} - ${linkType}`);}}
-          />
-        )}
+        <CompanyModals
+          companies={featuredCompanies}
+          selectedCompany={selectedCompany}
+          isModalOpen={isModalOpen}
+          isSidePanelOpen={isSidePanelOpen}
+          onModalClose={() => setIsModalOpen(false)}
+          onSidePanelClose={() => setIsSidePanelOpen(false)}
+          onExpandToModal={() => {setIsSidePanelOpen(false); setIsModalOpen(true);}}
+          searchQuery={query}
+          onKeywordClick={onKeywordClick}
+          onLinkClick={(company, linkType, searchQuery) => {console.log(`Link clicked: ${company} - ${linkType}`);}}
+          handleCardClick={handleFeaturedCardClick}
+        />
       </main>
     </div>
   );
