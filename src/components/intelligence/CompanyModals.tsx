@@ -186,17 +186,19 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
 
               {/* Content */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Overview */}
                 <div className="bg-gradient-to-br from-card/50 to-muted/30 backdrop-blur-sm border border-border/30 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3"><Building className="h-5 w-5 text-primary" /><h3 className="font-semibold">Company Overview</h3></div>
                   <p className="text-muted-foreground leading-relaxed">{selectedCompany.description}</p>
                 </div>
 
                 {/* Metrics & Activities */}
-                <div className="grid grid-cols-2 gap-4">
-                  {selectedCompany.year_founded && <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 rounded-lg p-4"><Calendar className="h-4 w-4 text-primary" /><p>{selectedCompany.year_founded}</p></div>}
-                  {selectedCompany.hq_location && <div className="bg-gradient-to-br from-secondary/5 to-muted/5 border border-secondary/20 rounded-lg p-4"><MapPin className="h-4 w-4 text-secondary" /><p>{selectedCompany.hq_location}</p></div>}
-                  {selectedCompany.total_funding_raised && <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 border border-green-500/20 rounded-lg p-4"><DollarSign className="h-4 w-4 text-green-600" /><p>{formatCurrency(selectedCompany.total_funding_raised)}</p></div>}
-                  {selectedCompany.latest_funding_raised && <div className="bg-gradient-to-br from-green-300/5 to-green-500/10 border border-green-400/20 rounded-lg p-4"><DollarSign className="h-4 w-4 text-green-700" /><p>{formatCurrency(selectedCompany.latest_funding_raised)}</p></div>}
-                  {selectedCompany.latest_funding_stage && <div className="bg-gradient-to-br from-orange-500/5 to-amber-500/5 border border-orange-500/20 rounded-lg p-4"><Award className="h-4 w-4 text-orange-600" /><p>{selectedCompany.latest_funding_stage}</p></div>}
+                <div className="grid grid-cols-1 gap-4">
+                  {selectedCompany.year_founded && <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><Calendar className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">Founded</span></div><p className="text-lg font-semibold">{selectedCompany.year_founded}</p></div>}
+                  {selectedCompany.hq_location && <div className="bg-gradient-to-br from-secondary/5 to-muted/5 border border-secondary/20 rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><MapPin className="h-4 w-4 text-secondary" /><span className="text-sm text-muted-foreground">Location</span></div><p className="text-lg font-semibold">{selectedCompany.hq_location}</p></div>}
+                  {selectedCompany.latest_funding_stage && <div className="bg-gradient-to-br from-orange-500/5 to-amber-500/5 border border-orange-500/20 rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><Award className="h-4 w-4 text-orange-600" /><span className="text-sm text-muted-foreground">Funding Stage</span></div><p className="text-lg font-semibold">{selectedCompany.latest_funding_stage}</p></div>}
+                  {selectedCompany.total_funding_raised && <div className="bg-gradient-to-br from-green-500/5 to-emerald-500/5 border border-green-500/20 rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><DollarSign className="h-4 w-4 text-green-600" /><span className="text-sm text-muted-foreground">Total Funding</span></div><p className="text-lg font-semibold">{formatCurrency(selectedCompany.total_funding_raised)}</p></div>}
+                  {selectedCompany.latest_funding_raised && <div className="bg-gradient-to-br from-green-300/5 to-green-500/10 border border-green-400/20 rounded-lg p-4"><div className="flex items-center gap-2 mb-2"><DollarSign className="h-4 w-4 text-green-700" /><span className="text-sm text-muted-foreground">Latest Funding</span></div><p className="text-lg font-semibold">{formatCurrency(selectedCompany.latest_funding_raised)}</p></div>}
                 </div>
 
                 {/* Business Activities */}
@@ -216,11 +218,17 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                     </div>
                   </div>
                 )}
-
-                <div className="text-center pt-4">
-                  <button onClick={() => setIsModalOpen(true)} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20 rounded-xl hover:from-primary/20 hover:to-accent/20 active:scale-95 font-medium">
-                    <Expand className="h-4 w-4" /> View Full Details
-                  </button>
+                {/* Request Intro Button */}
+                <div className="pt-4">
+                  <a
+                    href="https://calendly.com/imaginingforward/techweek-discovery?"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 active:scale-95"
+                    onClick={(e) => { e.stopPropagation(); onLinkClick(selectedCompany.company_name, 'calendly_sidepanel', searchQuery); }}
+                  >
+                    Request Intro
+                  </a>
                 </div>
               </div>
             </div>
