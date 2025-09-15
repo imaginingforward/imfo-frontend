@@ -49,6 +49,82 @@ export const FullModal: React.FC<FullModalProps> = ({
                   {selectedCompany.stage && <Badge variant="outline" className="text-sm px-3 py-1">{selectedCompany.stage}</Badge>}
                 </div>
               </div>
+             
+              {/* Social Links */}
+              <div className="flex gap-2 sm:gap-3 items-center mb-4">
+                {isValidUrl(selectedCompany.linkedin_link) && (
+                  <a 
+                    href={selectedCompany.linkedin_link.trim().startsWith('http')
+                      ? selectedCompany.linkedin_link.trim()
+                      : `https://${selectedCompany.linkedin_link.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="LinkedIn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLinkClick(selectedCompany.company_name, 'linkedin', searchQuery);
+                    }}
+                  >
+                    <img src="/linkedin_logo.png" alt="LinkedIn" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+  
+                {isValidUrl(selectedCompany.twitter_link) && (
+                  <a 
+                    href={selectedCompany.twitter_link.trim().startsWith('http')
+                      ? selectedCompany.twitter_link.trim()
+                      : `https://${selectedCompany.twitter_link.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="X"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLinkClick(selectedCompany.company_name, 'twitter', searchQuery);
+                    }}
+                  >
+                    <img src="/X_logo.jpeg" alt="X" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+  
+                {isValidUrl(selectedCompany.crunchbase_link) && (
+                  <a 
+                    href={selectedCompany.crunchbase_link.trim().startsWith('http')
+                      ? selectedCompany.crunchbase_link.trim()
+                      : `https://${selectedCompany.crunchbase_link.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-orange-600 hover:text-orange-500 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="Crunchbase"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLinkClick(selectedCompany.company_name, 'crunchbase', searchQuery);
+                    }}
+                  >
+                    <img src="/cb_logo.png" alt="Crunchbase" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+  
+                {isValidUrl(selectedCompany.website_link) && (
+                  <a 
+                    href={selectedCompany.website_link.trim().startsWith('http')
+                      ? selectedCompany.website_link.trim()
+                      : `https://${selectedCompany.website_link.trim()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 hover:bg-accent rounded active:scale-95"
+                    title="Website"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLinkClick(selectedCompany.company_name, 'website', searchQuery);
+                    }}
+                  >
+                    <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </a>
+                )}
+              </div> 
+              
               <div className="ml-4">
                 <a
                   href="https://calendly.com/imaginingforward/techweek-discovery?"
