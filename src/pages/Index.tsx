@@ -39,11 +39,11 @@ const Index = () => {
   const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
 
   const typingPrompts = [
-    "Companies in PNT",
-    "Avionics in California", 
+    "Startups in ISR",
+    "Companies in SoCal", 
     "Earth Observation Data",
     "Startups with SBIR Contracts",
-    "Energy security solutions",
+    "Antenna suppliers",
     "Satellite manufacturers"
   ];
 
@@ -142,12 +142,15 @@ const Index = () => {
   }, []);
 
   const suggestedPrompts = [
-    { icon: <Rocket className="h-4 w-4" />, text: "Companies in PNT" },
-    { icon: <Cpu className="h-4 w-4" />, text: "Satellites startups in SoCal" },
-    { icon: <Satellite className="h-4 w-4" />, text: "Earth Observation Data" },
-    { icon: <Users className="h-4 w-4" />, text: "Startups with SBIR Contracts" },
+    { icon: <Rocket className="h-4 w-4" />, text: "Startups in ISR" },
+    "Startups with SBIR Contracts",
+    "Antenna suppliers",
+    "Satellite manufacturers"
+    { icon: <Cpu className="h-4 w-4" />, text: "Companies in SoCal" },
+    { icon: <Satellite className="h-4 w-4" />, text: "Earth Observation" },
+    { icon: <DollarSign className="h-4 w-4" />, text: "Startups with SBIR Contracts" },
     { icon: <Building className="h-4 w-4" />, text: "Engineering Companies" },
-    { icon: <DollarSign className="h-4 w-4" />, text: "Companies Raised Series A" },
+    { icon: <Users className="h-4 w-4" />, text: "Antenna suppliers" },
   ];
 
   // Search API call with Mixpanel tracking
