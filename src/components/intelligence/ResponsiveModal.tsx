@@ -49,7 +49,6 @@ export const ResponsiveModal: React.FC<ResponsiveModalProps> = ({
                   <h2 className="text-2xl font-bold mb-2 line-clamp-2">{selectedCompany.company_name}</h2>
                   <div className="flex flex-wrap gap-2">
                     <Badge className="bg-primary/20 text-primary border-primary/30">{selectedCompany.sector}</Badge>
-                    {selectedCompany.stage && <Badge variant="outline" className="bg-muted/50 border-muted-foreground/20">{selectedCompany.stage}</Badge>}
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
