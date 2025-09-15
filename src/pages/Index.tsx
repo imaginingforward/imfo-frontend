@@ -38,6 +38,14 @@ const Index = () => {
 
   const roles = ["founders", "analysts", "sourcing officers", "sales leads", "buyers", "sellers"];
 
+  // Rotate roles every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+  
   const typingPrompts = [
     "Startups in ISR",
     "Companies in SoCal", 
