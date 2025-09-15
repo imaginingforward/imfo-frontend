@@ -385,7 +385,7 @@ const Index = () => {
             </span>
           </h1>
           <p className="text-xl sm:text-2xl md:text-4xl text-gray-600 mx-auto leading-relaxed font-medium">
-            Power deals with early signals, direct access, and real-time intelligence
+            Your edge: early signals, direct access, real-time intel
           </p>
         </div>
 
@@ -485,10 +485,10 @@ const Index = () => {
         {/* Value Proposition Section */}
         <div className="mb-12 sm:mb-16 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-16 sm:mb-20">
-            <span className="inline-block transition-all duration-500 ease-in-out transform">{roles[currentRoleIndex]}</span> expend 10+ hours a week on prospecting
+            <span className="inline-block transition-all duration-500 ease-in-out transform">{roles[currentRoleIndex]}</span> waste 10+ hours a week prospecting
           </h2>
           <p className="text-2xl sm:text-3xl text-gray-600 mb-16 sm:mb-20">
-            We collapse discovery to deal from weeks to minutes
+            We cut that to minutes
           </p>
 
           {/* Feature Boxes */}
@@ -499,7 +499,7 @@ const Index = () => {
                 <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Target className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Direct access to decision makers</h3>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Reach decision makers instantly</h3>
               </div>
             </div>
             <div className="group relative p-6 bg-gradient-to-br from-purple-50 via-white to-blue-50 border border-purple-200 rounded-xl hover:shadow-2xl hover:shadow-purple-100 transition-all duration-300 hover:-translate-y-2">
@@ -508,7 +508,7 @@ const Index = () => {
                 <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
                   <Zap className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">Early buy/sell alerts</h3>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">Get early buying alerts</h3>
               </div>
             </div>
             <div className="group relative p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 border border-blue-200 rounded-xl hover:shadow-2xl hover:shadow-blue-100 transition-all duration-300 hover:-translate-y-2">
@@ -517,7 +517,7 @@ const Index = () => {
                 <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">On demand competitor analysis</h3>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Track competitor moves real time</h3>
               </div>
             </div>
           </div>
