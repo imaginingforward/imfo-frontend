@@ -37,3 +37,22 @@ export const getSectorColor = (sector: string) => {
   
   return colorMap[sector] || 'bg-gray-500/20 text-gray-200 border-gray-400/30';
 };
+
+export const getEngagementStyle = (type?: string) => {
+  const styles: Record<string, string> = {
+    trending: "bg-gradient-to-r from-red-500 to-pink-500 text-white",
+    most_searched: "bg-gradient-to-r from-blue-500 to-purple-500 text-white",
+    breaking_news: "bg-gradient-to-r from-green-500 to-emerald-500 text-white",
+  };
+  return (type && styles[type]) || "bg-gray-500 text-white";
+};
+
+export const formatCurrency = (value?: string | number) => {
+    if (!value) return '';
+    const numValue = typeof value ===  'string' ? parseFloat(value.replace(/[^0-9.-]/g, '')) : value;
+    return isNaN(numValue) ? '' : numValue.toLocaleString('en-US', { 
+      style: 'currency', 
+      currency: 'USD', 
+      maximumFractionDigits: 0 
+    });
+};
