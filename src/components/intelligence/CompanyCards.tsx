@@ -133,6 +133,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
   // Handle keyword click
   const handleKeywordClick = (keyword: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
+    console.log("Keyword clicked:", keyword);
     if (onKeywordClick) {
       onKeywordClick(keyword);
     }
