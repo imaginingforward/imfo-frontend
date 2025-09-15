@@ -178,7 +178,14 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                   <button onClick={onExpandToModal} className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 active:scale-95" title="Expand to full view">
                     <Expand className="h-4 w-4" />
                   </button>
-                  <button onClick={onSidePanelClose} className="p-2 rounded-lg bg-muted/50 hover:bg-muted/70 active:scale-95" title="Close panel">
+                  <button 
+                    onClick={() => {
+                      onSidePanelClose();
+                      handleCardClick(null as unknown as FrontendCompany);
+                    }}
+                    className="p-2 rounded-lg bg-muted/50 hover:bg-muted/70 active:scale-95" 
+                    title="Close panel"
+                  >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -233,13 +240,27 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
               </div>
             </div>
           </div>
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={onSidePanelClose} />
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" 
+            onClick={() => {
+              onSidePanelClose();
+              handleCardClick(null as unknown as FrontendCompany);
+            }} 
+            />
         </>
       )}
 
       {/* Full Modal */}
       {selectedCompany && (
-        <Dialog open={isModalOpen} onOpenChange={onModalClose}>
+        <Dialog
+          open={isModalOpen} 
+          onOpenChange={(open) => {
+            if (!open) {
+              onModalClose();
+              handleCardClick(null as unknown as FrontendCompany);
+            }
+          }}
+        >
           <DialogContent className="max-w-6xl w-[95vw] h-[95vh] overflow-hidden bg-background text-foreground border border-border p-0 flex flex-col">
             <DialogHeader className="p-6 border-b flex-shrink-0 bg-muted/30 flex items-start justify-between">
               <div className="flex-1 min-w-0">
