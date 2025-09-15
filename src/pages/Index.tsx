@@ -143,9 +143,6 @@ const Index = () => {
 
   const suggestedPrompts = [
     { icon: <Rocket className="h-4 w-4" />, text: "Startups in ISR" },
-    "Startups with SBIR Contracts",
-    "Antenna suppliers",
-    "Satellite manufacturers"
     { icon: <Cpu className="h-4 w-4" />, text: "Companies in SoCal" },
     { icon: <Satellite className="h-4 w-4" />, text: "Earth Observation" },
     { icon: <DollarSign className="h-4 w-4" />, text: "Startups with SBIR Contracts" },
