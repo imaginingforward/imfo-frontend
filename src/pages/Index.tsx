@@ -47,14 +47,6 @@ const Index = () => {
     "Satellite manufacturers"
   ];
 
-  // Rotate roles every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
   // Typing animation effect
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -86,6 +78,7 @@ const Index = () => {
                   timeout = setTimeout(backspace, 50);
                 } else {
                   setPlaceholderText("Ask anything...");
+                  // Rotation
                   setCurrentPromptIndex((prev) => (prev + 1) % typingPrompts.length);
                   setIsTyping(false);
                   // Wait 2 seconds before next prompt
@@ -107,7 +100,7 @@ const Index = () => {
     return () => {
       if (timeout) clearTimeout(timeout);
     };
-  }, [currentPromptIndex, query]);
+  }, [query]);
 
   // Reset placeholder when user types
   useEffect(() => {
@@ -133,7 +126,7 @@ const Index = () => {
   }, []);
 
 
-  // Rotate suggestedPrompts every 3 seconds
+  // Rotate typingPrompts every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPromptIndex((prev) => (prev + 1) % typingPrompts.length);
@@ -485,7 +478,7 @@ const Index = () => {
         {/* Value Proposition Section */}
         <div className="mb-12 sm:mb-16 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-16 sm:mb-20">
-            <span className="inline-block transition-all duration-500 ease-in-out transform">{roles[currentRoleIndex]}</span> waste 10+ hours a week prospecting
+            <span className="inline-block transition-all duration-500 ease-in-out transform">{roles[currentRoleIndex]}</span> exhaust 10+ hours a week prospecting
           </h2>
           <p className="text-2xl sm:text-3xl text-gray-600 mb-16 sm:mb-20">
             We cut that to minutes
