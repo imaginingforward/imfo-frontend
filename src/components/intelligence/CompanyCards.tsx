@@ -50,7 +50,7 @@ interface FrontendCompany {
 
 interface CompanyCardsProps {
   companies: FrontendCompany[];
-  onKeywordClick?: (keyword: string) => void;
+  onKeywordClick?: (keyword: string, e: React.MouseEvent) => void;
   searchQuery?: string;
   selectedCompany:FrontendCompany | null;
   setSelectedCompany: (company: FrontendCompany | null) => void;
@@ -135,7 +135,7 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
     e.stopPropagation(); // Prevent card click
     console.log("Keyword clicked:", keyword);
     if (onKeywordClick) {
-      onKeywordClick(keyword);
+      onKeywordClick(keyword, e);
     }
   };
 
