@@ -78,9 +78,16 @@ export const CompanyModals: React.FC<CompanyModalsProps> = ({
                   {company.business_activity && (
                     <div className="mb-4 flex flex-wrap gap-2">
                       {parseBusinessActivities(company.business_activity).slice(0, 3).map((kw, idx) => (
-                        <span key={idx} className="px-2 py-1 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-full">
+                        <button
+                          key={idx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onKeywordClick(kw, e);
+                          }}
+                          className="px-2 py-1 text-xs bg-blue-50 text-blue-600 border border-blue-200 rounded-full hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 cursor-pointer active:scale-95"
+                        >
                           {kw}
-                        </span>
+                        </button>
                       ))}
                     </div>
                   )}
