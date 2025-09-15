@@ -198,9 +198,20 @@ const Index = () => {
   };
 
   const onKeywordClick = (keyword: string, e: React.MouseEvent) => {
-  e.stopPropagation();
-  setQuery(keyword);
-  handleSearch(keyword); // or handleSearch(keyword, "keywordClicked") if you want to track event type
+    e.stopPropagation();
+    
+    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    setHighlightSearchBar(true);
+    setTimeout(() => setHighlightSearchBar(false), 2000);
+    
+    setQuery(keyword);
+    handleSearch(keyword);
+
+    setTimeout(() => {
+      const searchInput = document.querySelector('input[placeholder*="Ask"]') as HTMLInputElement;
+      searchInput?.focus();
+    }, 500);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
