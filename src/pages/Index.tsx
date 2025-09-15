@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import CompanyCards from "@/components/intelligence/CompanyCards";
 import CompanyModals from "@/components/intelligence/CompanyModals";
 import { FrontendCompany } from "@/components/intelligence/types";
-import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, Target, Zap, Sparkles } from "lucide-react";
+import { Search, Rocket, Users, Building, DollarSign, Satellite, Cpu, Target, Zap, Sparkles, Eye, Flame } from "lucide-react";
 import mixpanel from "mixpanel-browser";
 
 // Initialize Mixpanel
