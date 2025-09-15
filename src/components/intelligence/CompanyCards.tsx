@@ -228,29 +228,6 @@ export const CompanyCards: React.FC<CompanyCardsProps> =
                   </span>
                  </div>
                )}
-
-              {/* Financial Info */}
-              {(company.revenue_arr || company.annual_revenue || company.total_funding_raised) && (
-                <div className="mb-3 text-left">
-                  <div className="flex flex-wrap gap-1.5 text-xs">
-                    {company.revenue_arr && (
-                      <span className="px-2 py-1 bg-green-500/10 text-green-200 border border-green-400/30 rounded">
-                        ARR: {company.revenue_arr}
-                      </span>
-                    )}
-                    {company.annual_revenue && (
-                      <span className="px-2 py-1 bg-blue-500/10 text-blue-200 border border-blue-400/30 rounded">
-                        Revenue: {company.annual_revenue}
-                      </span>
-                    )}
-                    {company.total_funding_raised && (
-                      <span className="px-2 py-1 bg-purple-500/10 text-purple-200 border border-purple-400/30 rounded">
-                      Funding: {company.total_funding_raised}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
               
               {/* Social Icons using /public */}
               <div className="flex gap-2 sm:gap-3 items-center">
