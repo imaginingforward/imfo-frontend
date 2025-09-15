@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
-  ExternalLink, Users, Handshake, TrendingUp, Lightbulb, Zap, Globe, MapPin, Building, Calendar, DollarSign, Award, Target, X 
+  ExternalLink, Expand, Users, Handshake, TrendingUp, Lightbulb, Zap, Globe, MapPin, Building, Calendar, DollarSign, Award, Target, X 
 } from 'lucide-react';
 import { FrontendCompany } from './types';
 import { FullModal } from './FullModal';
